@@ -4,40 +4,32 @@ import {
 
 import {
   Link,
-  Navigate,
   useLocation,
   useNavigate,
 } from "react-router-dom";
 
 import {
   ArrowLeft,
-  ArrowRight,
   Eye,
   EyeOff,
-  LockKeyhole,
-  Mail,
-  Plane,
+  LogIn,
 } from "lucide-react";
 
-import { motion } from "framer-motion";
-
-import {
-  useAuth,
-} from "../context/AuthContext";
+import { useAuth }
+  from "../context/AuthContext";
 
 import "../styles/Auth.css";
 
-function Login() {
-  const {
-    entrar,
-    usuario,
-  } = useAuth();
-
+export default function Login() {
   const navigate =
     useNavigate();
 
   const location =
     useLocation();
+
+  const {
+    entrar,
+  } = useAuth();
 
   const [email, setEmail] =
     useState("");
@@ -53,272 +45,176 @@ function Login() {
   const [erro, setErro] =
     useState("");
 
-  const [enviando, setEnviando] =
-    useState(false);
+  const [
+    enviando,
+    setEnviando,
+  ] = useState(false);
 
-  if (usuario) {
-    return (
-      <Navigate
-        to="/perfil"
-        replace
-      />
-    );
-  }
-
-  function enviar(event) {
+  async function handleSubmit(
+    event
+  ) {
     event.preventDefault();
 
     setErro("");
-
-    if (!email || !senha) {
-      setErro(
-        "Preencha seu e-mail e sua senha."
-      );
-
-      return;
-    }
-
     setEnviando(true);
 
-    const resultado =
-      entrar({
+    try {
+      await entrar({
         email,
         senha,
       });
 
-    setEnviando(false);
+      const destino =
+        location.state?.from ||
+        "/perfil";
 
-    if (!resultado.sucesso) {
-      setErro(
-        resultado.mensagem
-      );
-
-      return;
-    }
-
-    const destino =
-      location.state?.from ||
-      "/perfil";
-
-    navigate(
-      destino,
-      {
+      navigate(destino, {
         replace: true,
-      }
-    );
+      });
+    } catch (error) {
+      setErro(
+        error.message ||
+          "Não foi possível entrar."
+      );
+    } finally {
+      setEnviando(false);
+    }
   }
 
   return (
     <main className="auth-page">
-      <section className="auth-visual">
-        <div className="auth-visual-overlay" />
-
+      <section className="auth-panel">
         <Link
           to="/"
-          className="auth-logo"
+          className="auth-back"
         >
-          <div>
-            <Plane size={20} />
-          </div>
-
-          <span>
-            Inter
-            <strong>Way</strong>
-          </span>
+          <ArrowLeft size={18} />
+          Voltar
         </Link>
 
-        <motion.div
-          className="auth-visual-content"
-          initial={{
-            opacity: 0,
-            y: 30,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.7,
-          }}
-        >
+        <div className="auth-brand">
+          InterWay
+        </div>
+
+        <div className="auth-heading">
           <span>
-            SUA JORNADA CONTINUA
+            Bem-vindo de volta
           </span>
 
           <h1>
-            O mundo ainda tem
-            muita coisa esperando
-            por você.
+            Continue sua jornada.
           </h1>
 
           <p>
             Entre na sua conta para
-            continuar planejando sua
-            experiência internacional.
+            acessar seus destinos,
+            planos e recomendações.
           </p>
-        </motion.div>
-
-        <div className="auth-place">
-          <span>📍</span>
-
-          <div>
-            <strong>Dublin</strong>
-            <p>Irlanda</p>
-          </div>
         </div>
+
+        <form
+          className="auth-form"
+          onSubmit={handleSubmit}
+        >
+          <label>
+            E-mail
+
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(event) =>
+                setEmail(
+                  event.target.value
+                )
+              }
+              required
+            />
+          </label>
+
+          <label>
+            Senha
+
+            <div className="auth-password">
+              <input
+                type={
+                  mostrarSenha
+                    ? "text"
+                    : "password"
+                }
+                placeholder="Sua senha"
+                value={senha}
+                onChange={(event) =>
+                  setSenha(
+                    event.target.value
+                  )
+                }
+                required
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setMostrarSenha(
+                    !mostrarSenha
+                  )
+                }
+                aria-label="Mostrar senha"
+              >
+                {mostrarSenha ? (
+                  <EyeOff size={19} />
+                ) : (
+                  <Eye size={19} />
+                )}
+              </button>
+            </div>
+          </label>
+
+          {erro && (
+            <div className="auth-error">
+              {erro}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="auth-submit"
+            disabled={enviando}
+          >
+            <LogIn size={19} />
+
+            {enviando
+              ? "Entrando..."
+              : "Entrar"}
+          </button>
+        </form>
+
+        <p className="auth-switch">
+          Ainda não tem conta?{" "}
+          <Link to="/cadastro">
+            Criar conta
+          </Link>
+        </p>
       </section>
 
-      <section className="auth-form-area">
-        <div className="auth-mobile-top">
-          <Link to="/">
-            <ArrowLeft size={18} />
-          </Link>
+      <section className="auth-visual">
+        <div className="auth-visual-content">
+          <span>
+            INTERWAY
+          </span>
 
-          <span>InterWay</span>
+          <h2>
+            O mundo começa quando
+            você decide ir.
+          </h2>
+
+          <p>
+            Descubra destinos que
+            combinam com seus
+            objetivos.
+          </p>
         </div>
-
-        <motion.div
-          className="auth-form-container"
-          initial={{
-            opacity: 0,
-            x: 25,
-          }}
-          animate={{
-            opacity: 1,
-            x: 0,
-          }}
-          transition={{
-            duration: 0.55,
-          }}
-        >
-          <div className="auth-heading">
-            <span>
-              BEM-VINDO DE VOLTA
-            </span>
-
-            <h2>
-              Entre na sua conta.
-            </h2>
-
-            <p>
-              Continue de onde você
-              parou.
-            </p>
-          </div>
-
-          <form
-            onSubmit={enviar}
-            className="auth-form"
-          >
-            {erro && (
-              <div className="auth-error">
-                {erro}
-              </div>
-            )}
-
-            <div className="auth-field">
-              <label>
-                E-mail
-              </label>
-
-              <div className="auth-input">
-                <Mail size={19} />
-
-                <input
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={email}
-                  onChange={(event) =>
-                    setEmail(
-                      event.target.value
-                    )
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="auth-field">
-              <div className="auth-label-row">
-                <label>
-                  Senha
-                </label>
-
-                <button
-                  type="button"
-                  className="forgot-password"
-                >
-                  Esqueci minha senha
-                </button>
-              </div>
-
-              <div className="auth-input">
-                <LockKeyhole
-                  size={19}
-                />
-
-                <input
-                  type={
-                    mostrarSenha
-                      ? "text"
-                      : "password"
-                  }
-                  placeholder="Sua senha"
-                  value={senha}
-                  onChange={(event) =>
-                    setSenha(
-                      event.target.value
-                    )
-                  }
-                />
-
-                <button
-                  type="button"
-                  className="show-password"
-                  onClick={() =>
-                    setMostrarSenha(
-                      !mostrarSenha
-                    )
-                  }
-                >
-                  {mostrarSenha ? (
-                    <EyeOff
-                      size={19}
-                    />
-                  ) : (
-                    <Eye
-                      size={19}
-                    />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="auth-submit"
-              disabled={enviando}
-            >
-              {enviando
-                ? "Entrando..."
-                : "Entrar"}
-
-              <ArrowRight
-                size={18}
-              />
-            </button>
-          </form>
-
-          <div className="auth-register">
-            Ainda não tem uma conta?
-
-            <Link to="/cadastro">
-              Criar conta
-            </Link>
-          </div>
-        </motion.div>
       </section>
     </main>
   );
 }
-
-export default Login;

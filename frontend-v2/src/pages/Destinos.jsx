@@ -1,232 +1,268 @@
-export const destinos = [
-  {
-    slug: "irlanda",
-    pais: "Irlanda",
-    cidade: "Dublin",
-    bandeira: "🇮🇪",
-    continente: "Europa",
-    idioma: "Inglês",
-    moeda: "Euro",
-    destaque: "Estudo + Trabalho",
+import { Link } from "react-router-dom";
+import { Search, ArrowRight } from "lucide-react";
+import { useMemo, useState } from "react";
 
-    imagem:
-      "https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?auto=format&fit=crop&w=1600&q=90",
+import { destinos } from "../data/destinos";
 
-    descricao:
-      "Um dos destinos mais procurados por brasileiros que querem estudar inglês e viver uma experiência internacional.",
+export default function Destinos() {
+  const [busca, setBusca] = useState("");
 
-    texto:
-      "A Irlanda combina ensino de inglês, cultura forte, cidades acolhedoras e oportunidades para estudantes internacionais.",
+  const destinosFiltrados = useMemo(() => {
+    const termo = busca
+      .trim()
+      .toLowerCase();
 
-    beneficios: [
-      "Estudar inglês",
-      "Possibilidade de trabalho",
-      "Destino popular entre brasileiros",
-      "Boa mobilidade pela Europa",
-    ],
+    if (!termo) {
+      return destinos;
+    }
 
-    match: {
-      idiomas: ["ingles"],
-      objetivos: [
-        "idioma",
-        "trabalho",
-        "experiencia",
-      ],
-      orcamento: 2,
-      clima: ["frio", "moderado"],
-      trabalho: true,
-      duracoes: [
-        "3-meses",
-        "6-meses",
-        "1-ano",
-      ],
-    },
-  },
+    return destinos.filter((destino) => {
+      return (
+        destino.pais
+          .toLowerCase()
+          .includes(termo) ||
+        destino.cidade
+          .toLowerCase()
+          .includes(termo) ||
+        destino.continente
+          .toLowerCase()
+          .includes(termo)
+      );
+    });
+  }, [busca]);
 
-  {
-    slug: "canada",
-    pais: "Canadá",
-    cidade: "Toronto",
-    bandeira: "🇨🇦",
-    continente: "América do Norte",
-    idioma: "Inglês / Francês",
-    moeda: "Dólar Canadense",
-    destaque: "Mais procurado",
+  return (
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "#f5f7fb",
+        padding: "40px 20px 80px",
+      }}
+    >
+      <div
+        style={{
+          width: "min(1180px, 100%)",
+          margin: "0 auto",
+        }}
+      >
+        <Link
+          to="/"
+          style={{
+            textDecoration: "none",
+            color: "#173b67",
+            fontWeight: 600,
+          }}
+        >
+          ← Voltar para início
+        </Link>
 
-    imagem:
-      "https://images.unsplash.com/photo-1517935706615-2717063c2225?auto=format&fit=crop&w=1600&q=90",
+        <section
+          style={{
+            marginTop: 50,
+            marginBottom: 40,
+          }}
+        >
+          <span
+            style={{
+              color: "#3b82f6",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: 1.5,
+              fontSize: 13,
+            }}
+          >
+            Explore o mundo
+          </span>
 
-    descricao:
-      "Educação de alto nível, multiculturalismo e cidades com excelente infraestrutura.",
+          <h1
+            style={{
+              fontSize: "clamp(40px, 7vw, 72px)",
+              margin: "12px 0",
+              color: "#0b1f33",
+            }}
+          >
+            Encontre seu destino.
+          </h1>
 
-    texto:
-      "O Canadá é conhecido pela qualidade educacional, diversidade cultural e excelente infraestrutura para estudantes internacionais.",
+          <p
+            style={{
+              color: "#607084",
+              fontSize: 18,
+              maxWidth: 650,
+              lineHeight: 1.7,
+            }}
+          >
+            Conheça destinos para intercâmbio e descubra
+            qual combina melhor com seus objetivos.
+          </p>
+        </section>
 
-    beneficios: [
-      "Educação reconhecida",
-      "Alta qualidade de vida",
-      "Ambiente multicultural",
-      "Diversas opções de cursos",
-    ],
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            background: "#fff",
+            borderRadius: 18,
+            padding: "0 18px",
+            maxWidth: 520,
+            boxShadow:
+              "0 12px 30px rgba(20, 50, 80, 0.08)",
+            marginBottom: 40,
+          }}
+        >
+          <Search
+            size={20}
+            color="#607084"
+          />
 
-    match: {
-      idiomas: [
-        "ingles",
-        "frances",
-      ],
-      objetivos: [
-        "idioma",
-        "faculdade",
-        "experiencia",
-      ],
-      orcamento: 3,
-      clima: ["frio"],
-      trabalho: true,
-      duracoes: [
-        "6-meses",
-        "1-ano",
-        "mais-1-ano",
-      ],
-    },
-  },
+          <input
+            type="text"
+            placeholder="Buscar país, cidade ou continente..."
+            value={busca}
+            onChange={(event) =>
+              setBusca(event.target.value)
+            }
+            style={{
+              width: "100%",
+              border: "none",
+              outline: "none",
+              padding: "18px 0",
+              fontSize: 16,
+              background: "transparent",
+            }}
+          />
+        </div>
 
-  {
-    slug: "australia",
-    pais: "Austrália",
-    cidade: "Sydney",
-    bandeira: "🇦🇺",
-    continente: "Oceania",
-    idioma: "Inglês",
-    moeda: "Dólar Australiano",
-    destaque: "Experiência completa",
+        <section
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 24,
+          }}
+        >
+          {destinosFiltrados.map((destino) => (
+            <article
+              key={destino.slug}
+              style={{
+                overflow: "hidden",
+                borderRadius: 24,
+                background: "#fff",
+                boxShadow:
+                  "0 18px 50px rgba(24, 55, 90, 0.08)",
+              }}
+            >
+              <div
+                style={{
+                  height: 240,
+                  position: "relative",
+                }}
+              >
+                <img
+                  src={destino.imagem}
+                  alt={`${destino.pais} - ${destino.cidade}`}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
 
-    imagem:
-      "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1600&q=90",
+                <span
+                  style={{
+                    position: "absolute",
+                    top: 18,
+                    left: 18,
+                    background:
+                      "rgba(255,255,255,.9)",
+                    backdropFilter: "blur(10px)",
+                    padding: "8px 12px",
+                    borderRadius: 999,
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: "#173b67",
+                  }}
+                >
+                  {destino.destaque}
+                </span>
+              </div>
 
-    descricao:
-      "Uma experiência que mistura estudo, trabalho, natureza e qualidade de vida.",
+              <div
+                style={{
+                  padding: 24,
+                }}
+              >
+                <span
+                  style={{
+                    color: "#607084",
+                    fontSize: 14,
+                  }}
+                >
+                  {destino.continente}
+                </span>
 
-    texto:
-      "A Austrália é perfeita para quem busca intercâmbio com clima agradável, grandes cidades e contato com a natureza.",
+                <h2
+                  style={{
+                    margin: "7px 0 4px",
+                    color: "#0b1f33",
+                    fontSize: 28,
+                  }}
+                >
+                  {destino.bandeira}{" "}
+                  {destino.pais}
+                </h2>
 
-    beneficios: [
-      "Estudo + trabalho",
-      "Qualidade de vida",
-      "Praias e natureza",
-      "Mercado internacional",
-    ],
+                <strong
+                  style={{
+                    color: "#3b82f6",
+                    fontSize: 15,
+                  }}
+                >
+                  {destino.cidade}
+                </strong>
 
-    match: {
-      idiomas: ["ingles"],
-      objetivos: [
-        "idioma",
-        "trabalho",
-        "experiencia",
-      ],
-      orcamento: 4,
-      clima: [
-        "quente",
-        "moderado",
-      ],
-      trabalho: true,
-      duracoes: [
-        "6-meses",
-        "1-ano",
-        "mais-1-ano",
-      ],
-    },
-  },
+                <p
+                  style={{
+                    color: "#607084",
+                    lineHeight: 1.6,
+                    margin: "16px 0 22px",
+                  }}
+                >
+                  {destino.descricao}
+                </p>
 
-  {
-    slug: "reino-unido",
-    pais: "Reino Unido",
-    cidade: "Londres",
-    bandeira: "🇬🇧",
-    continente: "Europa",
-    idioma: "Inglês",
-    moeda: "Libra Esterlina",
-    destaque: "Tradição acadêmica",
+                <Link
+                  to={`/destinos/${destino.slug}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    textDecoration: "none",
+                    color: "#173b67",
+                    fontWeight: 700,
+                  }}
+                >
+                  Ver destino
+                  <ArrowRight size={18} />
+                </Link>
+              </div>
+            </article>
+          ))}
+        </section>
 
-    imagem:
-      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1600&q=90",
-
-    descricao:
-      "Universidades tradicionais, cultura global e algumas das cidades mais famosas do mundo.",
-
-    texto:
-      "O Reino Unido reúne história, educação e oportunidades acadêmicas reconhecidas mundialmente.",
-
-    beneficios: [
-      "Universidades renomadas",
-      "Inglês britânico",
-      "Cultura internacional",
-      "Grandes centros urbanos",
-    ],
-
-    match: {
-      idiomas: ["ingles"],
-      objetivos: [
-        "idioma",
-        "faculdade",
-        "experiencia",
-      ],
-      orcamento: 4,
-      clima: [
-        "frio",
-        "moderado",
-      ],
-      trabalho: false,
-      duracoes: [
-        "3-meses",
-        "6-meses",
-        "1-ano",
-      ],
-    },
-  },
-
-  {
-    slug: "malta",
-    pais: "Malta",
-    cidade: "Valletta",
-    bandeira: "🇲🇹",
-    continente: "Europa",
-    idioma: "Inglês / Maltês",
-    moeda: "Euro",
-    destaque: "Custo-benefício",
-
-    imagem:
-      "https://images.unsplash.com/photo-1571842060470-172eeb7a7a52?auto=format&fit=crop&w=1600&q=90",
-
-    descricao:
-      "Uma ilha europeia com clima agradável, inglês e opções de intercâmbio mais acessíveis.",
-
-    texto:
-      "Malta oferece uma experiência europeia diferente, com praias, cultura mediterrânea e cursos de inglês.",
-
-    beneficios: [
-      "Inglês",
-      "Clima mediterrâneo",
-      "Custo competitivo",
-      "Experiência europeia",
-    ],
-
-    match: {
-      idiomas: ["ingles"],
-      objetivos: [
-        "idioma",
-        "experiencia",
-      ],
-      orcamento: 1,
-      clima: [
-        "quente",
-        "moderado",
-      ],
-      trabalho: false,
-      duracoes: [
-        "1-mes",
-        "3-meses",
-        "6-meses",
-      ],
-    },
-  },
-];
+        {destinosFiltrados.length === 0 && (
+          <div
+            style={{
+              textAlign: "center",
+              padding: 60,
+              color: "#607084",
+            }}
+          >
+            Nenhum destino encontrado.
+          </div>
+        )}
+      </div>
+    </main>
+  );
+}
