@@ -5,187 +5,96 @@ import {
   useState,
 } from "react";
 
+import { api } from "../services/api";
+
 const AuthContext = createContext(null);
 
-const USERS_KEY = "interway-users";
-const SESSION_KEY = "interway-user";
+export function AuthProvider({
+  children,
+}) {
+  const [usuario, setUsuario] =
+    useState(null);
 
-export function AuthProvider({ children }) {
-  const [usuario, setUsuario] = useState(null);
-  const [carregando, setCarregando] = useState(true);
+  const [carregando, setCarregando] =
+    useState(true);
 
-  useEffect(() => {
-    const sessaoSalva = localStorage.getItem(SESSION_KEY);
+  async function carregarUsuario() {
+    const token =
+      localStorage.getItem(
+        "interway-token"
+      );
 
-    if (sessaoSalva) {
-      try {
-        setUsuario(JSON.parse(sessaoSalva));
-      } catch {
-        localStorage.removeItem(SESSION_KEY);
-      }
+    if (!token) {
+      setUsuario(null);
+      setCarregando(false);
+      return;
     }
 
-    setCarregando(false);
+    try {
+      const dados =
+        await api.meuPerfil();
+
+      setUsuario(dados);
+    } catch {
+      localStorage.removeItem(
+        "interway-token"
+      );
+
+      setUsuario(null);
+    } finally {
+      setCarregando(false);
+    }
+  }
+
+  useEffect(() => {
+    carregarUsuario();
   }, []);
 
-  function cadastrar({
+  async function cadastrar({
     nome,
     email,
     senha,
   }) {
-    const usuariosSalvos =
-      JSON.parse(
-        localStorage.getItem(USERS_KEY)
-      ) || [];
-
-    const emailNormalizado =
-      email.trim().toLowerCase();
-
-    const jaExiste =
-      usuariosSalvos.some(
-        (item) =>
-          item.email.toLowerCase() ===
-          emailNormalizado
-      );
-
-    if (jaExiste) {
-      return {
-        sucesso: false,
-        mensagem:
-          "Já existe uma conta com esse e-mail.",
-      };
-    }
-
-    const novoUsuario = {
-      id: crypto.randomUUID(),
-      nome: nome.trim(),
-      email: emailNormalizado,
+    await api.cadastrar({
+      nome,
+      email,
       senha,
-      criadoEm:
-        new Date().toISOString(),
-      favoritos: [],
-    };
+    });
 
-    const novosUsuarios = [
-      ...usuariosSalvos,
-      novoUsuario,
-    ];
-
-    localStorage.setItem(
-      USERS_KEY,
-      JSON.stringify(novosUsuarios)
-    );
-
-    const usuarioSessao = {
-      id: novoUsuario.id,
-      nome: novoUsuario.nome,
-      email: novoUsuario.email,
-      criadoEm: novoUsuario.criadoEm,
-    };
-
-    localStorage.setItem(
-      SESSION_KEY,
-      JSON.stringify(usuarioSessao)
-    );
-
-    setUsuario(usuarioSessao);
-
-    return {
-      sucesso: true,
-    };
+    return entrar({
+      email,
+      senha,
+    });
   }
 
-  function entrar({
+  async function entrar({
     email,
     senha,
   }) {
-    const usuariosSalvos =
-      JSON.parse(
-        localStorage.getItem(USERS_KEY)
-      ) || [];
-
-    const emailNormalizado =
-      email.trim().toLowerCase();
-
-    const encontrado =
-      usuariosSalvos.find(
-        (item) =>
-          item.email.toLowerCase() ===
-            emailNormalizado &&
-          item.senha === senha
-      );
-
-    if (!encontrado) {
-      return {
-        sucesso: false,
-        mensagem:
-          "E-mail ou senha incorretos.",
-      };
-    }
-
-    const usuarioSessao = {
-      id: encontrado.id,
-      nome: encontrado.nome,
-      email: encontrado.email,
-      criadoEm: encontrado.criadoEm,
-    };
+    const resposta =
+      await api.login({
+        email,
+        senha,
+      });
 
     localStorage.setItem(
-      SESSION_KEY,
-      JSON.stringify(usuarioSessao)
+      "interway-token",
+      resposta.access_token
     );
 
-    setUsuario(usuarioSessao);
+    setUsuario(
+      resposta.usuario
+    );
 
-    return {
-      sucesso: true,
-    };
+    return resposta.usuario;
   }
 
   function sair() {
     localStorage.removeItem(
-      SESSION_KEY
+      "interway-token"
     );
 
     setUsuario(null);
-  }
-
-  function atualizarNome(novoNome) {
-    if (!usuario) {
-      return;
-    }
-
-    const usuariosSalvos =
-      JSON.parse(
-        localStorage.getItem(USERS_KEY)
-      ) || [];
-
-    const novosUsuarios =
-      usuariosSalvos.map((item) =>
-        item.id === usuario.id
-          ? {
-              ...item,
-              nome: novoNome,
-            }
-          : item
-      );
-
-    localStorage.setItem(
-      USERS_KEY,
-      JSON.stringify(novosUsuarios)
-    );
-
-    const novaSessao = {
-      ...usuario,
-      nome: novoNome,
-    };
-
-    localStorage.setItem(
-      SESSION_KEY,
-      JSON.stringify(novaSessao)
-    );
-
-    setUsuario(novaSessao);
   }
 
   return (
@@ -193,10 +102,11 @@ export function AuthProvider({ children }) {
       value={{
         usuario,
         carregando,
+        autenticado: Boolean(usuario),
         cadastrar,
         entrar,
         sair,
-        atualizarNome,
+        carregarUsuario,
       }}
     >
       {children}
@@ -205,14 +115,14 @@ export function AuthProvider({ children }) {
 }
 
 export function useAuth() {
-  const contexto =
+  const context =
     useContext(AuthContext);
 
-  if (!contexto) {
+  if (!context) {
     throw new Error(
       "useAuth precisa estar dentro de AuthProvider."
     );
   }
 
-  return contexto;
+  return context;
 }

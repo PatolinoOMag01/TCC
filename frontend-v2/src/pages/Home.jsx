@@ -4,18 +4,26 @@ import {
   ArrowRight,
   Globe2,
   Heart,
+  LogOut,
   MapPin,
   Menu,
   Plane,
   Search,
   Sparkles,
+  User,
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
 
 import { destinos } from "../data/destinos";
+import { useAuth } from "../context/AuthContext";
 
 function Home() {
+  const {
+    usuario,
+    sair,
+  } = useAuth();
+
   return (
     <main>
       <section className="hero">
@@ -54,16 +62,60 @@ function Home() {
           </div>
 
           <div className="nav-actions">
-            <button className="login-button">
-              Entrar
-            </button>
+            {usuario ? (
+              <>
+                <Link
+                  to="/perfil"
+                  className="login-button"
+                  style={{
+                    textDecoration: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <User size={17} />
+                  {usuario.nome.split(" ")[0]}
+                </Link>
 
-            <button className="profile-button">
-              Criar conta
-              <ArrowRight size={17} />
-            </button>
+                <button
+                  type="button"
+                  className="profile-button"
+                  onClick={sair}
+                >
+                  Sair
+                  <LogOut size={17} />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="login-button"
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  Entrar
+                </Link>
 
-            <button className="menu-button">
+                <Link
+                  to="/cadastro"
+                  className="profile-button"
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  Criar conta
+                  <ArrowRight size={17} />
+                </Link>
+              </>
+            )}
+
+            <button
+              type="button"
+              className="menu-button"
+            >
               <Menu />
             </button>
           </div>

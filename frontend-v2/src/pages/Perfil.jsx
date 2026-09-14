@@ -1,447 +1,223 @@
 import {
-  useState,
-} from "react";
+  ArrowLeft,
+  Compass,
+  Heart,
+  LogOut,
+  Mail,
+  MapPin,
+  Sparkles,
+  User,
+} from "lucide-react";
 
 import {
   Link,
   useNavigate,
 } from "react-router-dom";
 
-import {
-  ArrowLeft,
-  ArrowRight,
-  CalendarDays,
-  Compass,
-  Edit3,
-  Globe2,
-  Heart,
-  LogOut,
-  Mail,
-  Map,
-  Plane,
-  Save,
-  User,
-  X,
-} from "lucide-react";
-
-import { motion } from "framer-motion";
-
-import {
-  useAuth,
-} from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 import "../styles/Auth.css";
 
-function Perfil() {
+export default function Perfil() {
+  const navigate = useNavigate();
+
   const {
     usuario,
     sair,
-    atualizarNome,
   } = useAuth();
 
-  const navigate =
-    useNavigate();
-
-  const [
-    editando,
-    setEditando,
-  ] = useState(false);
-
-  const [
-    novoNome,
-    setNovoNome,
-  ] = useState(
-    usuario?.nome || ""
-  );
-
-  function fazerLogout() {
+  function handleSair() {
     sair();
 
-    navigate("/");
+    navigate("/", {
+      replace: true,
+    });
   }
 
-  function salvarNome() {
-    if (
-      novoNome.trim().length < 3
-    ) {
-      return;
-    }
-
-    atualizarNome(
-      novoNome.trim()
-    );
-
-    setEditando(false);
-  }
-
-  function pegarIniciais() {
-    return usuario.nome
+  function pegarIniciais(nome = "") {
+    return nome
       .split(" ")
+      .filter(Boolean)
       .slice(0, 2)
       .map((parte) =>
-        parte[0]?.toUpperCase()
+        parte.charAt(0).toUpperCase()
       )
       .join("");
   }
 
-  function formatarData() {
-    if (!usuario.criadoEm) {
-      return "Hoje";
-    }
-
-    return new Intl.DateTimeFormat(
-      "pt-BR",
-      {
-        month: "long",
-        year: "numeric",
-      }
-    ).format(
-      new Date(
-        usuario.criadoEm
-      )
-    );
-  }
-
   return (
     <main className="profile-page">
-      <header className="profile-navbar">
-        <Link
-          to="/"
-          className="profile-logo"
-        >
-          <div>
-            <Plane size={19} />
-          </div>
+      <div className="profile-glow profile-glow-one" />
+      <div className="profile-glow profile-glow-two" />
 
-          <span>
-            Inter
-            <strong>Way</strong>
-          </span>
-        </Link>
-
-        <nav>
-          <Link to="/">
-            Início
-          </Link>
-
-          <Link to="/destinos">
-            Destinos
-          </Link>
-
-          <Link to="/match">
-            InterWay Match
-          </Link>
-        </nav>
-
-        <button
-          onClick={fazerLogout}
-          className="profile-logout"
-        >
-          <LogOut size={17} />
-          Sair
-        </button>
-      </header>
-
-      <section className="profile-hero">
-        <div className="profile-hero-bg" />
-
-        <motion.div
-          className="profile-hero-content"
-          initial={{
-            opacity: 0,
-            y: 25,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-        >
+      <div className="profile-wrapper">
+        <header className="profile-topbar">
           <Link
             to="/"
             className="profile-back"
           >
-            <ArrowLeft size={17} />
-            Voltar para o início
+            <ArrowLeft size={18} />
+            Voltar
           </Link>
 
-          <div className="profile-user">
-            <div className="profile-avatar">
-              {pegarIniciais()}
-            </div>
+          <Link
+            to="/"
+            className="profile-logo"
+          >
+            InterWay
+          </Link>
+        </header>
 
-            <div>
+        <section className="profile-hero">
+          <div>
+            <span className="profile-eyebrow">
+              SUA JORNADA
+            </span>
+
+            <h1>
+              Olá,{" "}
               <span>
-                MEU INTERWAY
+                {usuario?.nome?.split(" ")[0]}
               </span>
+              .
+            </h1>
 
-              <h1>
-                Olá,{" "}
-                {
-                  usuario.nome.split(
-                    " "
-                  )[0]
-                }
-                . 👋
-              </h1>
-
-              <p>
-                Continue planejando sua
-                próxima experiência.
-              </p>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      <section className="profile-content">
-        <div className="profile-main">
-          <div className="profile-section-title">
-            <div>
-              <span>
-                SUA JORNADA
-              </span>
-
-              <h2>
-                Continue explorando.
-              </h2>
-            </div>
+            <p>
+              Seu próximo destino pode estar
+              mais perto do que você imagina.
+            </p>
           </div>
 
-          <div className="profile-actions-grid">
-            <Link
-              to="/match"
-              className="profile-action-card featured"
-            >
-              <div className="profile-action-icon">
-                <Compass size={25} />
-              </div>
-
-              <div>
-                <span>
-                  INTERWAY MATCH
-                </span>
-
-                <h3>
-                  Encontre seu destino
-                  ideal
-                </h3>
-
-                <p>
-                  Descubra quais países
-                  mais combinam com seu
-                  perfil.
-                </p>
-              </div>
-
-              <ArrowRight
-                className="profile-arrow"
-              />
-            </Link>
-
-            <Link
-              to="/destinos"
-              className="profile-action-card"
-            >
-              <div className="profile-action-icon">
-                <Globe2 size={25} />
-              </div>
-
-              <div>
-                <span>
-                  EXPLORAR
-                </span>
-
-                <h3>
-                  Ver destinos
-                </h3>
-
-                <p>
-                  Conheça países,
-                  cidades e possibilidades.
-                </p>
-              </div>
-
-              <ArrowRight
-                className="profile-arrow"
-              />
-            </Link>
-
-            <div className="profile-action-card">
-              <div className="profile-action-icon">
-                <Heart size={25} />
-              </div>
-
-              <div>
-                <span>
-                  FAVORITOS
-                </span>
-
-                <h3>
-                  Seus favoritos
-                </h3>
-
-                <p>
-                  Você ainda não salvou
-                  nenhum destino.
-                </p>
-              </div>
-            </div>
-
-            <div className="profile-action-card">
-              <div className="profile-action-icon">
-                <Map size={25} />
-              </div>
-
-              <div>
-                <span>
-                  PLANEJAMENTO
-                </span>
-
-                <h3>
-                  Minha viagem
-                </h3>
-
-                <p>
-                  Em breve você poderá
-                  montar seu planejamento.
-                </p>
-              </div>
-            </div>
+          <div className="profile-avatar-large">
+            {pegarIniciais(usuario?.nome)}
           </div>
-        </div>
+        </section>
 
-        <aside className="profile-sidebar">
-          <div className="profile-card">
-            <div className="profile-card-header">
+        <div className="profile-grid">
+          <section className="profile-main-card">
+            <div className="profile-card-title">
               <div>
-                <span>
-                  MINHA CONTA
-                </span>
+                <span>Minha conta</span>
 
-                <h3>
+                <h2>
                   Informações pessoais
-                </h3>
+                </h2>
               </div>
 
-              {!editando ? (
-                <button
-                  onClick={() =>
-                    setEditando(true)
-                  }
-                >
-                  <Edit3 size={17} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setNovoNome(
-                      usuario.nome
-                    );
-
-                    setEditando(false);
-                  }}
-                >
-                  <X size={17} />
-                </button>
-              )}
+              <User size={22} />
             </div>
 
-            <div className="profile-info-list">
-              <div>
-                <div className="profile-info-icon">
-                  <User size={18} />
+            <div className="profile-details">
+              <div className="profile-detail">
+                <div className="profile-detail-icon">
+                  <User size={19} />
                 </div>
 
                 <div>
                   <span>Nome</span>
 
-                  {editando ? (
-                    <input
-                      value={novoNome}
-                      onChange={(event) =>
-                        setNovoNome(
-                          event.target.value
-                        )
-                      }
-                    />
-                  ) : (
-                    <strong>
-                      {usuario.nome}
-                    </strong>
-                  )}
+                  <strong>
+                    {usuario?.nome}
+                  </strong>
                 </div>
               </div>
 
-              <div>
-                <div className="profile-info-icon">
-                  <Mail size={18} />
+              <div className="profile-detail">
+                <div className="profile-detail-icon">
+                  <Mail size={19} />
                 </div>
 
                 <div>
                   <span>E-mail</span>
 
                   <strong>
-                    {usuario.email}
+                    {usuario?.email}
                   </strong>
                 </div>
               </div>
 
-              <div>
-                <div className="profile-info-icon">
-                  <CalendarDays
-                    size={18}
-                  />
+              <div className="profile-detail">
+                <div className="profile-detail-icon">
+                  <Sparkles size={19} />
                 </div>
 
                 <div>
-                  <span>
-                    Membro desde
-                  </span>
+                  <span>Conta InterWay</span>
 
                   <strong>
-                    {formatarData()}
+                    #{usuario?.id}
                   </strong>
                 </div>
               </div>
             </div>
 
-            {editando && (
-              <button
-                className="profile-save"
-                onClick={salvarNome}
-              >
-                <Save size={17} />
-                Salvar alterações
-              </button>
-            )}
-          </div>
+            <button
+              type="button"
+              className="profile-logout"
+              onClick={handleSair}
+            >
+              <LogOut size={18} />
+              Sair da conta
+            </button>
+          </section>
 
-          <div className="profile-tip">
-            <span>✨</span>
+          <aside className="profile-side">
+            <div className="profile-progress-card">
+              <span className="profile-mini-label">
+                INTERWAY MATCH
+              </span>
 
-            <div>
-              <strong>
-                Complete seu Match
-              </strong>
+              <h3>
+                Descubra o destino ideal
+                para você.
+              </h3>
 
               <p>
-                Quanto mais conhecemos
-                seu perfil, melhores
-                ficam as recomendações.
+                Responda algumas perguntas
+                e compare destinos de acordo
+                com o seu perfil.
               </p>
 
-              <Link to="/match">
-                Fazer Match
-                <ArrowRight
-                  size={15}
-                />
+              <Link
+                to="/match"
+                className="profile-primary-button"
+              >
+                Fazer meu Match
+                <Compass size={18} />
               </Link>
             </div>
-          </div>
-        </aside>
-      </section>
+
+            <Link
+              to="/destinos"
+              className="profile-shortcut"
+            >
+              <div className="profile-shortcut-icon">
+                <MapPin size={20} />
+              </div>
+
+              <div>
+                <span>Explorar</span>
+                <strong>
+                  Ver todos os destinos
+                </strong>
+              </div>
+            </Link>
+
+            <div className="profile-shortcut">
+              <div className="profile-shortcut-icon">
+                <Heart size={20} />
+              </div>
+
+              <div>
+                <span>Favoritos</span>
+                <strong>
+                  Em breve
+                </strong>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
     </main>
   );
 }
-
-export default Perfil;
