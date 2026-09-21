@@ -47,18 +47,12 @@ function Home() {
             <Link to="/destinos">
               Destinos
             </Link>
-
-            <a href="#programas">
-              Programas
-            </a>
-
-            <a href="#bolsas">
-              Bolsas
-            </a>
-
-            <a href="#comunidade">
-              Comunidade
-            </a>
+            <Link to="/destinos">Destinos</Link>
+            <Link to="/favoritos">Favoritos</Link>
+            <Link to="/bolsas">Bolsas</Link>
+            <Link to="/vagas">Vagas</Link>
+            <Link to="/chat">Comunidade</Link>
+            <Link to="/match">Match</Link>
           </div>
 
           <div className="nav-actions">

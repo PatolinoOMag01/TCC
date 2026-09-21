@@ -1,0 +1,42 @@
+export const mensagensIniciais = [
+  {
+    id: 1,
+    nome: "Lucas",
+    paisOrigem: "Brasil",
+    paisIntercambio: "Canadá",
+    mensagem: "Oi pessoal! Alguém aqui fez intercâmbio recentemente?",
+    data: "2026-09-09T16:34:56",
+  },
+  {
+    id: 2,
+    nome: "Amanda",
+    paisOrigem: "Brasil",
+    paisIntercambio: "Inglaterra",
+    mensagem: "Sim! Fiz em Londres, foi incrível. Qualquer dúvida pode perguntar.",
+    data: "2026-09-09T16:36:10",
+  },
+  {
+    id: 3,
+    nome: "Pedro",
+    paisOrigem: "Brasil",
+    paisIntercambio: "Austrália",
+    mensagem: "Estou indo pra Sydney em janeiro. Alguém tem dica de custo de vida?",
+    data: "2026-09-10T10:12:00",
+  },
+  {
+    id: 4,
+    nome: "Julia",
+    paisOrigem: "Brasil",
+    paisIntercambio: "Irlanda",
+    mensagem: "Dublin é ótimo pra quem quer trabalhar e estudar inglês ao mesmo tempo!",
+    data: "2026-09-10T11:05:22",
+  },
+  {
+    id: 5,
+    nome: "Rafael",
+    paisOrigem: "Brasil",
+    paisIntercambio: "Canadá",
+    mensagem: "Consegui uma bolsa parcial pro Canadá. Vale muito a pena procurar as bolsas da InterWay.",
+    data: "2026-09-11T09:40:15",
+  },
+];
