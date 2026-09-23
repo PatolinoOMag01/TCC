@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 
+import logo from "../assets/logo.png";
+
 import {
   ArrowRight,
   Globe2,
@@ -7,7 +9,6 @@ import {
   LogOut,
   MapPin,
   Menu,
-  Plane,
   Search,
   Sparkles,
   User,
@@ -35,7 +36,10 @@ function Home() {
             className="logo"
           >
             <div className="logo-icon">
-              <Plane size={20} />
+              <img
+                src={logo}
+                alt="Logo InterWay"
+              />
             </div>
 
             <span>

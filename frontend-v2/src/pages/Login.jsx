@@ -1,6 +1,7 @@
 import {
   useState,
 } from "react";
+import logo from "../assets/logo.png";
 
 import {
   Link,
@@ -74,7 +75,7 @@ export default function Login() {
     } catch (error) {
       setErro(
         error.message ||
-          "Não foi possível entrar."
+        "Não foi possível entrar."
       );
     } finally {
       setEnviando(false);
@@ -93,7 +94,15 @@ export default function Login() {
         </Link>
 
         <div className="auth-brand">
-          InterWay
+          <img
+            src={logo}
+            alt="Logo InterWay"
+            className="auth-brand-logo"
+          />
+
+          <span>
+            Inter<span className="auth-brand-blue">Way</span>
+          </span>
         </div>
 
         <div className="auth-heading">

@@ -708,3 +708,19 @@ a.profile-shortcut:hover {
     border-radius: 23px;
   }
 }
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.auth-brand-logo {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
+.auth-brand-blue {
+  color: #4385ff;
+}
