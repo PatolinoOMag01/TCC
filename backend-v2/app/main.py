@@ -1,24 +1,40 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
-from app.database import Base, engine
-from app.models import User
+from fastapi.middleware.cors import (
+    CORSMiddleware,
+)
+
+from app.database import (
+    Base,
+    engine,
+)
+
+from app.models import (
+    Passport,
+    User,
+)
+
 from app.routes import (
     auth_router,
+    passport_router,
     users_router,
 )
+
 
 Base.metadata.create_all(
     bind=engine
 )
 
+
 app = FastAPI(
     title="InterWay API",
     description=(
-        "API oficial da plataforma InterWay."
+        "API oficial da "
+        "plataforma InterWay."
     ),
-    version="2.0.0",
+    version="2.1.0",
 )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,6 +44,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 app.include_router(
     auth_router
 )
@@ -36,11 +53,17 @@ app.include_router(
     users_router
 )
 
+app.include_router(
+    passport_router
+)
+
 
 @app.get("/")
 def home():
     return {
-        "message": "InterWay API 2.0",
+        "message": (
+            "InterWay API 2.1"
+        ),
         "status": "online",
     }
 

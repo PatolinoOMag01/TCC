@@ -1,6 +1,4 @@
-import {
-  useState,
-} from "react";
+import { useState } from "react";
 
 import {
   Link,
@@ -21,11 +19,10 @@ import {
 
 import { motion } from "framer-motion";
 
-import {
-  useAuth,
-} from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 import "../styles/Auth.css";
+
 
 function Cadastro() {
   const {
@@ -33,8 +30,7 @@ function Cadastro() {
     usuario,
   } = useAuth();
 
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
   const [nome, setNome] =
     useState("");
@@ -55,8 +51,14 @@ function Cadastro() {
     setMostrarSenha,
   ] = useState(false);
 
+  const [
+    carregando,
+    setCarregando,
+  ] = useState(false);
+
   const [erro, setErro] =
     useState("");
+
 
   if (usuario) {
     return (
@@ -67,14 +69,15 @@ function Cadastro() {
     );
   }
 
-  function enviar(event) {
+
+  async function enviar(event) {
     event.preventDefault();
 
     setErro("");
 
     if (
-      !nome ||
-      !email ||
+      !nome.trim() ||
+      !email.trim() ||
       !senha ||
       !confirmarSenha
     ) {
@@ -111,31 +114,34 @@ function Cadastro() {
       return;
     }
 
-    const resultado =
-      cadastrar({
-        nome,
-        email,
+    try {
+      setCarregando(true);
+
+      await cadastrar({
+        nome: nome.trim(),
+        email: email.trim(),
         senha,
       });
 
-    if (!resultado.sucesso) {
-      setErro(
-        resultado.mensagem
+      navigate(
+        "/perfil",
+        {
+          replace: true,
+        }
       );
-
-      return;
+    } catch (error) {
+      setErro(
+        error.message ||
+          "Não foi possível criar sua conta."
+      );
+    } finally {
+      setCarregando(false);
     }
-
-    navigate(
-      "/perfil",
-      {
-        replace: true,
-      }
-    );
   }
 
+
   return (
-    <main className="auth-page">
+    <main className="auth-page auth-cadastro-page">
       <section className="auth-visual cadastro-visual">
         <div className="auth-visual-overlay" />
 
@@ -143,7 +149,7 @@ function Cadastro() {
           to="/"
           className="auth-logo"
         >
-          <div>
+          <div className="auth-logo-icon">
             <Plane size={20} />
           </div>
 
@@ -171,11 +177,11 @@ function Cadastro() {
             COMECE SUA JORNADA
           </span>
 
-          <h1>
+          <h2>
             Talvez sua próxima
             casa esteja do outro
             lado do mundo.
-          </h1>
+          </h2>
 
           <p>
             Crie sua conta e comece
@@ -186,22 +192,36 @@ function Cadastro() {
         </motion.div>
 
         <div className="auth-place">
-          <span>📍</span>
+          <span className="auth-place-pin">
+            📍
+          </span>
 
           <div>
-            <strong>Toronto</strong>
-            <p>Canadá</p>
+            <strong>
+              Toronto
+            </strong>
+
+            <p>
+              Canadá
+            </p>
           </div>
         </div>
       </section>
 
+
       <section className="auth-form-area">
         <div className="auth-mobile-top">
-          <Link to="/">
+          <Link
+            to="/"
+            aria-label="Voltar"
+          >
             <ArrowLeft size={18} />
           </Link>
 
-          <span>InterWay</span>
+          <span>
+            Inter
+            <strong>Way</strong>
+          </span>
         </div>
 
         <motion.div
@@ -232,6 +252,7 @@ function Cadastro() {
             </p>
           </div>
 
+
           <form
             onSubmit={enviar}
             className="auth-form"
@@ -242,8 +263,9 @@ function Cadastro() {
               </div>
             )}
 
+
             <div className="auth-field">
-              <label>
+              <label htmlFor="cadastro-nome">
                 Nome
               </label>
 
@@ -251,8 +273,10 @@ function Cadastro() {
                 <User size={19} />
 
                 <input
+                  id="cadastro-nome"
                   type="text"
                   placeholder="Seu nome"
+                  autoComplete="name"
                   value={nome}
                   onChange={(event) =>
                     setNome(
@@ -263,8 +287,9 @@ function Cadastro() {
               </div>
             </div>
 
+
             <div className="auth-field">
-              <label>
+              <label htmlFor="cadastro-email">
                 E-mail
               </label>
 
@@ -272,8 +297,10 @@ function Cadastro() {
                 <Mail size={19} />
 
                 <input
+                  id="cadastro-email"
                   type="email"
                   placeholder="seu@email.com"
+                  autoComplete="email"
                   value={email}
                   onChange={(event) =>
                     setEmail(
@@ -284,8 +311,9 @@ function Cadastro() {
               </div>
             </div>
 
+
             <div className="auth-field">
-              <label>
+              <label htmlFor="cadastro-senha">
                 Senha
               </label>
 
@@ -295,12 +323,14 @@ function Cadastro() {
                 />
 
                 <input
+                  id="cadastro-senha"
                   type={
                     mostrarSenha
                       ? "text"
                       : "password"
                   }
                   placeholder="Mínimo 6 caracteres"
+                  autoComplete="new-password"
                   value={senha}
                   onChange={(event) =>
                     setSenha(
@@ -312,27 +342,29 @@ function Cadastro() {
                 <button
                   type="button"
                   className="show-password"
+                  aria-label={
+                    mostrarSenha
+                      ? "Ocultar senha"
+                      : "Mostrar senha"
+                  }
                   onClick={() =>
                     setMostrarSenha(
-                      !mostrarSenha
+                      (valor) => !valor
                     )
                   }
                 >
                   {mostrarSenha ? (
-                    <EyeOff
-                      size={19}
-                    />
+                    <EyeOff size={19} />
                   ) : (
-                    <Eye
-                      size={19}
-                    />
+                    <Eye size={19} />
                   )}
                 </button>
               </div>
             </div>
 
+
             <div className="auth-field">
-              <label>
+              <label htmlFor="cadastro-confirmar">
                 Confirmar senha
               </label>
 
@@ -342,15 +374,15 @@ function Cadastro() {
                 />
 
                 <input
+                  id="cadastro-confirmar"
                   type={
                     mostrarSenha
                       ? "text"
                       : "password"
                   }
                   placeholder="Digite novamente"
-                  value={
-                    confirmarSenha
-                  }
+                  autoComplete="new-password"
+                  value={confirmarSenha}
                   onChange={(event) =>
                     setConfirmarSenha(
                       event.target.value
@@ -360,20 +392,29 @@ function Cadastro() {
               </div>
             </div>
 
+
             <button
               type="submit"
               className="auth-submit"
+              disabled={carregando}
             >
-              Criar minha conta
+              {carregando
+                ? "Criando conta..."
+                : "Criar minha conta"}
 
-              <ArrowRight
-                size={18}
-              />
+              {!carregando && (
+                <ArrowRight
+                  size={18}
+                />
+              )}
             </button>
           </form>
 
+
           <div className="auth-register">
-            Já possui uma conta?
+            <span>
+              Já possui uma conta?
+            </span>
 
             <Link to="/login">
               Entrar
@@ -384,5 +425,6 @@ function Cadastro() {
     </main>
   );
 }
+
 
 export default Cadastro;
