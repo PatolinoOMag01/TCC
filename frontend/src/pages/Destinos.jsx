@@ -27,7 +27,7 @@ export default function Destinos() {
     <main
       style={{
         minHeight: "100vh",
-        background: "#f5f7fb",
+        background: "var(--background)",
         padding: "40px 20px 80px",
       }}
     >
@@ -41,7 +41,7 @@ export default function Destinos() {
           to="/"
           style={{
             textDecoration: "none",
-            color: "#173b67",
+            color: "var(--link)",
             fontWeight: 600,
           }}
         >
@@ -56,7 +56,7 @@ export default function Destinos() {
         >
           <span
             style={{
-              color: "#3b82f6",
+              color: "var(--accent)",
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: 1.5,
@@ -70,7 +70,7 @@ export default function Destinos() {
             style={{
               fontSize: "clamp(40px, 7vw, 72px)",
               margin: "12px 0",
-              color: "#0b1f33",
+              color: "var(--text)",
             }}
           >
             Encontre seu destino.
@@ -78,7 +78,7 @@ export default function Destinos() {
 
           <p
             style={{
-              color: "#607084",
+              color: "var(--muted)",
               fontSize: 18,
               maxWidth: 650,
               lineHeight: 1.7,
@@ -94,7 +94,7 @@ export default function Destinos() {
             display: "flex",
             alignItems: "center",
             gap: 12,
-            background: "#fff",
+            background: "var(--surface)",
             borderRadius: 18,
             padding: "0 18px",
             maxWidth: 520,
@@ -136,7 +136,7 @@ export default function Destinos() {
                 style={{
                   overflow: "hidden",
                   borderRadius: 24,
-                  background: "#fff",
+                  background: "var(--surface)",
                   boxShadow:
                     "0 18px 50px rgba(24, 55, 90, 0.08)",
                   position: "relative",
@@ -163,13 +163,13 @@ export default function Destinos() {
                       position: "absolute",
                       top: 18,
                       left: 18,
-                      background: "rgba(255,255,255,.9)",
+                      background: "var(--surface)",
                       backdropFilter: "blur(10px)",
                       padding: "8px 12px",
                       borderRadius: 999,
                       fontSize: 13,
                       fontWeight: 700,
-                      color: "#173b67",
+                      color: "var(--link)",
                     }}
                   >
                     {destino.destaque}
@@ -191,7 +191,7 @@ export default function Destinos() {
                       height: 42,
                       borderRadius: "50%",
                       border: "none",
-                      background: "rgba(255,255,255,0.95)",
+                      background: "var(--surface)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -212,7 +212,7 @@ export default function Destinos() {
                 <div style={{ padding: 24 }}>
                   <span
                     style={{
-                      color: "#607084",
+                      color: "var(--muted)",
                       fontSize: 14,
                     }}
                   >
@@ -222,7 +222,7 @@ export default function Destinos() {
                   <h2
                     style={{
                       margin: "7px 0 4px",
-                      color: "#0b1f33",
+                      color: "var(--text)",
                       fontSize: 28,
                     }}
                   >
@@ -231,7 +231,7 @@ export default function Destinos() {
 
                   <strong
                     style={{
-                      color: "#3b82f6",
+                      color: "var(--accent)",
                       fontSize: 15,
                     }}
                   >
@@ -240,7 +240,7 @@ export default function Destinos() {
 
                   <p
                     style={{
-                      color: "#607084",
+                      color: "var(--muted)",
                       lineHeight: 1.6,
                       margin: "16px 0 22px",
                     }}
@@ -255,7 +255,7 @@ export default function Destinos() {
                       alignItems: "center",
                       gap: 8,
                       textDecoration: "none",
-                      color: "#173b67",
+                      color: "var(--link)",
                       fontWeight: 700,
                     }}
                   >
@@ -273,7 +273,7 @@ export default function Destinos() {
             style={{
               textAlign: "center",
               padding: 60,
-              color: "#607084",
+              color: "var(--muted)",
             }}
           >
             Nenhum destino encontrado.

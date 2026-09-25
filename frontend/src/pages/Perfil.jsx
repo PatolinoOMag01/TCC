@@ -240,7 +240,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 22,
-                color: "#0b1f33",
+                color: "var(--text)",
                 marginTop: 6,
               }}
             >
@@ -251,7 +251,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "#607084",
+                color: "var(--muted)",
               }}
             >
               Passport
@@ -281,7 +281,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 22,
-                color: "#0b1f33",
+                color: "var(--text)",
                 marginTop: 6,
               }}
             >
@@ -291,7 +291,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "#607084",
+                color: "var(--muted)",
               }}
             >
               Meta financeira
@@ -320,7 +320,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 22,
-                color: "#0b1f33",
+                color: "var(--text)",
                 marginTop: 6,
               }}
             >
@@ -330,7 +330,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "#607084",
+                color: "var(--muted)",
               }}
             >
               Favoritos
@@ -360,7 +360,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 15,
-                color: "#0b1f33",
+                color: "var(--text)",
                 marginTop: 8,
               }}
             >
@@ -370,7 +370,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "#607084",
+                color: "var(--muted)",
               }}
             >
               Encontrar destino
@@ -470,7 +470,7 @@ export default function Perfil() {
                   style={{
                     margin: 0,
                     fontSize: 17,
-                    color: "#0b1f33",
+                    color: "var(--text)",
                     display: "flex",
                     alignItems:
                       "center",
@@ -491,7 +491,7 @@ export default function Perfil() {
                     style={{
                       fontSize: 13,
                       color:
-                        "#3b82f6",
+                        "var(--accent)",
                       fontWeight: 600,
                       textDecoration:
                         "none",
@@ -507,14 +507,14 @@ export default function Perfil() {
                 <div
                   style={{
                     background:
-                      "#f8fafc",
+                      "var(--background)",
                     borderRadius: 16,
                     padding:
                       "24px 18px",
                     textAlign:
                       "center",
                     color:
-                      "#607084",
+                      "var(--muted)",
                     fontSize: 14,
                   }}
                 >
@@ -533,7 +533,7 @@ export default function Perfil() {
                     to="/destinos"
                     style={{
                       color:
-                        "#173b67",
+                        "var(--link)",
                       fontWeight: 700,
                       textDecoration:
                         "none",
@@ -566,7 +566,7 @@ export default function Perfil() {
                               "center",
                             gap: 12,
                             background:
-                              "#f8fafc",
+                              "var(--background)",
                             borderRadius:
                               14,
                             padding:
@@ -602,7 +602,7 @@ export default function Perfil() {
                                 display:
                                   "block",
                                 color:
-                                  "#0b1f33",
+                                  "var(--text)",
                                 fontSize:
                                   14,
                               }}
@@ -620,7 +620,7 @@ export default function Perfil() {
                                 fontSize:
                                   12,
                                 color:
-                                  "#607084",
+                                  "var(--muted)",
                               }}
                             >
                               {
@@ -633,7 +633,7 @@ export default function Perfil() {
                             to={`/destinos/${destino.slug}`}
                             style={{
                               color:
-                                "#173b67",
+                                "var(--link)",
                               display:
                                 "flex",
                             }}

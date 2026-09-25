@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 import logo from "../assets/logo.png";
 
@@ -20,6 +21,7 @@ import { destinos } from "../data/destinos";
 import { useAuth } from "../context/AuthContext";
 
 function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const {
     usuario,
     sair,
@@ -47,16 +49,16 @@ function Home() {
             </span>
           </Link>
 
-          <div className="nav-links">
-            <Link to="/destinos">
-              Destinos
-            </Link>
+          <div className={`nav-links${menuOpen ? " is-open" : ""}`} id="main-navigation">
             <Link to="/destinos">Destinos</Link>
             <Link to="/favoritos">Favoritos</Link>
             <Link to="/bolsas">Bolsas</Link>
             <Link to="/vagas">Vagas</Link>
             <Link to="/chat">Comunidade</Link>
             <Link to="/match">Match</Link>
+            <Link to={usuario ? "/perfil" : "/login"} className="mobile-account-link">
+              {usuario ? "Meu perfil" : "Entrar"}
+            </Link>
           </div>
 
           <div className="nav-actions">
@@ -113,6 +115,10 @@ function Home() {
             <button
               type="button"
               className="menu-button"
+              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={menuOpen}
+              aria-controls="main-navigation"
+              onClick={() => setMenuOpen((open) => !open)}
             >
               <Menu />
             </button>

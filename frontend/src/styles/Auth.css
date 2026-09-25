@@ -22,8 +22,8 @@
   min-height: 100vh;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(420px, 0.9fr);
-  background: #f7f9fc;
-  color: #0b1f33;
+  background: var(--background);
+  color: var(--text);
 }
 
 .auth-panel {
@@ -37,7 +37,7 @@
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  color: #64748b;
+  color: var(--muted);
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 42px;
@@ -45,7 +45,7 @@
 }
 
 .auth-back:hover {
-  color: #0f4c81;
+  color: var(--link);
   transform: translateX(-3px);
 }
 
@@ -53,7 +53,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #0f4c81;
+  color: var(--link);
   font-size: 22px;
   font-weight: 900;
   letter-spacing: -0.8px;
@@ -73,13 +73,13 @@
   font-size: clamp(38px, 6vw, 58px);
   line-height: 1;
   letter-spacing: -2.5px;
-  color: #071b2e;
+  color: var(--text);
 }
 
 .auth-heading p {
   max-width: 460px;
   margin: 0;
-  color: #64748b;
+  color: var(--muted);
   line-height: 1.7;
   font-size: 15px;
 }
@@ -93,7 +93,7 @@
 .auth-form label {
   display: grid;
   gap: 8px;
-  color: #23384f;
+  color: var(--text);
   font-size: 14px;
   font-weight: 700;
 }
@@ -105,8 +105,8 @@
   border-radius: 14px;
   padding: 0 16px;
   outline: none;
-  background: #fff;
-  color: #0b1f33;
+  background: var(--surface);
+  color: var(--text);
   font-size: 15px;
   transition: 0.2s ease;
 }
@@ -134,7 +134,7 @@
   place-items: center;
   border: 0;
   background: transparent;
-  color: #64748b;
+  color: var(--muted);
   cursor: pointer;
 }
 
@@ -178,7 +178,7 @@
   padding: 13px 15px;
   border: 1px solid #ffd4d4;
   border-radius: 12px;
-  background: #fff3f3;
+  background: var(--surface);
   color: #bd3030;
   font-size: 14px;
 }
@@ -186,7 +186,7 @@
 .auth-switch {
   margin-top: 26px;
   text-align: center;
-  color: #64748b;
+  color: var(--muted);
   font-size: 14px;
 }
 
@@ -274,7 +274,7 @@
       #f2f6fb 350px,
       #f2f6fb 100%
     );
-  color: #0b1f33;
+  color: var(--text);
 }
 
 .profile-glow {
@@ -416,7 +416,7 @@
 .profile-main-card {
   border-radius: 28px;
   padding: 32px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .profile-card-title {
@@ -465,7 +465,7 @@
   place-items: center;
   flex: 0 0 auto;
   border-radius: 13px;
-  background: #eef6fd;
+  background: var(--surface-soft);
   color: #1769aa;
 }
 
@@ -481,7 +481,7 @@
 }
 
 .profile-detail strong {
-  color: #132b42;
+  color: var(--text);
   font-size: 15px;
 }
 
@@ -494,8 +494,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: #fafbfd;
-  color: #64748b;
+  background: var(--background);
+  color: var(--muted);
   font-weight: 800;
   cursor: pointer;
   transition: 0.2s ease;
@@ -503,7 +503,7 @@
 
 .profile-logout:hover {
   border-color: #ffd5d5;
-  background: #fff5f5;
+  background: var(--surface);
   color: #c53b3b;
 }
 
@@ -577,8 +577,8 @@
   margin-top: 26px;
   padding: 0 17px;
   border-radius: 13px;
-  background: #fff;
-  color: #0d4c7d;
+  background: var(--surface);
+  color: var(--link);
   text-decoration: none;
   font-size: 14px;
   font-weight: 900;
@@ -596,7 +596,7 @@
   gap: 14px;
   padding: 17px;
   border-radius: 20px;
-  background: #fff;
+  background: var(--surface);
   text-decoration: none;
   color: inherit;
   transition: 0.2s ease;
@@ -625,13 +625,13 @@ a.profile-shortcut:hover {
 }
 
 .profile-shortcut span {
-  color: #96a2ae;
+  color: var(--muted);
   font-size: 11px;
   font-weight: 700;
 }
 
 .profile-shortcut strong {
-  color: #19334c;
+  color: var(--text);
   font-size: 14px;
 }
 
@@ -870,7 +870,7 @@ a.profile-shortcut:hover {
 
   padding: 35px 7%;
 
-  background: #f7f9fc;
+  background: var(--background);
 }
 
 .auth-form-container {
@@ -886,7 +886,7 @@ a.profile-shortcut:hover {
 .auth-heading h2 {
   margin: 8px 0 7px;
 
-  color: #071b2e;
+  color: var(--text);
 
   font-size: clamp(
     31px,
@@ -916,7 +916,7 @@ a.profile-shortcut:hover {
 }
 
 .auth-field > label {
-  color: #23384f;
+  color: var(--text);
 
   font-size: 13px;
   font-weight: 800;
@@ -937,7 +937,7 @@ a.profile-shortcut:hover {
 
   border-radius: 13px;
 
-  background: #fff;
+  background: var(--surface);
 
   transition:
     border-color 0.2s ease,
@@ -960,7 +960,7 @@ a.profile-shortcut:hover {
 .auth-input > svg {
   flex: 0 0 auto;
 
-  color: #7c8da0;
+  color: var(--muted);
 }
 
 .auth-form
@@ -978,7 +978,7 @@ a.profile-shortcut:hover {
 
   background: transparent;
 
-  color: #0b1f33;
+  color: var(--text);
 
   font-size: 14px;
 
@@ -994,7 +994,7 @@ a.profile-shortcut:hover {
 
 .auth-form
 .auth-input input::placeholder {
-  color: #98a4b3;
+  color: var(--muted);
 }
 
 .show-password {
@@ -1013,7 +1013,7 @@ a.profile-shortcut:hover {
 
   outline: none;
 
-  color: #718096;
+  color: var(--muted);
   background: transparent;
 
   cursor: pointer;
@@ -1024,7 +1024,7 @@ a.profile-shortcut:hover {
 
 .show-password:hover {
   color: #1769aa;
-  background: #eef6fd;
+  background: var(--surface-soft);
 }
 
 .auth-cadastro-page
@@ -1044,7 +1044,7 @@ a.profile-shortcut:hover {
 
   margin-top: 20px;
 
-  color: #718096;
+  color: var(--muted);
 
   font-size: 13px;
 }
@@ -1160,12 +1160,12 @@ a.profile-shortcut:hover {
 
     border-radius: 11px;
 
-    color: #19334c;
-    background: #fff;
+    color: var(--text);
+    background: var(--surface);
   }
 
   .auth-mobile-top > span {
-    color: #071b2e;
+    color: var(--text);
 
     font-size: 20px;
     font-weight: 900;

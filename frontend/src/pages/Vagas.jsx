@@ -32,7 +32,7 @@ export default function Vagas() {
     <main
       style={{
         minHeight: "100vh",
-        background: "#f5f7fb",
+        background: "var(--background)",
         padding: "40px 20px 80px",
       }}
     >
@@ -46,7 +46,7 @@ export default function Vagas() {
           to="/"
           style={{
             textDecoration: "none",
-            color: "#173b67",
+            color: "var(--link)",
             fontWeight: 600,
           }}
         >
@@ -61,7 +61,7 @@ export default function Vagas() {
         >
           <span
             style={{
-              color: "#3b82f6",
+              color: "var(--accent)",
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: 1.5,
@@ -75,7 +75,7 @@ export default function Vagas() {
             style={{
               fontSize: "clamp(40px, 7vw, 72px)",
               margin: "12px 0",
-              color: "#0b1f33",
+              color: "var(--text)",
             }}
           >
             Vagas de trabalho.
@@ -83,7 +83,7 @@ export default function Vagas() {
 
           <p
             style={{
-              color: "#607084",
+              color: "var(--muted)",
               fontSize: 18,
               maxWidth: 650,
               lineHeight: 1.7,
@@ -99,7 +99,7 @@ export default function Vagas() {
             display: "flex",
             alignItems: "center",
             gap: 12,
-            background: "#fff",
+            background: "var(--surface)",
             borderRadius: 18,
             padding: "0 18px",
             maxWidth: 520,
@@ -135,7 +135,7 @@ export default function Vagas() {
             <article
               key={vaga.id}
               style={{
-                background: "#fff",
+                background: "var(--surface)",
                 borderRadius: 24,
                 padding: 28,
                 boxShadow: "0 18px 50px rgba(24, 55, 90, 0.08)",
@@ -159,7 +159,7 @@ export default function Vagas() {
                   <h2
                     style={{
                       margin: "8px 0 4px",
-                      color: "#0b1f33",
+                      color: "var(--text)",
                       fontSize: 22,
                     }}
                   >
@@ -167,7 +167,7 @@ export default function Vagas() {
                   </h2>
                   <p
                     style={{
-                      color: "#607084",
+                      color: "var(--muted)",
                       margin: 0,
                       fontSize: 14,
                     }}
@@ -196,7 +196,7 @@ export default function Vagas() {
                   display: "flex",
                   flexWrap: "wrap",
                   gap: 14,
-                  color: "#607084",
+                  color: "var(--muted)",
                   fontSize: 14,
                 }}
               >
@@ -224,7 +224,7 @@ export default function Vagas() {
 
               <p
                 style={{
-                  color: "#607084",
+                  color: "var(--muted)",
                   lineHeight: 1.6,
                   margin: 0,
                   flex: 1,
@@ -246,7 +246,7 @@ export default function Vagas() {
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
-                    color: "#173b67",
+                    color: "var(--link)",
                     fontWeight: 700,
                   }}
                 >
@@ -258,7 +258,7 @@ export default function Vagas() {
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
-                    color: "#607084",
+                    color: "var(--muted)",
                   }}
                 >
                   <Clock size={16} />
@@ -270,7 +270,7 @@ export default function Vagas() {
                 style={{
                   margin: 0,
                   fontSize: 13,
-                  color: "#607084",
+                  color: "var(--muted)",
                 }}
               >
                 <strong>Requisitos:</strong> {vaga.requisitos}
@@ -308,7 +308,7 @@ export default function Vagas() {
             style={{
               textAlign: "center",
               padding: 60,
-              color: "#607084",
+              color: "var(--muted)",
             }}
           >
             Nenhuma vaga encontrada.

@@ -2,7 +2,10 @@ import {
   BrowserRouter,
   Route,
   Routes,
+  useLocation,
 } from "react-router-dom";
+import { useLayoutEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
 import {
   AuthProvider,
@@ -55,12 +58,39 @@ import Planejador
   from "./pages/Planejador";
 
 
-function App() {
+function NavigationAndTheme() {
+  const { pathname } = useLocation();
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem("interway-theme");
+    return saved === "dark" || saved === "light"
+      ? saved
+      : window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+  });
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    localStorage.setItem("interway-theme", theme);
+  }, [theme]);
+
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <FavoritesProvider>
-          <Routes>
+    <>
+      <button
+        type="button"
+        className="theme-toggle"
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        aria-label={theme === "dark" ? "Ativar modo claro" : "Ativar modo escuro"}
+        title={theme === "dark" ? "Modo claro" : "Modo escuro"}
+      >
+        {theme === "dark" ? <Sun size={21} /> : <Moon size={21} />}
+      </button>
+      <Routes>
             <Route
               path="/"
               element={<Home />}
@@ -139,7 +169,17 @@ function App() {
                 </ProtectedRoute>
               }
             />
-          </Routes>
+      </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <FavoritesProvider>
+          <NavigationAndTheme />
         </FavoritesProvider>
       </AuthProvider>
     </BrowserRouter>
