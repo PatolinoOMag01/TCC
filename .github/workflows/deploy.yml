@@ -28,14 +28,14 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: frontend-v2/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
-        working-directory: frontend-v2
+        working-directory: frontend
         run: npm ci
 
       - name: Build
-        working-directory: frontend-v2
+        working-directory: frontend
         run: npm run build
 
       - name: Setup Pages
@@ -44,7 +44,7 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
-          path: frontend-v2/dist
+          path: frontend/dist
 
   deploy:
     environment:

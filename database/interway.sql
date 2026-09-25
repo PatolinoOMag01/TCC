@@ -1,3 +1,10 @@
+-- Esquema único do InterWay. Importe apenas em uma instância local de desenvolvimento.
+-- O aplicativo FastAPI usa usuarios e passports; as demais tabelas são do protótipo anterior.
+-- O frontend ainda contém catálogos locais em src/data e não consulta essas tabelas.
+-- Faça backup antes de importar em uma instalação que já contenha dados.
+CREATE DATABASE IF NOT EXISTS `banco_interway` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `banco_interway`;
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
@@ -53,11 +60,11 @@ CREATE TABLE `bolsa_estudo` (
 --
 
 INSERT INTO `bolsa_estudo` (`id_bolsa`, `nome`, `descricao`, `percentual_desconto`, `data_inicio`, `data_fim`, `id_curso`) VALUES
-(1, 'Bolsa InterWay Canadá', 'Bolsa destinada a estudantes interessados em estudar no Canadá.', 999.99, '2026-01-01', '2026-06-30', NULL),
-(2, 'Bolsa Europa Acadêmica', 'Auxílio financeiro para estudantes que desejam realizar intercâmbio na Europa.', 999.99, '2026-02-01', '2026-07-31', NULL),
-(3, 'Bolsa Global de Tecnologia', 'Bolsa para estudantes da área de tecnologia e computação.', 999.99, '2026-03-01', '2026-08-31', NULL),
-(4, 'Bolsa Novos Horizontes', 'Programa de apoio para estudantes que realizarão intercâmbio internacional.', 999.99, '2026-04-01', '2026-09-30', NULL),
-(5, 'Bolsa Excelência Acadêmica', 'Bolsa destinada a estudantes com excelente desempenho acadêmico.', 999.99, '2026-05-01', '2026-10-31', NULL);
+(1, 'Bolsa InterWay Canadá', 'Bolsa destinada a estudantes interessados em estudar no Canadá.', 25.00, '2026-01-01', '2026-06-30', NULL),
+(2, 'Bolsa Europa Acadêmica', 'Auxílio financeiro para estudantes que desejam realizar intercâmbio na Europa.', 50.00, '2026-02-01', '2026-07-31', NULL),
+(3, 'Bolsa Global de Tecnologia', 'Bolsa para estudantes da área de tecnologia e computação.', 30.00, '2026-03-01', '2026-08-31', NULL),
+(4, 'Bolsa Novos Horizontes', 'Programa de apoio para estudantes que realizarão intercâmbio internacional.', 40.00, '2026-04-01', '2026-09-30', NULL),
+(5, 'Bolsa Excelência Acadêmica', 'Bolsa destinada a estudantes com excelente desempenho acadêmico.', 20.00, '2026-05-01', '2026-10-31', NULL);
 
 -- --------------------------------------------------------
 
@@ -542,6 +549,34 @@ ALTER TABLE `recebe`
 ALTER TABLE `usuário`
   ADD CONSTRAINT `usuário_ibfk_1` FOREIGN KEY (`id_avaliacao`) REFERENCES `avaliação` (`id_avaliacao`),
   ADD CONSTRAINT `usuário_ibfk_2` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`);
+-- Tabelas usadas pela API FastAPI (backend/app/models).
+-- Não migre senhas da tabela antiga `usuário`: ela tem formato incompatível.
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(120) NOT NULL,
+  `email` varchar(180) NOT NULL,
+  `senha_hash` varchar(255) NOT NULL,
+  `criado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_usuarios_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `passports` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL,
+  `pais` varchar(100) DEFAULT NULL,
+  `cidade` varchar(100) DEFAULT NULL,
+  `objetivo` varchar(150) DEFAULT NULL,
+  `nivel_idioma` varchar(80) DEFAULT NULL,
+  `orcamento` int DEFAULT NULL,
+  `checklist` text NOT NULL,
+  `criado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `atualizado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_passports_usuario_id` (`usuario_id`),
+  CONSTRAINT `fk_passports_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
