@@ -111,7 +111,7 @@ export default function Chat() {
     <main
       style={{
         minHeight: "100vh",
-        background: "#f5f7fb",
+        background: "var(--background)",
         padding: "40px 20px 40px",
         display: "flex",
         flexDirection: "column",
@@ -130,7 +130,7 @@ export default function Chat() {
           to="/"
           style={{
             textDecoration: "none",
-            color: "#173b67",
+            color: "var(--link)",
             fontWeight: 600,
             marginBottom: 24,
           }}
@@ -140,7 +140,7 @@ export default function Chat() {
 
         <div
           style={{
-            background: "#fff",
+            background: "var(--surface)",
             borderRadius: 24,
             boxShadow: "0 18px 50px rgba(24, 55, 90, 0.08)",
             overflow: "hidden",
@@ -188,7 +188,7 @@ export default function Chat() {
                   style={{
                     margin: 0,
                     fontSize: 22,
-                    color: "#0b1f33",
+                    color: "var(--text)",
                   }}
                 >
                   Comunidade InterWay
@@ -197,7 +197,7 @@ export default function Chat() {
                 <p
                   style={{
                     margin: "4px 0 0",
-                    color: "#607084",
+                    color: "var(--muted)",
                     fontSize: 14,
                     display: "flex",
                     alignItems: "center",
@@ -215,7 +215,7 @@ export default function Chat() {
                 to="/login"
                 style={{
                   fontSize: 14,
-                  color: "#3b82f6",
+                  color: "var(--accent)",
                   fontWeight: 600,
                   textDecoration: "none",
                 }}
@@ -234,7 +234,7 @@ export default function Chat() {
               display: "flex",
               flexDirection: "column",
               gap: 16,
-              background: "#f8fafc",
+              background: "var(--background)",
             }}
           >
             {mensagens.map((msg) => {
@@ -296,7 +296,7 @@ export default function Chat() {
                           <strong
                             style={{
                               fontSize: 13,
-                              color: "#0b1f33",
+                              color: "var(--text)",
                             }}
                           >
                             {msg.nome}
@@ -305,7 +305,7 @@ export default function Chat() {
                           <span
                             style={{
                               fontSize: 12,
-                              color: "#94a3b8",
+                              color: "var(--muted)",
                             }}
                           >
                             {msg.paisOrigem} →{" "}
@@ -339,7 +339,7 @@ export default function Chat() {
                       <div
                         style={{
                           fontSize: 11,
-                          color: "#94a3b8",
+                          color: "var(--muted)",
                           marginTop: 4,
                           textAlign: ePropria
                             ? "right"
@@ -367,7 +367,7 @@ export default function Chat() {
               borderTop: "1px solid #e8eef5",
               display: "flex",
               gap: 12,
-              background: "#fff",
+              background: "var(--surface)",
             }}
           >
             <input
@@ -386,7 +386,7 @@ export default function Chat() {
                 padding: "14px 18px",
                 fontSize: 15,
                 outline: "none",
-                background: "#f8fafc",
+                background: "var(--background)",
               }}
             />
 
@@ -420,7 +420,7 @@ export default function Chat() {
         <p
           style={{
             textAlign: "center",
-            color: "#94a3b8",
+            color: "var(--muted)",
             fontSize: 13,
             marginTop: 16,
           }}

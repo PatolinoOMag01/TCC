@@ -1,0 +1,40 @@
+:root[data-theme="dark"] .planner-card,
+:root[data-theme="dark"] .planejador-top,
+:root[data-theme="dark"] .match-topbar {
+  background: rgba(23, 37, 58, 0.96);
+}
+
+:root[data-theme="dark"] .profile-page {
+  background: linear-gradient(
+    180deg,
+    #071b2e 0,
+    #092944 350px,
+    var(--background) 350px,
+    var(--background) 100%
+  );
+}
+
+:root[data-theme="dark"] .passport-progress,
+:root[data-theme="dark"] .match-progress-bar,
+:root[data-theme="dark"] .ranking-progress,
+:root[data-theme="dark"] .planejador-progress {
+  background: var(--border);
+}
+
+:root[data-theme="dark"] .passport-checklist .checklist-icon,
+:root[data-theme="dark"] .planejador-tip,
+:root[data-theme="dark"] .profile-empty,
+:root[data-theme="dark"] .match-option {
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: var(--muted);
+}

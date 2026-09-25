@@ -10,7 +10,7 @@ export default function Favoritos() {
     <main
       style={{
         minHeight: "100vh",
-        background: "#f5f7fb",
+        background: "var(--background)",
         padding: "40px 20px 80px",
       }}
     >
@@ -24,7 +24,7 @@ export default function Favoritos() {
           to="/"
           style={{
             textDecoration: "none",
-            color: "#173b67",
+            color: "var(--link)",
             fontWeight: 600,
           }}
         >
@@ -39,7 +39,7 @@ export default function Favoritos() {
         >
           <span
             style={{
-              color: "#3b82f6",
+              color: "var(--accent)",
               fontWeight: 700,
               textTransform: "uppercase",
               letterSpacing: 1.5,
@@ -53,7 +53,7 @@ export default function Favoritos() {
             style={{
               fontSize: "clamp(40px, 7vw, 64px)",
               margin: "12px 0",
-              color: "#0b1f33",
+              color: "var(--text)",
               display: "flex",
               alignItems: "center",
               gap: 14,
@@ -65,7 +65,7 @@ export default function Favoritos() {
 
           <p
             style={{
-              color: "#607084",
+              color: "var(--muted)",
               fontSize: 18,
               maxWidth: 600,
               lineHeight: 1.7,
@@ -82,7 +82,7 @@ export default function Favoritos() {
             style={{
               textAlign: "center",
               padding: "80px 20px",
-              background: "#fff",
+              background: "var(--surface)",
               borderRadius: 24,
               boxShadow: "0 18px 50px rgba(24, 55, 90, 0.08)",
             }}
@@ -94,7 +94,7 @@ export default function Favoritos() {
             />
             <h2
               style={{
-                color: "#0b1f33",
+                color: "var(--text)",
                 marginBottom: 8,
               }}
             >
@@ -102,7 +102,7 @@ export default function Favoritos() {
             </h2>
             <p
               style={{
-                color: "#607084",
+                color: "var(--muted)",
                 marginBottom: 28,
               }}
             >
@@ -142,7 +142,7 @@ export default function Favoritos() {
                 style={{
                   overflow: "hidden",
                   borderRadius: 24,
-                  background: "#fff",
+                  background: "var(--surface)",
                   boxShadow:
                     "0 18px 50px rgba(24, 55, 90, 0.08)",
                   position: "relative",
@@ -178,7 +178,7 @@ export default function Favoritos() {
                       height: 40,
                       borderRadius: "50%",
                       border: "none",
-                      background: "rgba(255,255,255,0.95)",
+                      background: "var(--surface)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -196,12 +196,12 @@ export default function Favoritos() {
                         position: "absolute",
                         top: 14,
                         left: 14,
-                        background: "rgba(255,255,255,.9)",
+                        background: "var(--surface)",
                         padding: "6px 12px",
                         borderRadius: 999,
                         fontSize: 12,
                         fontWeight: 700,
-                        color: "#173b67",
+                        color: "var(--link)",
                       }}
                     >
                       {destino.destaque}
@@ -213,7 +213,7 @@ export default function Favoritos() {
                   <h2
                     style={{
                       margin: "0 0 4px",
-                      color: "#0b1f33",
+                      color: "var(--text)",
                       fontSize: 24,
                     }}
                   >
@@ -222,7 +222,7 @@ export default function Favoritos() {
 
                   <p
                     style={{
-                      color: "#3b82f6",
+                      color: "var(--accent)",
                       fontWeight: 600,
                       margin: "0 0 12px",
                       fontSize: 14,
@@ -233,7 +233,7 @@ export default function Favoritos() {
 
                   <p
                     style={{
-                      color: "#607084",
+                      color: "var(--muted)",
                       lineHeight: 1.55,
                       margin: "0 0 18px",
                       fontSize: 14,
@@ -249,7 +249,7 @@ export default function Favoritos() {
                       alignItems: "center",
                       gap: 8,
                       textDecoration: "none",
-                      color: "#173b67",
+                      color: "var(--link)",
                       fontWeight: 700,
                     }}
                   >
