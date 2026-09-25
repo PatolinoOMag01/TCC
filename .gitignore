@@ -11,6 +11,8 @@ __pycache__/
 # Variáveis de ambiente
 .env
 .env.*
+!.env.example
+!**/.env.example
 
 # Editores
 .vscode/
