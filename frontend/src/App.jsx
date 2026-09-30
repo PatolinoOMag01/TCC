@@ -57,6 +57,9 @@ import Passport
 import Planejador
   from "./pages/Planejador";
 
+import AssistenteIA
+  from "./pages/AssistenteIA";
+
 
 function NavigationAndTheme() {
   const { pathname } = useLocation();
@@ -169,6 +172,11 @@ function NavigationAndTheme() {
                 </ProtectedRoute>
               }
             />
+
+<Route
+  path="/assistente"
+  element={<AssistenteIA />}
+/>
       </Routes>
     </>
   );

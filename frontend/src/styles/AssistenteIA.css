@@ -1,0 +1,403 @@
+.assistente-page {
+  min-height: 100vh;
+  padding: 32px 20px;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(70, 111, 255, 0.14),
+      transparent 35%
+    ),
+    var(--background, #f5f7fb);
+}
+
+.assistente-shell {
+  width: min(100%, 980px);
+  height: calc(100vh - 64px);
+  min-height: 620px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid
+    rgba(120, 130, 160, 0.16);
+  border-radius: 24px;
+  background:
+    var(--surface, #ffffff);
+  box-shadow:
+    0 20px 60px
+    rgba(20, 35, 70, 0.12);
+}
+
+.assistente-header {
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid
+    rgba(120, 130, 160, 0.15);
+}
+
+.assistente-header-left {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.assistente-voltar {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: inherit;
+  transition: 0.2s;
+}
+
+.assistente-voltar:hover {
+  background:
+    rgba(100, 110, 140, 0.1);
+}
+
+.assistente-avatar {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 15px;
+  color: white;
+  background:
+    linear-gradient(
+      135deg,
+      #3458e8,
+      #6b7cff
+    );
+  box-shadow:
+    0 8px 20px
+    rgba(52, 88, 232, 0.25);
+}
+
+.assistente-titulo-linha {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.assistente-titulo-linha h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.assistente-titulo-linha svg {
+  color: #526df0;
+}
+
+.assistente-header p {
+  margin: 3px 0 0;
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.assistente-online {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  opacity: 0.72;
+}
+
+.assistente-online span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow:
+    0 0 0 4px
+    rgba(34, 197, 94, 0.12);
+}
+
+.assistente-chat {
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.assistente-mensagens {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 28px 16px;
+}
+
+.mensagem-linha {
+  margin-bottom: 22px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.mensagem-linha.usuario {
+  justify-content: flex-end;
+}
+
+.mensagem-avatar {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  border-radius: 11px;
+}
+
+.mensagem-avatar.ia {
+  color: white;
+  background:
+    linear-gradient(
+      135deg,
+      #3458e8,
+      #6b7cff
+    );
+}
+
+.mensagem-avatar.usuario {
+  background:
+    rgba(100, 110, 140, 0.12);
+}
+
+.mensagem-balao {
+  max-width: min(76%, 650px);
+  padding: 13px 16px;
+  border-radius: 18px;
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.mensagem-balao p {
+  margin: 0 0 7px;
+}
+
+.mensagem-balao p:last-child {
+  margin-bottom: 0;
+}
+
+.mensagem-balao.ia {
+  border-bottom-left-radius: 5px;
+  background:
+    rgba(110, 120, 150, 0.1);
+}
+
+.mensagem-balao.usuario {
+  border-bottom-right-radius: 5px;
+  color: white;
+  background:
+    linear-gradient(
+      135deg,
+      #3458e8,
+      #536ff2
+    );
+}
+
+.mensagem-balao.erro {
+  color: #b42318;
+  background:
+    rgba(239, 68, 68, 0.1);
+}
+
+.pensando {
+  min-width: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.pensando span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  animation:
+    interway-pensando 1.2s
+    infinite ease-in-out;
+}
+
+.pensando span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.pensando span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes interway-pensando {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.assistente-sugestoes {
+  padding: 0 28px 18px;
+}
+
+.sugestoes-titulo {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.55;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.sugestoes-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.sugestoes-grid button {
+  padding: 10px 13px;
+  border: 1px solid
+    rgba(100, 110, 150, 0.16);
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sugestoes-grid button:hover {
+  border-color:
+    rgba(52, 88, 232, 0.4);
+  background:
+    rgba(52, 88, 232, 0.06);
+}
+
+.assistente-input-area {
+  padding: 15px 22px 17px;
+  border-top: 1px solid
+    rgba(120, 130, 160, 0.14);
+}
+
+.assistente-input-box {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 9px 9px 9px 15px;
+  border: 1px solid
+    rgba(100, 110, 150, 0.22);
+  border-radius: 17px;
+  background:
+    rgba(120, 130, 160, 0.055);
+}
+
+.assistente-input-box:focus-within {
+  border-color:
+    rgba(52, 88, 232, 0.6);
+  box-shadow:
+    0 0 0 3px
+    rgba(52, 88, 232, 0.08);
+}
+
+.assistente-input-box textarea {
+  width: 100%;
+  max-height: 120px;
+  padding: 8px 0;
+  resize: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1.4;
+}
+
+.assistente-enviar {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 13px;
+  color: white;
+  background:
+    linear-gradient(
+      135deg,
+      #3458e8,
+      #536ff2
+    );
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.assistente-enviar:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.assistente-enviar:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.assistente-aviso {
+  margin: 9px 0 0;
+  text-align: center;
+  font-size: 11px;
+  opacity: 0.48;
+}
+
+@media (max-width: 650px) {
+  .assistente-page {
+    padding: 0;
+  }
+
+  .assistente-shell {
+    height: 100vh;
+    min-height: 100vh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .assistente-header {
+    padding: 14px;
+  }
+
+  .assistente-online {
+    display: none;
+  }
+
+  .assistente-mensagens {
+    padding:
+      20px 14px 12px;
+  }
+
+  .mensagem-balao {
+    max-width: 82%;
+  }
+
+  .assistente-sugestoes {
+    padding:
+      0 14px 14px;
+  }
+
+  .sugestoes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .assistente-input-area {
+    padding: 12px 14px;
+  }
+}

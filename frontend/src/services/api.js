@@ -121,4 +121,17 @@ export const api = {
       }
     );
   },
+
+  conversarIA(mensagem) {
+    return request(
+      "/ia/chat",
+      {
+        method: "POST",
+        body:
+          JSON.stringify({
+            mensagem,
+          }),
+      }
+    );
+  },
 };
