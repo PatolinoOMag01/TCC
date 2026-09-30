@@ -16,6 +16,7 @@ from app.models import (
 
 from app.routes import (
     auth_router,
+    ia_router,
     passport_router,
     users_router,
 )
@@ -57,6 +58,9 @@ app.include_router(
     passport_router
 )
 
+app.include_router(
+    ia_router
+)
 
 @app.get("/")
 def home():
