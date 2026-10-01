@@ -122,16 +122,16 @@ export const api = {
     );
   },
 
-  conversarIA(mensagem) {
+  conversarIA(mensagem, historico = []) {
     return request(
       "/ia/chat",
       {
         method: "POST",
-        body:
-          JSON.stringify({
-            mensagem,
-          }),
+        body: JSON.stringify({
+          mensagem,
+          historico,
+        }),
       }
     );
   },
-};
+};  

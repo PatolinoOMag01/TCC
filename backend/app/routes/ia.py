@@ -24,8 +24,14 @@ OPEN_METEO_FORECAST_URL = (
 )
 
 
+class MensagemHistorico(BaseModel):
+    role: str
+    content: str
+
+
 class ChatRequest(BaseModel):
     mensagem: str
+    historico: list[MensagemHistorico] = []
 
 
 class ChatResponse(BaseModel):
@@ -431,11 +437,39 @@ async def conversar(
                         + contexto_extra
                     ),
                 },
+               
+            ]
+            historico_valido = []
+
+            for item in dados.historico[-8:]:
+                if item.role not in [
+                    "user",
+                    "assistant",
+                ]:
+                    continue
+
+                conteudo = item.content.strip()
+
+                if not conteudo:
+                    continue
+
+                historico_valido.append(
+                    {
+                        "role": item.role,
+                        "content": conteudo[:4000],
+                    }
+                )
+
+            mensagens.extend(
+                historico_valido
+            )
+
+            mensagens.append(
                 {
                     "role": "user",
                     "content": mensagem,
-                },
-            ]
+                }
+            )
 
             modelos = (
                 await buscar_modelos_gratuitos(

@@ -91,10 +91,26 @@ function AssistenteIA() {
     setEnviando(true);
 
     try {
-      const resultado =
-        await api.conversarIA(
-          texto
-        );
+  const historico = mensagens
+    .filter(
+      (item) =>
+        item.autor === "usuario" ||
+        item.autor === "ia"
+    )
+    .slice(-8)
+    .map((item) => ({
+      role:
+        item.autor === "usuario"
+          ? "user"
+          : "assistant",
+      content: item.texto,
+    }));
+
+  const resultado =
+    await api.conversarIA(
+      texto,
+      historico
+    );
 
       setMensagens(
         (anteriores) => [
