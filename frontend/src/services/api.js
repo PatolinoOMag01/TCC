@@ -1,4 +1,4 @@
-const API_URL =
+git status --shortconst API_URL =
   import.meta.env.VITE_API_URL ||
   "http://127.0.0.1:8000";
 
@@ -120,6 +120,43 @@ export const api = {
           }),
       }
     );
+  },
+
+  meuPlanejamento() {
+    return request(
+      "/planejador/me"
+    );
+  },
+
+  atualizarPlanejamento(dados) {
+    return request(
+      "/planejador/me",
+      {
+        method: "PUT",
+        body: JSON.stringify(dados),
+      }
+    );
+  },
+
+
+  meuPerfilIntercambio() {
+    return request("/perfil-intercambio/me");
+  },
+
+  atualizarPerfilIntercambio(dados) {
+    return request("/perfil-intercambio/me", { method: "PUT", body: JSON.stringify(dados) });
+  },
+
+  planoInterWay() {
+    return request("/planejador/plano-interway");
+  },
+
+  historicoIA() {
+    return request("/ia/historico");
+  },
+
+  limparHistoricoIA() {
+    return request("/ia/historico", { method: "DELETE" });
   },
 
   conversarIA(mensagem, historico = []) {

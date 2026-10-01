@@ -110,3 +110,19 @@ def obter_usuario_atual(
         raise erro_credenciais
 
     return usuario
+optional_bearer_scheme = HTTPBearer(auto_error=False)
+
+def obter_usuario_opcional(
+    credenciais: HTTPAuthorizationCredentials | None = Depends(optional_bearer_scheme),
+    db: Session = Depends(get_db),
+):
+    if credenciais is None:
+        return None
+    try:
+        payload = jwt.decode(credenciais.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = payload.get("sub")
+        if user_id is None:
+            return None
+        return db.query(User).filter(User.id == int(user_id)).first()
+    except (JWTError, ValueError):
+        return None

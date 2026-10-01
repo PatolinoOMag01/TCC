@@ -60,6 +60,8 @@ import Planejador
 import AssistenteIA
   from "./pages/AssistenteIA";
 
+import PerfilIntercambio from "./pages/PerfilIntercambio";
+
 
 function NavigationAndTheme() {
   const { pathname } = useLocation();
@@ -169,6 +171,15 @@ function NavigationAndTheme() {
               element={
                 <ProtectedRoute>
                   <Planejador />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/perfil-intercambio"
+              element={
+                <ProtectedRoute>
+                  <PerfilIntercambio />
                 </ProtectedRoute>
               }
             />

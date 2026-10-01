@@ -11,14 +11,20 @@ from app.database import (
 
 from app.models import (
     Passport,
+    Planner,
     User,
+    ExchangeProfile,
+    ConversationMessage,
 )
 
 from app.routes import (
     auth_router,
     ia_router,
     passport_router,
+    planner_router,
     users_router,
+    profile_router,
+    conversations_router,
 )
 
 
@@ -33,7 +39,7 @@ app = FastAPI(
         "API oficial da "
         "plataforma InterWay."
     ),
-    version="2.1.0",
+    version="3.0.0",
 )
 
 
@@ -59,14 +65,21 @@ app.include_router(
 )
 
 app.include_router(
+    planner_router
+)
+
+app.include_router(
     ia_router
 )
+
+app.include_router(profile_router)
+app.include_router(conversations_router)
 
 @app.get("/")
 def home():
     return {
         "message": (
-            "InterWay API 2.1"
+            "InterWay API 3.0"
         ),
         "status": "online",
     }

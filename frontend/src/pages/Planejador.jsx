@@ -43,65 +43,31 @@ export default function Planejador() {
     });
 
 
-  const storageKey =
-    `interway-planejador-${usuario?.id || "visitante"}`;
-
 
   useEffect(() => {
     async function carregar() {
       try {
-        const dadosPassport =
-          await api.meuPassport();
+        const [dadosPassport, dadosPlanejamento] = await Promise.all([
+          api.meuPassport(),
+          api.meuPlanejamento(),
+        ]);
 
         setPassport(dadosPassport);
-
-        const salvoLocal =
-          localStorage.getItem(
-            storageKey
-          );
-
-        if (salvoLocal) {
-          setFormulario(
-            JSON.parse(salvoLocal)
-          );
-        } else {
-          setFormulario({
-            destino: [
-              dadosPassport?.cidade,
-              dadosPassport?.pais,
-            ]
-              .filter(Boolean)
-              .join(", "),
-
-            meta:
-              dadosPassport?.orcamento
-                ? String(
-                    dadosPassport.orcamento
-                  )
-                : "",
-
-            guardado: "",
-            mensal: "",
-          });
-        }
-      } catch {
-        const salvoLocal =
-          localStorage.getItem(
-            storageKey
-          );
-
-        if (salvoLocal) {
-          setFormulario(
-            JSON.parse(salvoLocal)
-          );
-        }
+        setFormulario({
+          destino: dadosPlanejamento.destino || [dadosPassport?.cidade, dadosPassport?.pais].filter(Boolean).join(", "),
+          meta: dadosPlanejamento.meta ? String(dadosPlanejamento.meta) : (dadosPassport?.orcamento ? String(dadosPassport.orcamento) : ""),
+          guardado: dadosPlanejamento.guardado ? String(dadosPlanejamento.guardado) : "",
+          mensal: dadosPlanejamento.mensal ? String(dadosPlanejamento.mensal) : "",
+        });
+      } catch (erro) {
+        console.error("Erro ao carregar planejamento:", erro);
       } finally {
         setCarregando(false);
       }
     }
 
     carregar();
-  }, [storageKey]);
+  }, [usuario?.id]);
 
 
   function alterarCampo(event) {
@@ -121,15 +87,21 @@ export default function Planejador() {
   }
 
 
-  function salvar(event) {
+  async function salvar(event) {
     event.preventDefault();
+    setSalvo(false);
 
-    localStorage.setItem(
-      storageKey,
-      JSON.stringify(formulario)
-    );
-
-    setSalvo(true);
+    try {
+      await api.atualizarPlanejamento({
+        destino: formulario.destino.trim() || null,
+        meta: Number(formulario.meta) || 0,
+        guardado: Number(formulario.guardado) || 0,
+        mensal: Number(formulario.mensal) || 0,
+      });
+      setSalvo(true);
+    } catch (erro) {
+      console.error("Erro ao salvar planejamento:", erro);
+    }
   }
 
 

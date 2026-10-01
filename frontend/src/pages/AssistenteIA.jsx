@@ -11,6 +11,7 @@ import {
   Send,
   Sparkles,
   User,
+  Trash2,
 } from "lucide-react";
 
 import {
@@ -60,6 +61,38 @@ function AssistenteIA() {
       behavior: "smooth",
     });
   }, [mensagens, enviando]);
+
+  useEffect(() => {
+    async function carregarHistorico() {
+      if (!localStorage.getItem("interway-token")) return;
+      try {
+        const itens = await api.historicoIA();
+        if (itens.length) {
+          setMensagens(itens.map((item) => ({
+            id: item.id,
+            autor: item.role === "user" ? "usuario" : "ia",
+            texto: item.content,
+          })));
+        }
+      } catch (erro) {
+        console.error("Historico da IA:", erro);
+      }
+    }
+    carregarHistorico();
+  }, []);
+
+  async function limparHistorico() {
+    if (!localStorage.getItem("interway-token")) {
+      setMensagens([]);
+      return;
+    }
+    try {
+      await api.limparHistoricoIA();
+      setMensagens([]);
+    } catch (erro) {
+      console.error("Erro ao limpar historico:", erro);
+    }
+  }
 
 
   async function enviarMensagem(
@@ -192,9 +225,14 @@ function AssistenteIA() {
             </div>
           </div>
 
-          <div className="assistente-online">
-            <span />
-            Online
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <button type="button" onClick={limparHistorico} title="Limpar conversa" aria-label="Limpar conversa" style={{ border: 0, background: "transparent", cursor: "pointer" }}>
+              <Trash2 size={19} />
+            </button>
+            <div className="assistente-online">
+              <span />
+              Online
+            </div>
           </div>
         </header>
 

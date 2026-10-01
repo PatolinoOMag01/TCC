@@ -55,7 +55,8 @@ function Home() {
             <Link to="/bolsas">Bolsas</Link>
             <Link to="/vagas">Vagas</Link>
             <Link to="/chat">Comunidade</Link>
-            <Link to="/match">Match</Link>
+<Link to="/assistente">InterWay IA</Link>
+<Link to="/match">Match</Link>
             <Link to={usuario ? "/perfil" : "/login"} className="mobile-account-link">
               {usuario ? "Meu perfil" : "Entrar"}
             </Link>
