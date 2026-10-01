@@ -16,12 +16,19 @@ router = APIRouter(
 )
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1"
+
 OPEN_METEO_GEOCODING_URL = (
     "https://geocoding-api.open-meteo.com/v1/search"
 )
+
 OPEN_METEO_FORECAST_URL = (
     "https://api.open-meteo.com/v1/forecast"
 )
+
+
+# Cache enquanto o backend estiver ligado.
+MODELOS_CACHE = []
+MODELO_PREFERIDO = None
 
 
 class MensagemHistorico(BaseModel):
@@ -88,6 +95,7 @@ def modelo_gratuito(modelo: dict) -> bool:
         prompt = float(
             pricing.get("prompt", 1)
         )
+
         completion = float(
             pricing.get("completion", 1)
         )
@@ -96,6 +104,7 @@ def modelo_gratuito(modelo: dict) -> bool:
             prompt == 0
             and completion == 0
         )
+
     except (TypeError, ValueError):
         return False
 
@@ -108,6 +117,7 @@ async def buscar_modelos_gratuitos(
     response = await client.get(
         f"{OPENROUTER_URL}/models",
         headers=headers,
+        timeout=10.0,
     )
 
     response.raise_for_status()
@@ -127,7 +137,9 @@ async def buscar_modelos_gratuitos(
         modelo_id = modelo.get("id")
 
         if modelo_id:
-            gratuitos.append(modelo_id)
+            gratuitos.append(
+                modelo_id
+            )
 
     return gratuitos
 
@@ -136,7 +148,9 @@ def pergunta_sobre_clima(
     mensagem: str,
 ) -> bool:
 
-    texto = normalizar_texto(mensagem)
+    texto = normalizar_texto(
+        mensagem
+    )
 
     palavras = [
         "clima",
@@ -164,25 +178,33 @@ def extrair_cidade(
     texto = mensagem.strip()
 
     padroes = [
-        r"(?:temperatura|clima|tempo|graus|chuva)"
-        r".*?\bem\s+(.+?)(?:\?|$)",
-
-        r"(?:como esta|como está)"
-        r".*?\bem\s+(.+?)(?:\?|$)",
-
-        r"(?:previsao|previsão)"
-        r".*?\b(?:para|em|de)\s+(.+?)(?:\?|$)",
+        (
+            r"(?:temperatura|clima|tempo|graus|chuva)"
+            r".*?\bem\s+(.+?)(?:\?|$)"
+        ),
+        (
+            r"(?:como esta)"
+            r".*?\bem\s+(.+?)(?:\?|$)"
+        ),
+        (
+            r"(?:previsao)"
+            r".*?\b(?:para|em|de)\s+(.+?)(?:\?|$)"
+        ),
     ]
 
     for padrao in padroes:
         resultado = re.search(
             padrao,
-            texto,
+            normalizar_texto(texto),
             flags=re.IGNORECASE,
         )
 
         if resultado:
-            cidade = resultado.group(1).strip()
+            cidade = (
+                resultado
+                .group(1)
+                .strip()
+            )
 
             cidade = re.sub(
                 r"\b(agora|hoje|nesse momento)\b",
@@ -210,11 +232,13 @@ async def buscar_clima(
             "language": "pt",
             "format": "json",
         },
+        timeout=10.0,
     )
 
     geo_response.raise_for_status()
 
     geo_data = geo_response.json()
+
     resultados = geo_data.get(
         "results",
         [],
@@ -243,11 +267,13 @@ async def buscar_clima(
             ),
             "timezone": "auto",
         },
+        timeout=10.0,
     )
 
     clima_response.raise_for_status()
 
     clima_data = clima_response.json()
+
     atual = clima_data.get(
         "current",
         {},
@@ -327,6 +353,8 @@ def contexto_clima(
 async def conversar(
     dados: ChatRequest,
 ):
+    global MODELOS_CACHE
+    global MODELO_PREFERIDO
 
     mensagem = dados.mensagem.strip()
 
@@ -362,12 +390,11 @@ async def conversar(
     }
 
     try:
-        async with httpx.AsyncClient(
-            timeout=60.0
-        ) as client:
+        async with httpx.AsyncClient() as client:
 
             contexto_extra = ""
 
+            # CLIMA
             if pergunta_sobre_clima(
                 mensagem
             ):
@@ -381,10 +408,14 @@ async def conversar(
                         cidade,
                     )
 
-                    clima = await buscar_clima(
-                        client,
-                        cidade,
-                    )
+                    try:
+                        clima = await buscar_clima(
+                            client,
+                            cidade,
+                        )
+
+                    except httpx.RequestError:
+                        clima = None
 
                     if clima:
                         print(
@@ -397,6 +428,7 @@ async def conversar(
                                 clima
                             )
                         )
+
                     else:
                         contexto_extra = (
                             "\n\nO usuario perguntou "
@@ -405,6 +437,7 @@ async def conversar(
                             "Peca para ele informar uma "
                             "cidade valida."
                         )
+
                 else:
                     contexto_extra = (
                         "\n\nO usuario perguntou sobre "
@@ -413,6 +446,7 @@ async def conversar(
                         "da cidade antes de responder."
                     )
 
+            # SYSTEM PROMPT
             mensagens = [
                 {
                     "role": "system",
@@ -423,9 +457,10 @@ async def conversar(
                         "Ajude com destinos, bolsas, "
                         "documentacao, planejamento "
                         "financeiro, idiomas e adaptacao "
-                        "internacional. Responda sempre "
-                        "em portugues do Brasil de forma "
-                        "clara, amigavel e objetiva. "
+                        "internacional. "
+                        "Responda sempre em portugues "
+                        "do Brasil de forma clara, "
+                        "amigavel e objetiva. "
                         "Nao invente informacoes. "
                         "Quando receber dados externos "
                         "em tempo real no contexto, "
@@ -437,8 +472,9 @@ async def conversar(
                         + contexto_extra
                     ),
                 },
-               
             ]
+
+            # MEMORIA CURTA
             historico_valido = []
 
             for item in dados.historico[-8:]:
@@ -448,7 +484,10 @@ async def conversar(
                 ]:
                     continue
 
-                conteudo = item.content.strip()
+                conteudo = (
+                    item.content
+                    .strip()
+                )
 
                 if not conteudo:
                     continue
@@ -471,12 +510,44 @@ async def conversar(
                 }
             )
 
-            modelos = (
-                await buscar_modelos_gratuitos(
-                    client,
-                    headers,
+            # MODELOS
+            if MODELOS_CACHE:
+                modelos = (
+                    MODELOS_CACHE.copy()
                 )
-            )
+
+                print(
+                    "Usando cache de modelos."
+                )
+
+            else:
+                print(
+                    "Buscando modelos gratuitos..."
+                )
+
+                modelos = (
+                    await buscar_modelos_gratuitos(
+                        client,
+                        headers,
+                    )
+                )
+
+                MODELOS_CACHE = (
+                    modelos.copy()
+                )
+
+            if (
+                MODELO_PREFERIDO
+                and MODELO_PREFERIDO in modelos
+            ):
+                modelos.remove(
+                    MODELO_PREFERIDO
+                )
+
+                modelos.insert(
+                    0,
+                    MODELO_PREFERIDO,
+                )
 
             if not modelos:
                 raise HTTPException(
@@ -487,7 +558,8 @@ async def conversar(
                     ),
                 )
 
-            for modelo in modelos[:8]:
+            # Tenta no maximo quatro modelos.
+            for modelo in modelos[:4]:
 
                 payload = {
                     "model": modelo,
@@ -499,24 +571,47 @@ async def conversar(
                     modelo,
                 )
 
-                response = await client.post(
-                    (
-                        f"{OPENROUTER_URL}"
-                        "/chat/completions"
-                    ),
-                    headers=headers,
-                    json=payload,
-                )
+                try:
+                    response = await client.post(
+                        (
+                            f"{OPENROUTER_URL}"
+                            "/chat/completions"
+                        ),
+                        headers=headers,
+                        json=payload,
+                        timeout=15.0,
+                    )
 
-                if (
-                    response.status_code
-                    != 200
-                ):
+                except httpx.TimeoutException:
+                    print(
+                        "Modelo demorou demais:",
+                        modelo,
+                    )
+                    continue
+
+                except httpx.RequestError as erro:
+                    print(
+                        "Erro no modelo:",
+                        modelo,
+                        erro,
+                    )
+                    continue
+
+                if response.status_code != 200:
                     print(
                         "Modelo falhou:",
                         modelo,
                         response.status_code,
                     )
+
+                    # Se o preferido deixou de funcionar,
+                    # deixa de trata-lo como preferido.
+                    if (
+                        MODELO_PREFERIDO
+                        == modelo
+                    ):
+                        MODELO_PREFERIDO = None
+
                     continue
 
                 resultado = response.json()
@@ -543,6 +638,7 @@ async def conversar(
                     resposta.lower()
                 )
 
+                # Evita selecionar classificadores.
                 if (
                     resposta_lower.startswith(
                         "user safety:"
@@ -556,6 +652,9 @@ async def conversar(
                     )
                     continue
 
+                # Esse modelo funcionou.
+                MODELO_PREFERIDO = modelo
+
                 print(
                     "Modelo escolhido:",
                     modelo,
@@ -565,13 +664,23 @@ async def conversar(
                     "resposta": resposta,
                 }
 
-        raise HTTPException(
-            status_code=503,
-            detail=(
-                "Os modelos gratuitos estao "
-                "indisponiveis no momento."
-            ),
-        )
+            # Se todos os modelos do cache falharem,
+            # limpa o cache para a proxima requisicao
+            # buscar a lista atualizada.
+            MODELOS_CACHE = []
+            MODELO_PREFERIDO = None
+
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "Os modelos gratuitos estao "
+                    "indisponiveis no momento. "
+                    "Tente novamente."
+                ),
+            )
+
+    except HTTPException:
+        raise
 
     except httpx.RequestError as erro:
         print(
