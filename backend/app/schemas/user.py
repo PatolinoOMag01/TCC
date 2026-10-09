@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class CadastroRequest(BaseModel):
@@ -18,6 +18,14 @@ class CadastroRequest(BaseModel):
         min_length=6,
         max_length=72,
     )
+
+
+    @field_validator("senha")
+    @classmethod
+    def validar_senha_bytes(cls, valor):
+        if len(valor.encode("utf-8")) > 72:
+            raise ValueError("A senha deve ter no máximo 72 bytes em UTF-8.")
+        return valor
 
 
 class LoginRequest(BaseModel):

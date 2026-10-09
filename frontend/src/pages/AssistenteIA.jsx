@@ -136,7 +136,7 @@ function AssistenteIA() {
         item.autor === "usuario"
           ? "user"
           : "assistant",
-      content: item.texto,
+      content: item.texto.slice(0, 4000),
     }));
 
   const resultado =
@@ -226,7 +226,7 @@ function AssistenteIA() {
           </div>
 
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <button type="button" onClick={limparHistorico} title="Limpar conversa" aria-label="Limpar conversa" style={{ border: 0, background: "transparent", cursor: "pointer" }}>
+            <button type="button" onClick={limparHistorico} disabled={enviando} title="Limpar conversa" aria-label="Limpar conversa" style={{ border: 0, background: "transparent", cursor: "pointer" }}>
               <Trash2 size={19} />
             </button>
             <div className="assistente-online">
@@ -348,6 +348,7 @@ function AssistenteIA() {
                   aoPressionarTecla
                 }
                 placeholder="Pergunte sobre seu intercâmbio..."
+                maxLength={4000}
                 rows={1}
                 disabled={enviando}
               />

@@ -6,22 +6,33 @@ echo          INICIANDO INTERWAY
 echo ========================================
 echo.
 
-cd /d C:\Users\LAB4\Desktop\TCC
+cd /d "%~dp0"
 
 echo [1/4] Iniciando MariaDB...
-start "" /min C:\xampp\mysql_start.bat
+if exist "C:\xampp\mysql_start.bat" start "" /min "C:\xampp\mysql_start.bat"
 
 echo Aguardando banco iniciar...
 timeout /t 5 /nobreak >nul
 
+if not exist "backend\.env" copy "backend\.env.example" "backend\.env" >nul
+if not exist "backend\venv\Scripts\python.exe" (
+  echo Crie o ambiente backend\venv e instale requirements.txt conforme o README.
+  pause
+  exit /b 1
+)
+if not exist "frontend\node_modules" (
+  echo Execute npm ci dentro da pasta frontend conforme o README.
+  pause
+  exit /b 1
+)
 echo [2/4] Iniciando Backend...
-start "InterWay Backend" cmd /k "cd /d C:\Users\LAB4\Desktop\TCC\backend && venv\Scripts\python.exe -m uvicorn app.main:app --reload"
+start "InterWay Backend" cmd /k "cd /d "%~dp0"\backend && venv\Scripts\python.exe -m uvicorn app.main:app --reload"
 
 echo Aguardando backend...
 timeout /t 4 /nobreak >nul
 
 echo [3/4] Iniciando Frontend...
-start "InterWay Frontend" cmd /k "cd /d C:\Users\LAB4\Desktop\TCC\frontend && npm run dev"
+start "InterWay Frontend" cmd /k "cd /d "%~dp0"\frontend && npm run dev"
 
 echo Aguardando frontend...
 timeout /t 4 /nobreak >nul

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- Context exports its public hook. */
 import {
   createContext,
   useContext,
@@ -16,7 +17,7 @@ export function AuthProvider({
     useState(null);
 
   const [carregando, setCarregando] =
-    useState(true);
+    useState(() => Boolean(localStorage.getItem("interway-token")));
 
   async function carregarUsuario() {
     const token =
@@ -47,7 +48,12 @@ export function AuthProvider({
   }
 
   useEffect(() => {
-    carregarUsuario();
+    if (!localStorage.getItem("interway-token")) return;
+    let ativo = true;
+    api.meuPerfil().then(dados => { if (ativo) setUsuario(dados); })
+      .catch(() => { if (ativo) { localStorage.removeItem("interway-token"); setUsuario(null); } })
+      .finally(() => { if (ativo) setCarregando(false); });
+    return () => { ativo = false; };
   }, []);
 
   async function cadastrar({

@@ -14,7 +14,8 @@ export function FavoritesProvider({ children }) {
     const [favoritos, setFavoritos] = useState(() => {
         try {
             const salvos = localStorage.getItem(STORAGE_KEY);
-            return salvos ? JSON.parse(salvos) : [];
+            const itens = salvos ? JSON.parse(salvos) : [];
+            return Array.isArray(itens) ? itens.filter((item) => item && typeof item.slug === "string") : [];
         } catch {
             return [];
         }

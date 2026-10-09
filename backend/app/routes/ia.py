@@ -22,7 +22,7 @@ async def conversar(dados: ChatRequest, db: Session = Depends(get_db), usuario: 
         salvos.reverse()
         if salvos:
             from app.schemas.ia import MensagemHistorico
-            historico = [MensagemHistorico(role=i.role, content=i.content) for i in salvos]
+            historico = [MensagemHistorico(role=i.role, content=i.content[:4000]) for i in salvos]
 
     resposta = await conversar_com_ia(mensagem, historico, db, usuario)
 

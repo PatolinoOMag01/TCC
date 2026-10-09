@@ -46,14 +46,15 @@ def detectar_moedas(
         mensagem
     )
 
+    nomes = sorted(MOEDAS, key=len, reverse=True)
+    nomes.insert(0, "dolares canadenses")
+    padrao = r"\b(?:" + "|".join(re.escape(n) for n in nomes) + r")\b"
     encontradas = []
-
-    for nome, codigo in MOEDAS.items():
-        if nome in texto:
-            if codigo not in encontradas:
-                encontradas.append(
-                    codigo
-                )
+    for match in re.finditer(padrao, texto):
+        nome = match.group(0)
+        codigo = "CAD" if nome == "dolares canadenses" else MOEDAS[nome]
+        if codigo not in encontradas:
+            encontradas.append(codigo)
 
     if len(encontradas) >= 2:
         return (

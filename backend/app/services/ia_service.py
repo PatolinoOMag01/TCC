@@ -129,7 +129,7 @@ async def gerar_contexto_ferramentas(
                         )
                     )
 
-            except httpx.RequestError:
+            except (httpx.HTTPError, ValueError):
                 contextos.append(
                     (
                         "\nO servico meteorologico "
@@ -177,7 +177,7 @@ async def gerar_contexto_ferramentas(
                     )
                 )
 
-            except httpx.RequestError:
+            except (httpx.HTTPError, ValueError):
                 contextos.append(
                     (
                         "\nO servico de cambio "
@@ -297,7 +297,7 @@ async def conversar_com_ia(
                 headers,
             )
 
-        except httpx.RequestError:
+        except (httpx.HTTPError, ValueError):
             raise HTTPException(
                 status_code=503,
                 detail=(
@@ -350,7 +350,7 @@ async def conversar_com_ia(
                 )
                 continue
 
-            except httpx.RequestError:
+            except (httpx.HTTPError, ValueError):
                 continue
 
             if response.status_code != 200:

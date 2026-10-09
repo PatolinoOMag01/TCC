@@ -75,18 +75,13 @@ export default function Passport() {
 
 
   useEffect(() => {
-    carregarPassport();
-  }, []);
-
-
-  async function carregarPassport() {
-    setCarregando(true);
-    setErro("");
-
+    let ativo = true;
+    async function carregarPassport() {
     try {
       const dados =
         await api.meuPassport();
 
+      if (!ativo) return;
       setPassport(dados);
 
       setFormulario({
@@ -100,17 +95,17 @@ export default function Passport() {
           dados.nivel_idioma ||
           "",
         orcamento:
-          dados.orcamento || "",
+          dados.orcamento ?? "",
       });
     } catch (error) {
-      setErro(
-        error.message
-      );
+      if (ativo) setErro(error.message);
     } finally {
-      setCarregando(false);
+      if (ativo) setCarregando(false);
     }
-  }
-
+    }
+    carregarPassport();
+    return () => { ativo = false; };
+  }, []);
 
   function alterarCampo(
     event

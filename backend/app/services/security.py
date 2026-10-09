@@ -42,10 +42,10 @@ def verificar_senha(
     senha: str,
     senha_hash: str,
 ) -> bool:
-    return bcrypt.checkpw(
-        senha.encode("utf-8"),
-        senha_hash.encode("utf-8"),
-    )
+    try:
+        return bcrypt.checkpw(senha.encode("utf-8"), senha_hash.encode("utf-8"))
+    except ValueError:
+        return False
 
 
 def criar_access_token(user_id: int) -> str:
@@ -97,7 +97,7 @@ def obter_usuario_atual(
 
         user_id = int(user_id)
 
-    except (JWTError, ValueError):
+    except (JWTError, ValueError, TypeError):
         raise erro_credenciais
 
     usuario = (
@@ -124,5 +124,5 @@ def obter_usuario_opcional(
         if user_id is None:
             return None
         return db.query(User).filter(User.id == int(user_id)).first()
-    except (JWTError, ValueError):
+    except (JWTError, ValueError, TypeError):
         return None
