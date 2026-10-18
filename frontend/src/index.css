@@ -1356,7 +1356,8 @@ a {
   line-height: 1.7;
 }
 
-.destination-detail-content button {
+.destination-detail-content button,
+.destination-detail-content .destination-programs-link {
   display: flex;
   align-items: center;
 
@@ -1374,6 +1375,45 @@ a {
   background: var(--surface);
 
   font-weight: 700;
+  text-decoration: none;
+}
+
+.prototype-notice {
+  margin: 0 0 28px;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 158, 11, 0.38);
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.09);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.prototype-action-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.expired-opportunity {
+  align-self: center;
+  color: #a12a2a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.exchange-profile-form > label {
+  display: grid;
+  gap: 7px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.chat-prototype-notice {
+  margin: 0 20px 12px;
+  font-size: 13px;
 }
 
 .destination-info-section {

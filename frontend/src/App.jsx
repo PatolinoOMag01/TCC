@@ -1,5 +1,6 @@
 import {
   BrowserRouter,
+  Link,
   Route,
   Routes,
   useLocation,
@@ -184,10 +185,15 @@ function NavigationAndTheme() {
               }
             />
 
-<Route
-  path="/assistente"
-  element={<AssistenteIA />}
-/>
+            <Route
+              path="/assistente"
+              element={
+                <ProtectedRoute>
+                  <AssistenteIA />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<main className="not-found"><div><h1>Página não encontrada</h1><Link to="/">Voltar para o início</Link></div></main>} />
       </Routes>
     </>
   );

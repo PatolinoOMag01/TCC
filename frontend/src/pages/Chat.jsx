@@ -210,6 +210,10 @@ export default function Chat() {
               </div>
             </div>
 
+            <p className="prototype-notice chat-prototype-notice" role="note">
+              <strong>Modo demonstração:</strong> as mensagens ficam salvas somente neste navegador e não são enviadas a outros usuários.
+            </p>
+
             {!usuario && (
               <Link
                 to="/login"

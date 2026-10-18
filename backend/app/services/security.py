@@ -13,10 +13,11 @@ from app.models.user import User
 
 load_dotenv()
 
-SECRET_KEY = os.getenv(
-    "JWT_SECRET_KEY",
-    "troque-essa-chave-em-producao",
-)
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", "").strip()
+if len(SECRET_KEY) < 32:
+    raise RuntimeError(
+        "JWT_SECRET_KEY precisa estar definida e ter pelo menos 32 caracteres."
+    )
 
 ALGORITHM = "HS256"
 

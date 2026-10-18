@@ -15,6 +15,9 @@ class FluxosTest(unittest.TestCase):
         with TestClient(app) as c:
             self.assertEqual(c.get('/health').status_code, 200)
             self.assertIn(c.get('/passport/me').status_code, (401,403))
+            self.assertEqual(c.post('/ia/chat', json={'mensagem':'Olá'}).status_code, 401)
+            resposta_cors = c.get('/health', headers={'Origin':'https://origem-nao-permitida.example'})
+            self.assertNotIn('access-control-allow-origin', resposta_cors.headers)
             dados = {'nome':'Aluno Teste','email':'teste@example.com','senha':'senha123'}
             self.assertEqual(c.post('/auth/cadastro',json=dados).status_code,201)
             self.assertEqual(c.post('/auth/cadastro',json=dados).status_code,409)

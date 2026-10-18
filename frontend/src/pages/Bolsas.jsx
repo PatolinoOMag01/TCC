@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  ArrowRight,
   Search,
   GraduationCap,
   Calendar,
@@ -92,6 +91,10 @@ export default function Bolsas() {
           </p>
         </section>
 
+        <p className="prototype-notice" role="note">
+          <strong>Conteúdo demonstrativo:</strong> estas bolsas são exemplos do protótipo, não oportunidades confirmadas. Consulte os canais oficiais antes de tomar qualquer decisão.
+        </p>
+
         <div
           style={{
             display: "flex",
@@ -108,6 +111,7 @@ export default function Bolsas() {
           <Search size={20} color="#607084" />
           <input
             type="text"
+            aria-label="Buscar bolsas por nome, país ou área"
             placeholder="Buscar por nome, país ou área..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
@@ -231,9 +235,12 @@ export default function Bolsas() {
                   }}
                 >
                   <Calendar size={16} />
-                  {bolsa.dataInicio.slice(5)} até{" "}
-                  {bolsa.dataFim.slice(5)}
+                  {new Date(`${bolsa.dataInicio}T00:00:00`).toLocaleDateString("pt-BR")} até{" "}
+                  {new Date(`${bolsa.dataFim}T00:00:00`).toLocaleDateString("pt-BR")}
                 </div>
+                {new Date(`${bolsa.dataFim}T23:59:59`) < new Date() && (
+                  <span className="expired-opportunity">Prazo encerrado</span>
+                )}
               </div>
 
               <div>
@@ -260,28 +267,10 @@ export default function Bolsas() {
                 </ul>
               </div>
 
-              <button
-                type="button"
-                style={{
-                  marginTop: 8,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  background: "#173b67",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 14,
-                  padding: "14px 18px",
-                  fontWeight: 700,
-                  fontSize: 15,
-                  cursor: "pointer",
-                }}
-              >
+              <p className="prototype-action-note">
                 <GraduationCap size={18} />
-                Quero me candidatar
-                <ArrowRight size={16} />
-              </button>
+                Candidatura indisponível neste protótipo.
+              </p>
             </article>
           ))}
         </section>

@@ -73,10 +73,10 @@ function DestinoDetalhes() {
 
           <p className="detail-description">{destino.descricao}</p>
 
-          <button>
+          <Link to="/bolsas" className="destination-programs-link">
             Ver programas disponíveis
             <ArrowRight size={18} />
-          </button>
+          </Link>
         </motion.div>
       </section>
 

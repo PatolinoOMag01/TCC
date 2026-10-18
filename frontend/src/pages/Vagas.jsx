@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  ArrowRight,
   Search,
   Briefcase,
   MapPin,
@@ -94,6 +93,10 @@ export default function Vagas() {
           </p>
         </section>
 
+        <p className="prototype-notice" role="note">
+          <strong>Conteúdo demonstrativo:</strong> estas vagas são exemplos e não foram confirmadas por empregadores. Verifique a empresa, as regras de trabalho e os requisitos do visto em fontes oficiais.
+        </p>
+
         <div
           style={{
             display: "flex",
@@ -110,6 +113,7 @@ export default function Vagas() {
           <Search size={20} color="#607084" />
           <input
             type="text"
+            aria-label="Buscar vagas por cargo, cidade ou país"
             placeholder="Buscar por cargo, cidade ou país..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
@@ -262,7 +266,7 @@ export default function Vagas() {
                   }}
                 >
                   <Clock size={16} />
-                  Até {vaga.dataLimite}
+                  Até {new Date(`${vaga.dataLimite}T00:00:00`).toLocaleDateString("pt-BR")}
                 </span>
               </div>
 
@@ -278,27 +282,9 @@ export default function Vagas() {
                 <strong>Idioma:</strong> {vaga.idioma}
               </p>
 
-              <button
-                type="button"
-                style={{
-                  marginTop: 6,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  background: "#173b67",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 14,
-                  padding: "14px 18px",
-                  fontWeight: 700,
-                  fontSize: 15,
-                  cursor: "pointer",
-                }}
-              >
-                Candidatar-se
-                <ArrowRight size={16} />
-              </button>
+              <p className="prototype-action-note">
+                Candidatura indisponível neste protótipo.
+              </p>
             </article>
           ))}
         </section>

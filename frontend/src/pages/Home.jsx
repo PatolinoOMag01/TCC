@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 
 import { destinos } from "../data/destinos";
 import { useAuth } from "../context/AuthContext";
+import { useFavorites } from "../context/FavoritesContext";
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -26,6 +27,7 @@ function Home() {
     usuario,
     sair,
   } = useAuth();
+  const { toggleFavorito, isFavorito } = useFavorites();
 
   return (
     <main>
@@ -403,8 +405,14 @@ function Home() {
 
                   <div className="card-gradient" />
 
-                  <button className="favorite-button">
-                    <Heart size={19} />
+                  <button
+                    type="button"
+                    className="favorite-button"
+                    aria-label={isFavorito(destino.slug) ? `Remover ${destino.pais} dos favoritos` : `Adicionar ${destino.pais} aos favoritos`}
+                    aria-pressed={isFavorito(destino.slug)}
+                    onClick={() => toggleFavorito(destino)}
+                  >
+                    <Heart size={19} fill={isFavorito(destino.slug) ? "currentColor" : "none"} />
                   </button>
 
                   <div className="destination-tag">

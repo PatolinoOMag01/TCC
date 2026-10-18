@@ -105,6 +105,7 @@ export default function Destinos() {
           <Search size={20} color="#607084" />
           <input
             type="text"
+            aria-label="Buscar destino por país, cidade ou continente"
             placeholder="Buscar país, cidade ou continente..."
             value={busca}
             onChange={(event) => setBusca(event.target.value)}
