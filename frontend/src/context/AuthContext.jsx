@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useRef,
 } from "react";
 
 import { api } from "../services/api";
@@ -19,7 +20,10 @@ export function AuthProvider({
   const [carregando, setCarregando] =
     useState(() => Boolean(localStorage.getItem("interway-token")));
 
+  const sessao = useRef(0);
+
   async function carregarUsuario() {
+    const versao = sessao.current;
     const token =
       localStorage.getItem(
         "interway-token"
@@ -35,24 +39,23 @@ export function AuthProvider({
       const dados =
         await api.meuPerfil();
 
-      setUsuario(dados);
-    } catch {
-      localStorage.removeItem(
-        "interway-token"
-      );
-
+      if (versao === sessao.current) setUsuario(dados);
+    } catch (erro) {
+      if (versao !== sessao.current) return;
+      if (erro.status === 401) localStorage.removeItem("interway-token");
       setUsuario(null);
     } finally {
-      setCarregando(false);
+      if (versao === sessao.current) setCarregando(false);
     }
   }
 
   useEffect(() => {
     if (!localStorage.getItem("interway-token")) return;
     let ativo = true;
-    api.meuPerfil().then(dados => { if (ativo) setUsuario(dados); })
-      .catch(() => { if (ativo) { localStorage.removeItem("interway-token"); setUsuario(null); } })
-      .finally(() => { if (ativo) setCarregando(false); });
+    const versao = sessao.current;
+    api.meuPerfil().then(dados => { if (ativo && versao === sessao.current) setUsuario(dados); })
+      .catch((erro) => { if (ativo && versao === sessao.current) { if (erro.status === 401) localStorage.removeItem("interway-token"); setUsuario(null); } })
+      .finally(() => { if (ativo && versao === sessao.current) setCarregando(false); });
     return () => { ativo = false; };
   }, []);
 
@@ -83,6 +86,8 @@ export function AuthProvider({
         senha,
       });
 
+    sessao.current += 1;
+    setCarregando(false);
     localStorage.setItem(
       "interway-token",
       resposta.access_token
@@ -96,6 +101,8 @@ export function AuthProvider({
   }
 
   function sair() {
+    sessao.current += 1;
+    setCarregando(false);
     localStorage.removeItem(
       "interway-token"
     );

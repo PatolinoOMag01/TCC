@@ -73,7 +73,7 @@ function DestinoDetalhes() {
 
           <p className="detail-description">{destino.descricao}</p>
 
-          <Link to="/bolsas" className="destination-programs-link">
+          <Link to={`/bolsas?busca=${encodeURIComponent(destino.pais)}`} className="destination-programs-link">
             Ver programas disponíveis
             <ArrowRight size={18} />
           </Link>
@@ -133,9 +133,9 @@ function DestinoDetalhes() {
           <div className="stat-card highlight-stat">
             <span>InterWay Match</span>
 
-            <strong>{destino.compatibilidade}%</strong>
+            <Link to="/match">Descobrir compatibilidade</Link>
 
-            <p>Compatível com seu perfil</p>
+            <p>Responda ao teste para conhecer seu resultado.</p>
           </div>
         </div>
       </section>

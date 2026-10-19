@@ -6,6 +6,7 @@ import {
 
 import {
   ArrowLeft,
+  ArrowRight,
   Bot,
   Globe2,
   Send,
@@ -16,6 +17,8 @@ import {
 
 import {
   Link,
+  useLocation,
+  useNavigate,
 } from "react-router-dom";
 
 import {
@@ -34,6 +37,9 @@ const SUGESTOES = [
 
 
 function AssistenteIA() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const voltar = () => location.key === "default" ? navigate("/") : navigate(-1);
   const [mensagem, setMensagem] =
     useState("");
 
@@ -55,6 +61,9 @@ function AssistenteIA() {
     ]);
 
   const finalRef = useRef(null);
+  const operacaoRef = useRef(false);
+  const [carregandoHistorico, setCarregandoHistorico] = useState(true);
+  const [erroHistorico, setErroHistorico] = useState("");
 
   useEffect(() => {
     finalRef.current?.scrollIntoView({
@@ -63,11 +72,12 @@ function AssistenteIA() {
   }, [mensagens, enviando]);
 
   useEffect(() => {
+    let ativo = true;
     async function carregarHistorico() {
-      if (!localStorage.getItem("interway-token")) return;
+      if (!localStorage.getItem("interway-token")) { setCarregandoHistorico(false); return; }
       try {
         const itens = await api.historicoIA();
-        if (itens.length) {
+        if (ativo && itens.length) {
           setMensagens(itens.map((item) => ({
             id: item.id,
             autor: item.role === "user" ? "usuario" : "ia",
@@ -75,22 +85,34 @@ function AssistenteIA() {
           })));
         }
       } catch (erro) {
-        console.error("Historico da IA:", erro);
+        if (ativo) setErroHistorico(erro.message);
+      } finally {
+        if (ativo) setCarregandoHistorico(false);
       }
     }
     carregarHistorico();
+    return () => { ativo = false; };
   }, []);
 
   async function limparHistorico() {
+    if (operacaoRef.current || carregandoHistorico) return;
+    operacaoRef.current = true;
+    setEnviando(true);
+    setErroHistorico("");
     if (!localStorage.getItem("interway-token")) {
       setMensagens([]);
+      operacaoRef.current = false;
+      setEnviando(false);
       return;
     }
     try {
       await api.limparHistoricoIA();
       setMensagens([]);
     } catch (erro) {
-      console.error("Erro ao limpar historico:", erro);
+      setErroHistorico(erro.message);
+    } finally {
+      operacaoRef.current = false;
+      setEnviando(false);
     }
   }
 
@@ -103,10 +125,11 @@ function AssistenteIA() {
       mensagem
     ).trim();
 
-    if (!texto || enviando) {
+    if (!texto || operacaoRef.current || carregandoHistorico) {
       return;
     }
 
+    operacaoRef.current = true;
     const mensagemUsuario = {
       id: Date.now(),
       autor: "usuario",
@@ -172,6 +195,7 @@ function AssistenteIA() {
         ]
       );
     } finally {
+      operacaoRef.current = false;
       setEnviando(false);
     }
   }
@@ -196,13 +220,15 @@ function AssistenteIA() {
 
         <header className="assistente-header">
           <div className="assistente-header-left">
-            <Link
-              to="/"
+            <button
+              type="button"
               className="assistente-voltar"
-              aria-label="Voltar para o início"
+              aria-label="Voltar"
+              title="Voltar para a página anterior"
+              onClick={voltar}
             >
               <ArrowLeft size={21} />
-            </Link>
+            </button>
 
             <div className="assistente-avatar">
               <Globe2 size={27} />
@@ -225,8 +251,9 @@ function AssistenteIA() {
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <button type="button" onClick={limparHistorico} disabled={enviando} title="Limpar conversa" aria-label="Limpar conversa" style={{ border: 0, background: "transparent", cursor: "pointer" }}>
+          <div className="assistente-header-actions" style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <Link to="/" className="assistente-inicio">Voltar para início <ArrowRight size={16} /></Link>
+            <button type="button" onClick={limparHistorico} disabled={enviando || carregandoHistorico} title="Limpar conversa" aria-label="Limpar conversa" style={{ border: 0, background: "transparent", cursor: "pointer" }}>
               <Trash2 size={19} />
             </button>
             <div className="assistente-online">
@@ -238,6 +265,8 @@ function AssistenteIA() {
 
 
         <section className="assistente-chat">
+          {carregandoHistorico && <p role="status">Carregando conversa...</p>}
+          {erroHistorico && <p role="alert">{erroHistorico}</p>}
 
           <div className="assistente-mensagens">
             {mensagens.map(
@@ -308,7 +337,7 @@ function AssistenteIA() {
           </div>
 
 
-          {mensagens.length === 1 && (
+          {mensagens.length <= 1 && !carregandoHistorico && (
             <div className="assistente-sugestoes">
               <span className="sugestoes-titulo">
                 Experimente perguntar
@@ -350,7 +379,7 @@ function AssistenteIA() {
                 placeholder="Pergunte sobre seu intercâmbio..."
                 maxLength={4000}
                 rows={1}
-                disabled={enviando}
+                disabled={enviando || carregandoHistorico}
               />
 
               <button
@@ -360,7 +389,7 @@ function AssistenteIA() {
                   enviarMensagem()
                 }
                 disabled={
-                  enviando ||
+                  enviando || carregandoHistorico ||
                   !mensagem.trim()
                 }
                 aria-label="Enviar mensagem"

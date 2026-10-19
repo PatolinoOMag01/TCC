@@ -23,6 +23,8 @@ import { useFavorites } from "../context/FavoritesContext";
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [preferencias, setPreferencias] = useState({ destino: "", objetivo: "", orcamento: "" });
+  const alterarPreferencia = (event) => setPreferencias((atual) => ({ ...atual, [event.target.name]: event.target.value }));
   const {
     usuario,
     sair,
@@ -78,7 +80,7 @@ function Home() {
                   }}
                 >
                   <User size={17} />
-                  {usuario.nome.split(" ")[0]}
+                  {usuario.nome?.trim().split(/\s+/)[0] || "Meu perfil"}
                 </Link>
 
                 <button
@@ -191,7 +193,7 @@ function Home() {
 
               <p>
                 <strong>
-                  +20 destinos
+                  +12 destinos
                 </strong>
 
                 <span>
@@ -243,6 +245,7 @@ function Home() {
 
                 <input
                   placeholder="Escolha um destino"
+                  name="destino" value={preferencias.destino} onChange={alterarPreferencia}
                 />
               </div>
             </div>
@@ -251,7 +254,7 @@ function Home() {
               <div className="planner-field">
                 <label>Objetivo</label>
 
-                <select defaultValue="">
+                <select name="objetivo" value={preferencias.objetivo} onChange={alterarPreferencia}>
                   <option
                     value=""
                     disabled
@@ -259,19 +262,19 @@ function Home() {
                     Selecione
                   </option>
 
-                  <option>
+                  <option value="idioma">
                     Aprender idioma
                   </option>
 
-                  <option>
+                  <option value="faculdade">
                     Faculdade
                   </option>
 
-                  <option>
+                  <option value="trabalho">
                     Trabalhar
                   </option>
 
-                  <option>
+                  <option value="experiencia">
                     Experiência cultural
                   </option>
                 </select>
@@ -280,7 +283,7 @@ function Home() {
               <div className="planner-field">
                 <label>Orçamento</label>
 
-                <select defaultValue="">
+                <select name="orcamento" value={preferencias.orcamento} onChange={alterarPreferencia}>
                   <option
                     value=""
                     disabled
@@ -288,19 +291,19 @@ function Home() {
                     Selecione
                   </option>
 
-                  <option>
+                  <option value="1">
                     Até R$ 10 mil
                   </option>
 
-                  <option>
+                  <option value="2">
                     R$ 10 mil - R$ 20 mil
                   </option>
 
-                  <option>
+                  <option value="3">
                     R$ 20 mil - R$ 40 mil
                   </option>
 
-                  <option>
+                  <option value="4">
                     Acima de R$ 40 mil
                   </option>
                 </select>
@@ -309,6 +312,7 @@ function Home() {
 
             <Link
               to="/match"
+              state={{ preferencias }}
               className="planner-button"
             >
               <Search size={18} />

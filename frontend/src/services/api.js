@@ -1,6 +1,7 @@
 const API_URL =
   import.meta.env.VITE_API_URL ||
   "http://127.0.0.1:8000";
+const BASE_URL = API_URL.replace(/\/+$/, "");
 
 
 async function request(
@@ -23,13 +24,21 @@ async function request(
       `Bearer ${token}`;
   }
 
-  const response = await fetch(
-    `${API_URL}${endpoint}`,
+  let response;
+  try {
+    response = await fetch(
+    `${BASE_URL}${endpoint}`,
     {
       ...options,
       headers,
+      signal: options.signal ?? AbortSignal.timeout(endpoint === "/ia/chat" ? 120000 : 15000),
     }
   );
+  } catch (cause) {
+    throw new Error(cause.name === "TimeoutError"
+      ? "O servidor demorou para responder. Tente novamente."
+      : "Não foi possível conectar à API. Verifique se o backend está iniciado e se VITE_API_URL está correto.", { cause });
+  }
 
   let data;
 
@@ -41,12 +50,14 @@ async function request(
   }
 
   if (!response.ok) {
-    throw new Error(
+    const error = new Error(
       (Array.isArray(data?.detail)
         ? data.detail.map((item) => item.msg).join("; ")
         : data?.detail) ||
         "Erro ao comunicar com o servidor."
     );
+    error.status = response.status;
+    throw error;
   }
 
   return data;

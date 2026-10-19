@@ -1,6 +1,6 @@
+import PageNavigation from "./components/PageNavigation";
 import {
   BrowserRouter,
-  Link,
   Route,
   Routes,
   useLocation,
@@ -193,7 +193,7 @@ function NavigationAndTheme() {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<main className="not-found"><div><h1>Página não encontrada</h1><Link to="/">Voltar para o início</Link></div></main>} />
+            <Route path="*" element={<main className="not-found"><div><PageNavigation /><h1>Página não encontrada</h1></div></main>} />
       </Routes>
     </>
   );

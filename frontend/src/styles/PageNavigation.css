@@ -1,0 +1,32 @@
+.page-navigation {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-navigation-back,
+.page-navigation-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--link);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.page-navigation-home {
+  margin-left: auto;
+}
+
+.page-navigation-back:hover,
+.page-navigation-home:hover {
+  text-decoration: underline;
+}

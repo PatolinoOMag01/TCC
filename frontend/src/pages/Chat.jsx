@@ -1,3 +1,4 @@
+import PageNavigation from "../components/PageNavigation";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -126,17 +127,7 @@ export default function Chat() {
           flexDirection: "column",
         }}
       >
-        <Link
-          to="/"
-          style={{
-            textDecoration: "none",
-            color: "var(--link)",
-            fontWeight: 600,
-            marginBottom: 24,
-          }}
-        >
-          ← Voltar para início
-        </Link>
+        <PageNavigation />
 
         <div
           style={{

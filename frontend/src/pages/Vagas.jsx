@@ -1,5 +1,5 @@
+import PageNavigation from "../components/PageNavigation";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Search,
   Briefcase,
@@ -41,16 +41,7 @@ export default function Vagas() {
           margin: "0 auto",
         }}
       >
-        <Link
-          to="/"
-          style={{
-            textDecoration: "none",
-            color: "var(--link)",
-            fontWeight: 600,
-          }}
-        >
-          ← Voltar para início
-        </Link>
+        <PageNavigation />
 
         <section
           style={{

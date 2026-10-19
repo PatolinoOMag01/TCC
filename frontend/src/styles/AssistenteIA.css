@@ -50,7 +50,11 @@
   display: grid;
   place-items: center;
   border-radius: 12px;
+  border: 0;
+  padding: 0;
+  background: transparent;
   color: inherit;
+  cursor: pointer;
   transition: 0.2s;
 }
 
@@ -91,6 +95,17 @@
 
 .assistente-titulo-linha svg {
   color: #526df0;
+}
+
+.assistente-inicio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--link);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .assistente-header p {
@@ -377,6 +392,10 @@
 
   .assistente-online {
     display: none;
+  }
+
+  .assistente-inicio {
+    font-size: 12px;
   }
 
   .assistente-mensagens {

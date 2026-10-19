@@ -33,7 +33,8 @@
   backdrop-filter: blur(15px);
 }
 
-.match-topbar a {
+.match-topbar a,
+.match-topbar button {
   display: flex;
   align-items: center;
 
@@ -43,6 +44,20 @@
 
   font-size: 14px;
   font-weight: 600;
+  text-decoration: none;
+}
+
+.match-topbar button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.match-topbar a:hover,
+.match-topbar button:hover {
+  color: var(--accent);
 }
 
 .match-topbar > span {

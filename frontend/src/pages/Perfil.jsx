@@ -240,7 +240,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 22,
-                color: "var(--text)",
+                color: "#000000",
                 marginTop: 6,
               }}
             >
@@ -251,7 +251,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "var(--muted)",
+                color: "#000000",
               }}
             >
               Passport
@@ -281,7 +281,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 22,
-                color: "var(--text)",
+                color: "#000000",
                 marginTop: 6,
               }}
             >
@@ -291,7 +291,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "var(--muted)",
+                color: "#000000",
               }}
             >
               Meta financeira
@@ -320,7 +320,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 22,
-                color: "var(--text)",
+                color: "#000000",
                 marginTop: 6,
               }}
             >
@@ -330,7 +330,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "var(--muted)",
+                color: "#000000",
               }}
             >
               Favoritos
@@ -360,7 +360,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 15,
-                color: "var(--text)",
+                color: "#000000",
                 marginTop: 8,
               }}
             >
@@ -370,7 +370,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "var(--muted)",
+                color: "#000000",
               }}
             >
               Encontrar destino

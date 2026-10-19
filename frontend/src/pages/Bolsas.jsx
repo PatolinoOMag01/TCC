@@ -1,5 +1,6 @@
+import PageNavigation from "../components/PageNavigation";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {
   Search,
   GraduationCap,
@@ -9,7 +10,8 @@ import {
 import { bolsas } from "../data/bolsas";
 
 export default function Bolsas() {
-  const [busca, setBusca] = useState("");
+  const [params] = useSearchParams();
+  const [busca, setBusca] = useState(() => params.get("busca") || "");
 
   const bolsasFiltradas = useMemo(() => {
     const termo = busca.trim().toLowerCase();
@@ -39,16 +41,7 @@ export default function Bolsas() {
           margin: "0 auto",
         }}
       >
-        <Link
-          to="/"
-          style={{
-            textDecoration: "none",
-            color: "var(--link)",
-            fontWeight: 600,
-          }}
-        >
-          ← Voltar para início
-        </Link>
+        <PageNavigation />
 
         <section
           style={{

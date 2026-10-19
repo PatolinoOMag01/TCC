@@ -31,6 +31,10 @@ export default function Planejador() {
   const [carregando, setCarregando] =
     useState(true);
 
+  const [erro, setErro] = useState("");
+  const [falhaCarregamento, setFalhaCarregamento] = useState(false);
+  const [salvando, setSalvando] = useState(false);
+  const [tentativa, setTentativa] = useState(0);
   const [salvo, setSalvo] =
     useState(false);
 
@@ -45,29 +49,38 @@ export default function Planejador() {
 
 
   useEffect(() => {
+    let ativo = true;
     async function carregar() {
+      setCarregando(true);
+      setErro("");
+      setFalhaCarregamento(false);
       try {
-        const [dadosPassport, dadosPlanejamento] = await Promise.all([
+        const [dadosPassport, dadosPlanejamento] = await Promise.allSettled([
           api.meuPassport(),
           api.meuPlanejamento(),
         ]);
 
-        setPassport(dadosPassport);
+        if (!ativo) return;
+        if (dadosPlanejamento.status === "rejected") throw dadosPlanejamento.reason;
+        const planejamento = dadosPlanejamento.value;
+        const passaporte = dadosPassport.status === "fulfilled" ? dadosPassport.value : null;
+        setPassport(passaporte);
         setFormulario({
-          destino: dadosPlanejamento.destino || [dadosPassport?.cidade, dadosPassport?.pais].filter(Boolean).join(", "),
-          meta: dadosPlanejamento.meta ? String(dadosPlanejamento.meta) : (dadosPassport?.orcamento ? String(dadosPassport.orcamento) : ""),
-          guardado: dadosPlanejamento.guardado ? String(dadosPlanejamento.guardado) : "",
-          mensal: dadosPlanejamento.mensal ? String(dadosPlanejamento.mensal) : "",
+          destino: planejamento.destino || [passaporte?.cidade, passaporte?.pais].filter(Boolean).join(", "),
+          meta: planejamento.meta != null ? String(planejamento.meta) : (passaporte?.orcamento ? String(passaporte.orcamento) : ""),
+          guardado: planejamento.guardado != null ? String(planejamento.guardado) : "",
+          mensal: planejamento.mensal != null ? String(planejamento.mensal) : "",
         });
       } catch (erro) {
-        console.error("Erro ao carregar planejamento:", erro);
+        if (ativo) { setErro(erro.message); setFalhaCarregamento(true); }
       } finally {
-        setCarregando(false);
+        if (ativo) setCarregando(false);
       }
     }
 
     carregar();
-  }, [usuario?.id]);
+    return () => { ativo = false; };
+  }, [usuario?.id, tentativa]);
 
 
   function alterarCampo(event) {
@@ -89,7 +102,10 @@ export default function Planejador() {
 
   async function salvar(event) {
     event.preventDefault();
+    if (salvando || falhaCarregamento) return;
     setSalvo(false);
+    setErro("");
+    setSalvando(true);
 
     try {
       await api.atualizarPlanejamento({
@@ -100,7 +116,9 @@ export default function Planejador() {
       });
       setSalvo(true);
     } catch (erro) {
-      console.error("Erro ao salvar planejamento:", erro);
+      setErro(erro.message);
+    } finally {
+      setSalvando(false);
     }
   }
 
@@ -150,6 +168,7 @@ export default function Planejador() {
         const data =
           new Date();
 
+        data.setDate(1);
         data.setMonth(
           data.getMonth() +
             meses
@@ -232,6 +251,7 @@ export default function Planejador() {
 
 
       <div className="planner-wrapper">
+        {erro && <div role="alert"><p>{erro}</p>{falhaCarregamento && <button type="button" onClick={() => setTentativa(v => v + 1)}>Tentar carregar novamente</button>}</div>}
         <section className="planner-heading">
           <div>
             <span className="planner-eyebrow">
@@ -376,6 +396,7 @@ export default function Planejador() {
                 <input
                   type="number"
                   min="0"
+                  step="0.01"
                   name="meta"
                   value={
                     formulario.meta
@@ -400,6 +421,7 @@ export default function Planejador() {
                 <input
                   type="number"
                   min="0"
+                  step="0.01"
                   name="guardado"
                   value={
                     formulario.guardado
@@ -427,6 +449,7 @@ export default function Planejador() {
                 <input
                   type="number"
                   min="0"
+                  step="0.01"
                   name="mensal"
                   value={
                     formulario.mensal
@@ -443,10 +466,11 @@ export default function Planejador() {
             <button
               type="submit"
               className="planner-save"
+              disabled={salvando || falhaCarregamento}
             >
               <Save size={18} />
 
-              Salvar planejamento
+              {salvando ? "Salvando..." : "Salvar planejamento"}
             </button>
 
             {salvo && (

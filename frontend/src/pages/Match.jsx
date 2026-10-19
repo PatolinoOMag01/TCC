@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -75,6 +75,11 @@ const perguntas = [
         descricao: "Quero desenvolver meu francês.",
         emoji: "🇫🇷",
       },
+      { valor: "espanhol", titulo: "Espanhol", descricao: "Quero desenvolver meu espanhol.", emoji: "🇪🇸" },
+      { valor: "alemao", titulo: "Alemão", descricao: "Quero desenvolver meu alemão.", emoji: "🇩🇪" },
+      { valor: "japones", titulo: "Japonês", descricao: "Quero desenvolver meu japonês.", emoji: "🇯🇵" },
+      { valor: "portugues", titulo: "Português", descricao: "Quero estudar em português.", emoji: "🇵🇹" },
+      { valor: "holandes", titulo: "Neerlandês", descricao: "Quero desenvolver meu neerlandês.", emoji: "🇳🇱" },
     ],
   },
 
@@ -253,7 +258,14 @@ function calcularMatch(destino, respostas) {
 function Match() {
   const [etapa, setEtapa] = useState(0);
 
-  const [respostas, setRespostas] = useState({});
+  const location = useLocation();
+  const navigate = useNavigate();
+  const sair = () => location.key === "default" ? navigate("/") : navigate(-1);
+  const [respostas, setRespostas] = useState(() => {
+    const p = location.state?.preferencias;
+    return p ? { ...(p.objetivo ? { objetivo: p.objetivo } : {}), ...(p.orcamento ? { orcamento: Number(p.orcamento) } : {}) } : {};
+  });
+  const destinoPreferido = location.state?.preferencias?.destino?.trim().toLocaleLowerCase("pt-BR");
 
   const [finalizado, setFinalizado] = useState(false);
 
@@ -277,9 +289,11 @@ function Match() {
       }))
       .sort(
         (a, b) =>
+          Number(Boolean(destinoPreferido && `${b.pais} ${b.cidade}`.toLocaleLowerCase("pt-BR").includes(destinoPreferido))) -
+          Number(Boolean(destinoPreferido && `${a.pais} ${a.cidade}`.toLocaleLowerCase("pt-BR").includes(destinoPreferido))) ||
           b.compatibilidade - a.compatibilidade
       );
-  }, [finalizado, respostas]);
+  }, [finalizado, respostas, destinoPreferido]);
 
   function escolherResposta(valor) {
     setRespostas((anteriores) => ({
@@ -510,10 +524,10 @@ function Match() {
   return (
     <main className="match-page">
       <div className="match-topbar">
-        <Link to="/">
+        <button type="button" onClick={sair}>
           <ArrowLeft size={18} />
-          Sair
-        </Link>
+          Voltar
+        </button>
 
         <span>INTERWAY MATCH</span>
       </div>

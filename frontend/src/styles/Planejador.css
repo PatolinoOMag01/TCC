@@ -764,3 +764,149 @@
     padding: 19px;
   }
 }
+
+/* Layout da página financeira atual */
+.planner-page {
+  min-height: 100vh;
+  color: var(--text);
+  background: radial-gradient(circle at 85% 5%, rgba(23, 105, 255, 0.12), transparent 30%), var(--background);
+}
+
+.planner-topbar {
+  min-height: 72px;
+  padding: 0 clamp(20px, 6vw, 88px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+}
+
+.planner-back, .planner-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--link);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.planner-back:hover { color: var(--accent); }
+.planner-logo { color: var(--text); font: 800 22px "Manrope", sans-serif; letter-spacing: -1px; }
+.planner-logo span { color: var(--accent); }
+
+.planner-wrapper {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 54px 0 80px;
+}
+
+.planner-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 30px;
+}
+
+.planner-eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.planner-heading h1 {
+  max-width: 760px;
+  margin: 12px 0;
+  color: var(--text);
+  font: 800 clamp(34px, 5vw, 56px)/1.08 "Manrope", sans-serif;
+  letter-spacing: -2px;
+}
+
+.planner-heading h1 span { color: var(--accent); }
+.planner-heading p { max-width: 650px; color: var(--muted); line-height: 1.65; }
+.planner-heading-icon { width: 62px; height: 62px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 18px; color: var(--accent); background: var(--surface-soft); }
+
+.planner-passport-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 22px;
+  padding: 15px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text);
+  background: var(--surface);
+}
+.planner-passport-info svg { flex: 0 0 auto; color: #10b981; }
+
+.planner-progress-card, .planner-form-card, .planner-result-card, .planner-tip {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 12px 35px rgba(16, 24, 40, 0.07);
+}
+
+.planner-progress-card { margin-bottom: 22px; padding: 22px 26px; }
+.planner-progress-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 14px; }
+.planner-progress-header > div:first-child { display: grid; gap: 6px; }
+.planner-progress-header span { color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+.planner-progress-header strong { color: var(--accent); font-size: 23px; }
+.planner-progress-money { display: flex; align-items: baseline; gap: 7px; color: var(--text); }
+.planner-progress-money span { color: var(--muted); font-size: 13px; }
+.planner-progress { height: 10px; overflow: hidden; border-radius: 20px; background: var(--surface-soft); }
+.planner-progress-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #1769ff, #57a0ff); transition: width .3s ease; }
+
+.planner-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); align-items: start; gap: 22px; }
+.planner-form-card { display: grid; gap: 18px; padding: 26px; }
+.planner-card-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; color: var(--accent); }
+.planner-card-heading span { color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+.planner-card-heading h2 { margin-top: 5px; color: var(--text); font: 700 23px "Manrope", sans-serif; }
+.planner-form-card label { display: grid; gap: 8px; color: var(--text); font-size: 14px; font-weight: 600; }
+.planner-input { min-height: 48px; display: flex; align-items: center; gap: 10px; padding: 0 13px; border: 1px solid var(--border); border-radius: 12px; color: var(--muted); background: var(--background); transition: border-color .2s, box-shadow .2s; }
+.planner-input:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 17%, transparent); }
+.planner-input svg { flex: 0 0 auto; color: var(--accent); }
+.planner-input span { color: var(--muted); }
+.planner-input input { width: 100%; min-width: 0; padding: 12px 0; border: 0; outline: 0; color: var(--text); background: transparent; }
+.planner-input input::placeholder { color: var(--muted); opacity: .8; }
+.planner-save { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; margin-top: 2px; border: 0; border-radius: 12px; color: #fff; background: #1769ff; font-weight: 700; transition: background .2s, transform .2s; }
+.planner-save:hover:not(:disabled) { background: #0a55df; transform: translateY(-1px); }
+.planner-save:disabled { cursor: wait; opacity: .65; }
+.planner-saved { display: flex; align-items: center; gap: 8px; color: #07845b; font-size: 14px; font-weight: 600; }
+
+.planner-results { display: grid; gap: 14px; }
+.planner-result-card { min-height: 92px; display: flex; align-items: center; gap: 15px; padding: 18px 20px; }
+.planner-result-icon { width: 46px; height: 46px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 14px; color: var(--accent); background: var(--surface-soft); }
+.planner-result-card span { display: block; margin-bottom: 5px; color: var(--muted); font-size: 13px; }
+.planner-result-card strong { color: var(--text); font-size: 17px; }
+.planner-result-highlight { border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+.planner-result-highlight .planner-result-icon { color: #07845b; background: rgba(16, 185, 129, .12); }
+.planner-tip { display: flex; align-items: flex-start; gap: 13px; padding: 19px; color: var(--text); background: var(--surface-soft); box-shadow: none; }
+.planner-tip > svg { flex: 0 0 auto; color: var(--accent); }
+.planner-tip strong { display: block; margin-bottom: 5px; color: var(--text); }
+.planner-tip p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.planner-loading { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; color: var(--muted); background: var(--background); }
+.planner-spinner { color: var(--accent); animation: planner-spin 1s linear infinite; }
+@keyframes planner-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 760px) {
+  .planner-wrapper { width: min(100% - 32px, 560px); padding: 36px 0 56px; }
+  .planner-heading { align-items: flex-start; }
+  .planner-heading-icon { width: 50px; height: 50px; }
+  .planner-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .planner-topbar { min-height: 62px; padding: 0 16px; }
+  .planner-back { font-size: 13px; }
+  .planner-logo { font-size: 19px; }
+  .planner-wrapper { width: calc(100% - 28px); padding-top: 30px; }
+  .planner-heading { gap: 12px; }
+  .planner-heading h1 { font-size: 34px; letter-spacing: -1px; }
+  .planner-heading p { font-size: 14px; }
+  .planner-heading-icon { display: none; }
+  .planner-progress-card, .planner-form-card { padding: 19px; }
+  .planner-progress-header { align-items: flex-start; flex-direction: column; }
+  .planner-progress-money { flex-wrap: wrap; }
+}

@@ -1,3 +1,4 @@
+import PageNavigation from "../components/PageNavigation";
 import { Link } from "react-router-dom";
 import { ArrowRight, Heart, Trash2 } from "lucide-react";
 import { useFavorites } from "../context/FavoritesContext";
@@ -20,16 +21,7 @@ export default function Favoritos() {
           margin: "0 auto",
         }}
       >
-        <Link
-          to="/"
-          style={{
-            textDecoration: "none",
-            color: "var(--link)",
-            fontWeight: 600,
-          }}
-        >
-          ← Voltar para início
-        </Link>
+        <PageNavigation />
 
         <section
           style={{

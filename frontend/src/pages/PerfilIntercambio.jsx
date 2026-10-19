@@ -6,6 +6,9 @@ import { api } from "../services/api";
 export default function PerfilIntercambio() {
   const [form, setForm] = useState({ destino_pais:"", destino_cidade:"", duracao_meses:"", data_prevista:"", tipo_programa:"", area_interesse:"", instituicao:"", observacoes:"" });
   const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [tentativa, setTentativa] = useState(0);
   const [saving, setSaving] = useState(false);
   useEffect(() => {
     let ativo = true;
@@ -15,12 +18,14 @@ export default function PerfilIntercambio() {
           destino_pais:d.destino_pais||"", destino_cidade:d.destino_cidade||"", duracao_meses:d.duracao_meses||"", data_prevista:d.data_prevista||"", tipo_programa:d.tipo_programa||"", area_interesse:d.area_interesse||"", instituicao:d.instituicao||"", observacoes:d.observacoes||""
         });
       })
-      .catch((e) => { if (ativo) setStatus(e.message); });
+      .catch((e) => { if (ativo) { setStatus(e.message); setLoadError(true); } })
+      .finally(() => { if (ativo) setLoading(false); });
     return () => { ativo = false; };
-  }, []);
+  }, [tentativa]);
   const change = e => setForm(v => ({...v,[e.target.name]:e.target.value}));
   async function save(e){
     e.preventDefault();
+    if (loading || loadError || saving) return;
     setStatus("");
     setSaving(true);
     try {
@@ -32,16 +37,19 @@ export default function PerfilIntercambio() {
   return <main style={{maxWidth:900,margin:"40px auto",padding:24}}>
     <Link to="/perfil"><ArrowLeft size={18}/> Voltar</Link>
     <h1>Meu perfil de intercâmbio</h1><p>Esses dados ajudam a InterWay IA a personalizar seu plano.</p>
+    {loading && <p role="status">Carregando perfil...</p>}
+    {loadError && <button type="button" onClick={() => { setLoading(true); setLoadError(false); setStatus(""); setTentativa(v => v + 1); }}>Tentar novamente</button>}
+    <fieldset disabled={loading || loadError || saving} style={{border:0,padding:0}}>
     <form className="exchange-profile-form" onSubmit={save} style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:16}}>
-      <label>País desejado<input name="destino_pais" value={form.destino_pais} onChange={change} /></label>
-      <label>Cidade desejada<input name="destino_cidade" value={form.destino_cidade} onChange={change} /></label>
+      <label>País desejado<input maxLength={100} name="destino_pais" value={form.destino_pais} onChange={change} /></label>
+      <label>Cidade desejada<input maxLength={100} name="destino_cidade" value={form.destino_cidade} onChange={change} /></label>
       <label>Duração em meses<input name="duracao_meses" type="number" min="1" max="120" value={form.duracao_meses} onChange={change} /></label>
       <label>Data prevista<input name="data_prevista" type="month" value={form.data_prevista} onChange={change} /></label>
-      <label>Tipo de programa<input name="tipo_programa" value={form.tipo_programa} onChange={change} /></label>
-      <label>Área de interesse<input name="area_interesse" value={form.area_interesse} onChange={change} /></label>
-      <label>Instituição desejada<input name="instituicao" value={form.instituicao} onChange={change} /></label>
+      <label>Tipo de programa<input maxLength={120} name="tipo_programa" value={form.tipo_programa} onChange={change} /></label>
+      <label>Área de interesse<input maxLength={150} name="area_interesse" value={form.area_interesse} onChange={change} /></label>
+      <label>Instituição desejada<input maxLength={180} name="instituicao" value={form.instituicao} onChange={change} /></label>
       <label style={{gridColumn:"1/-1"}}>Observações<textarea name="observacoes" value={form.observacoes} onChange={change} rows={4} maxLength={2000} /></label>
       <button type="submit" disabled={saving}><Save size={18}/> {saving ? "Salvando..." : "Salvar perfil"}</button>
-    </form>{status && <p role="status" aria-live="polite">{status}</p>}
+    </form></fieldset>{status && <p role="status" aria-live="polite">{status}</p>}
   </main>;
 }

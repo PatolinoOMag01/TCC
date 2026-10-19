@@ -1,3 +1,4 @@
+import PageNavigation from "../components/PageNavigation";
 import { Link } from "react-router-dom";
 import { Search, ArrowRight, Heart } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -37,16 +38,7 @@ export default function Destinos() {
           margin: "0 auto",
         }}
       >
-        <Link
-          to="/"
-          style={{
-            textDecoration: "none",
-            color: "var(--link)",
-            fontWeight: 600,
-          }}
-        >
-          ← Voltar para início
-        </Link>
+        <PageNavigation />
 
         <section
           style={{
