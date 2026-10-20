@@ -1,6 +1,7 @@
 import PageNavigation from "./components/PageNavigation";
 import {
   BrowserRouter,
+  Link,
   Route,
   Routes,
   useLocation,
@@ -45,6 +46,9 @@ import Bolsas
 
 import Vagas
   from "./pages/Vagas";
+
+import EscolasIdiomas
+  from "./pages/EscolasIdiomas";
 
 import Favoritos
   from "./pages/Favoritos";
@@ -130,6 +134,21 @@ function NavigationAndTheme() {
             />
 
             <Route
+              path="/escolas-idiomas"
+              element={<EscolasIdiomas />}
+            />
+
+            <Route
+              path="/escolas-de-idiomas"
+              element={<EscolasIdiomas />}
+            />
+
+            <Route
+              path="/idiomas"
+              element={<EscolasIdiomas />}
+            />
+
+            <Route
               path="/favoritos"
               element={<Favoritos />}
             />
@@ -193,7 +212,7 @@ function NavigationAndTheme() {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<main className="not-found"><div><PageNavigation /><h1>Página não encontrada</h1></div></main>} />
+            <Route path="*" element={<main className="not-found"><div><PageNavigation /><h1>Página não encontrada</h1><Link to="/escolas-idiomas">Abrir escolas de idiomas</Link></div></main>} />
       </Routes>
     </>
   );

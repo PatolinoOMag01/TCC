@@ -58,6 +58,7 @@ function Home() {
             <Link to="/favoritos">Favoritos</Link>
             <Link to="/bolsas">Bolsas</Link>
             <Link to="/vagas">Vagas</Link>
+            <Link to="/escolas-idiomas">Escolas de idiomas</Link>
             <Link to="/chat">Comunidade</Link>
 <Link to="/assistente">InterWay IA</Link>
 <Link to="/match">Match</Link>
