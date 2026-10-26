@@ -1,6 +1,6 @@
 # InterWay
 
-Site publicado: https://tcc-kappa-ecru.vercel.app/
+Site publicado:
 
 ## Organização
 
