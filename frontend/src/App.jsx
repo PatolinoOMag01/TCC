@@ -6,8 +6,8 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { useLayoutEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
+import { lazy, Suspense, useLayoutEffect, useState } from "react";
+import { LoaderCircle, Moon, Sun } from "lucide-react";
 
 import {
   AuthProvider,
@@ -20,52 +20,22 @@ import {
 import ProtectedRoute
   from "./components/ProtectedRoute";
 
-import Home
-  from "./pages/Home";
-
-import Destinos
-  from "./pages/Destinos";
-
-import DestinoDetalhes
-  from "./pages/DestinoDetalhes";
-
-import Match
-  from "./pages/Match";
-
-import Login
-  from "./pages/Login";
-
-import Cadastro
-  from "./pages/Cadastro";
-
-import Perfil
-  from "./pages/Perfil";
-
-import Bolsas
-  from "./pages/Bolsas";
-
-import Vagas
-  from "./pages/Vagas";
-
-import EscolasIdiomas
-  from "./pages/EscolasIdiomas";
-
-import Favoritos
-  from "./pages/Favoritos";
-
-import Chat
-  from "./pages/Chat";
-
-import Passport
-  from "./pages/Passport";
-
-import Planejador
-  from "./pages/Planejador";
-
-import AssistenteIA
-  from "./pages/AssistenteIA";
-
-import PerfilIntercambio from "./pages/PerfilIntercambio";
+const Home = lazy(() => import("./pages/Home"));
+const Destinos = lazy(() => import("./pages/Destinos"));
+const DestinoDetalhes = lazy(() => import("./pages/DestinoDetalhes"));
+const Match = lazy(() => import("./pages/Match"));
+const Login = lazy(() => import("./pages/Login"));
+const Cadastro = lazy(() => import("./pages/Cadastro"));
+const Perfil = lazy(() => import("./pages/Perfil"));
+const Bolsas = lazy(() => import("./pages/Bolsas"));
+const Vagas = lazy(() => import("./pages/Vagas"));
+const EscolasIdiomas = lazy(() => import("./pages/EscolasIdiomas"));
+const Favoritos = lazy(() => import("./pages/Favoritos"));
+const Chat = lazy(() => import("./pages/Chat"));
+const Passport = lazy(() => import("./pages/Passport"));
+const Planejador = lazy(() => import("./pages/Planejador"));
+const AssistenteIA = lazy(() => import("./pages/AssistenteIA"));
+const PerfilIntercambio = lazy(() => import("./pages/PerfilIntercambio"));
 
 
 function NavigationAndTheme() {
@@ -100,6 +70,14 @@ function NavigationAndTheme() {
       >
         {theme === "dark" ? <Sun size={21} /> : <Moon size={21} />}
       </button>
+      <Suspense
+        fallback={
+          <main className="route-loading" role="status" aria-live="polite">
+            <LoaderCircle className="route-loading-spinner" size={28} />
+            <span>Carregando página...</span>
+          </main>
+        }
+      >
       <Routes>
             <Route
               path="/"
@@ -214,6 +192,7 @@ function NavigationAndTheme() {
             />
             <Route path="*" element={<main className="not-found"><div><PageNavigation /><h1>Página não encontrada</h1><Link to="/escolas-idiomas">Abrir escolas de idiomas</Link></div></main>} />
       </Routes>
+      </Suspense>
     </>
   );
 }

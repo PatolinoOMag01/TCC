@@ -196,6 +196,50 @@
   margin-bottom: 0;
 }
 
+.resposta-formatada > h2,
+.resposta-formatada > h3 {
+  color: var(--text);
+  font-family: "Manrope", sans-serif;
+  line-height: 1.35;
+}
+
+.resposta-formatada > h2 {
+  margin: 4px 0 9px;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.resposta-formatada > h3 {
+  margin: 12px 0 7px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.resposta-formatada > p {
+  margin: 0 0 9px;
+}
+
+.resposta-formatada > ul,
+.resposta-formatada > ol {
+  display: grid;
+  gap: 6px;
+  margin: 7px 0 12px;
+  padding-left: 22px;
+}
+
+.mensagem-balao.ia .resposta-formatada strong {
+  color: var(--blue-dark);
+  font-weight: 700;
+}
+
+.resposta-formatada code {
+  padding: 2px 5px;
+  border-radius: 5px;
+  background: rgba(100, 110, 140, 0.12);
+  font-family: Consolas, monospace;
+  font-size: 0.92em;
+}
+
 .mensagem-balao.ia {
   border-bottom-left-radius: 5px;
   background:

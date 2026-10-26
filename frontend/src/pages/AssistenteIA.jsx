@@ -24,6 +24,7 @@ import {
 import {
   api,
 } from "../services/api";
+import RespostaFormatada from "../components/RespostaFormatada";
 
 import "../styles/AssistenteIA.css";
 
@@ -289,23 +290,13 @@ function AssistenteIA() {
                       `mensagem-balao ${item.autor}`
                     }
                   >
-                    {item.texto
-                      .split("\n")
-                      .map(
-                        (
-                          linha,
-                          index
-                        ) => (
-                          <p
-                            key={
-                              `${item.id}-${index}`
-                            }
-                          >
-                            {linha ||
-                              "\u00A0"}
-                          </p>
-                        )
-                      )}
+                    {item.autor === "ia" ? (
+                      <RespostaFormatada texto={item.texto} />
+                    ) : (
+                      item.texto.split("\n").map((linha, index) => (
+                        <p key={`${item.id}-${index}`}>{linha || "\u00A0"}</p>
+                      ))
+                    )}
                   </div>
 
                   {item.autor ===

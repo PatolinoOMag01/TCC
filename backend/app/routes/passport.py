@@ -14,6 +14,7 @@ from app.models.passport import (
     Passport,
 )
 from app.models.user import User
+from app.models.profile import ExchangeProfile
 from app.schemas.passport import (
     ChecklistUpdate,
     PassportUpdate,
@@ -175,6 +176,25 @@ def atualizar_passport(
             campo,
             valor,
         )
+
+    campos_destino = {
+        "pais": "destino_pais",
+        "cidade": "destino_cidade",
+    }
+    destino_atualizado = {
+        campo: valores[campo]
+        for campo in campos_destino
+        if campo in valores
+    }
+    if destino_atualizado:
+        perfil = (
+            db.query(ExchangeProfile)
+            .filter(ExchangeProfile.usuario_id == usuario.id)
+            .first()
+        )
+        if perfil:
+            for campo, valor in destino_atualizado.items():
+                setattr(perfil, campos_destino[campo], valor)
 
     db.commit()
     db.refresh(passport)

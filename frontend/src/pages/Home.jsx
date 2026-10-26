@@ -21,6 +21,10 @@ import { destinos } from "../data/destinos";
 import { useAuth } from "../context/AuthContext";
 import { useFavorites } from "../context/FavoritesContext";
 
+const destinosDoCard = ["reino-unido", "malta", "estados-unidos"]
+  .map((slug) => destinos.find((destino) => destino.slug === slug))
+  .filter(Boolean);
+
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [preferencias, setPreferencias] = useState({ destino: "", objetivo: "", orcamento: "" });
@@ -65,6 +69,19 @@ function Home() {
             <Link to={usuario ? "/perfil" : "/login"} className="mobile-account-link">
               {usuario ? "Meu perfil" : "Entrar"}
             </Link>
+            {usuario && (
+              <button
+                type="button"
+                className="mobile-logout-button"
+                onClick={() => {
+                  sair();
+                  setMenuOpen(false);
+                }}
+              >
+                <LogOut size={16} />
+                Sair da conta
+              </button>
+            )}
           </div>
 
           <div className="nav-actions">
@@ -478,36 +495,48 @@ function Home() {
 
       <section className="journey-section">
         <div className="journey-card">
-          <div className="journey-decoration">
-            <Globe2 />
+          <div className="journey-card-content">
+            <span className="eyebrow light">
+              INTERWAY MATCH
+            </span>
+
+            <h2>
+              Ainda não sabe
+              <br />
+              para onde ir?
+            </h2>
+
+            <p>
+              Responda algumas perguntas
+              sobre seus objetivos, orçamento
+              e preferências. Nós encontramos
+              os destinos que mais combinam
+              com você.
+            </p>
+
+            <Link
+              to="/match"
+              className="primary-button"
+            >
+              Descobrir meu destino
+
+              <ArrowRight size={18} />
+            </Link>
           </div>
 
-          <span className="eyebrow light">
-            INTERWAY MATCH
-          </span>
-
-          <h2>
-            Ainda não sabe
-            <br />
-            para onde ir?
-          </h2>
-
-          <p>
-            Responda algumas perguntas
-            sobre seus objetivos, orçamento
-            e preferências. Nós encontramos
-            os destinos que mais combinam
-            com você.
-          </p>
-
-          <Link
-            to="/match"
-            className="primary-button"
-          >
-            Descobrir meu destino
-
-            <ArrowRight size={18} />
-          </Link>
+          <div className="journey-card-visual" role="group" aria-label="Fotos de destinos para intercâmbio">
+            {destinosDoCard.map((destino, index) => (
+              <figure className={`journey-photo journey-photo-${index + 1}`} key={destino.slug}>
+                <img
+                  src={destino.imagem}
+                  alt={`${destino.cidade}, ${destino.pais}`}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>{destino.cidade}</figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
     </main>

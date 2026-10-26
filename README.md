@@ -4,9 +4,9 @@ Site publicado: https://tcc-kappa-ecru.vercel.app/
 
 ## Organização
 
-- `frontend/`: aplicação React + Vite. As páginas de destinos, vagas, bolsas e chat ainda usam dados locais em `frontend/src/data/`.
-- `backend/`: API FastAPI. Cadastro, login, usuário e passaporte usam MySQL.
-- Bolsas e vagas são dados demonstrativos; a comunidade salva mensagens somente no navegador. O assistente IA exige login.
+- `frontend/`: aplicação React + Vite. Destinos, vagas e bolsas usam catálogos locais; a comunidade consome a API.
+- `backend/`: API FastAPI. Cadastro, login, usuário, passaporte e mensagens da comunidade usam o banco configurado.
+- Bolsas e vagas são dados demonstrativos. Para publicar na comunidade é necessário entrar na conta; a leitura é pública.
 - `database/interway.sql`: **único SQL do projeto**, com o banco `banco_interway`, tabelas do protótipo e tabelas `usuarios` e `passports` da API.
 - `legacy/img/` e `legacy/js/`: arquivos do protótipo anterior; não fazem parte da compilação do React.
 
@@ -39,3 +39,5 @@ Abra `http://127.0.0.1:8000/docs` para testar a API e o endereço exibido pelo V
 O workflow de GitHub Pages usa `frontend/`. **Na Vercel, atualize o Root Directory do projeto de `frontend-v2` para `frontend` antes do próximo deploy.** Configure `VITE_API_URL` com o endereço público da API. No backend, configure `JWT_SECRET_KEY` e `CORS_ORIGINS` com o domínio exato do site publicado; publique o backend e o MySQL em serviços próprios. O front hospedado não consegue usar o backend em `127.0.0.1` de outro computador.
 
 Importar o SQL não liga automaticamente as páginas com dados locais ao banco. Essa integração ainda exige rotas no backend e chamadas no frontend. A tabela antiga `usuário` não é usada no login atual e não deve ser migrada diretamente: ela contém um campo de senha incompatível com o hash de `usuarios`.
+
+A comunidade ativa usa a tabela `mensagens_comunidade`, criada pelo SQLAlchemy quando a API inicia. A tabela antiga `mensagens_chat` pertence ao protótipo e referencia `usuarios_chat`; ela não é usada pela comunidade atual. Em produção, o frontend deve apontar `VITE_API_URL` para uma API acessível pela internet e essa API deve usar um banco persistente compartilhado.

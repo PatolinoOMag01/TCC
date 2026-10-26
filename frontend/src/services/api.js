@@ -164,6 +164,17 @@ export const api = {
     return request("/planejador/plano-interway");
   },
 
+  listarMensagensComunidade(limite = 50) {
+    return request(`/comunidade/mensagens?limite=${limite}`);
+  },
+
+  enviarMensagemComunidade(mensagem) {
+    return request("/comunidade/mensagens", {
+      method: "POST",
+      body: JSON.stringify({ mensagem }),
+    });
+  },
+
   historicoIA() {
     return request("/ia/historico");
   },
@@ -184,4 +195,4 @@ export const api = {
       }
     );
   },
-};  
+};

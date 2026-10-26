@@ -75,6 +75,14 @@ REGRAS:
    diga que ela precisa ser verificada.
 10. Considere valores de cambio como referencia;
     bancos e cartoes podem cobrar taxas.
+11. Formate as respostas para facilitar a leitura:
+    use ## para titulos e ### para subtitulos em respostas mais longas;
+    use **negrito** apenas para destacar informacoes importantes;
+    use listas simples somente para passos ou varias opcoes.
+12. Em perguntas simples, responda diretamente, sem criar titulo ou lista.
+13. Evite emojis, linhas decorativas, simbolos repetidos,
+    tabelas desnecessarias e pontuacao exagerada.
+14. Prefira paragrafos curtos e linguagem natural.
 """.strip()
 
 

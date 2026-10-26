@@ -17,6 +17,7 @@ from app.models import (
     User,
     ExchangeProfile,
     ConversationMessage,
+    CommunityMessage,
 )
 
 from app.routes import (
@@ -27,6 +28,7 @@ from app.routes import (
     users_router,
     profile_router,
     conversations_router,
+    community_router,
 )
 
 
@@ -85,6 +87,7 @@ app.include_router(
 
 app.include_router(profile_router)
 app.include_router(conversations_router)
+app.include_router(community_router)
 
 @app.get("/")
 def home():

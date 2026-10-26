@@ -12,10 +12,16 @@ export default function PerfilIntercambio() {
   const [saving, setSaving] = useState(false);
   useEffect(() => {
     let ativo = true;
-    api.meuPerfilIntercambio()
-      .then((d) => {
-        if (ativo) setForm({
-          destino_pais:d.destino_pais||"", destino_cidade:d.destino_cidade||"", duracao_meses:d.duracao_meses||"", data_prevista:d.data_prevista||"", tipo_programa:d.tipo_programa||"", area_interesse:d.area_interesse||"", instituicao:d.instituicao||"", observacoes:d.observacoes||""
+    Promise.allSettled([api.meuPerfilIntercambio(), api.meuPassport()])
+      .then(([perfilResult, passportResult]) => {
+        if (!ativo) return;
+        if (perfilResult.status === "rejected") throw perfilResult.reason;
+        const d = perfilResult.value;
+        const passport = passportResult.status === "fulfilled" ? passportResult.value : null;
+        setForm({
+          destino_pais: passport?.pais || d.destino_pais || "",
+          destino_cidade: passport?.cidade || d.destino_cidade || "",
+          duracao_meses:d.duracao_meses||"", data_prevista:d.data_prevista||"", tipo_programa:d.tipo_programa||"", area_interesse:d.area_interesse||"", instituicao:d.instituicao||"", observacoes:d.observacoes||""
         });
       })
       .catch((e) => { if (ativo) { setStatus(e.message); setLoadError(true); } })

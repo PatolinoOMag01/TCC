@@ -6,10 +6,8 @@ import {
   Send,
   Users,
 } from "lucide-react";
-import { mensagensIniciais } from "../data/chat";
 import { useAuth } from "../context/AuthContext";
-
-const STORAGE_KEY = "interway-chat-mensagens";
+import { api } from "../services/api";
 
 function formatarHora(dataIso) {
   try {
@@ -45,39 +43,64 @@ function corAvatar(nome) {
   return cores[Math.abs(hash) % cores.length];
 }
 
+function formatarMensagem(item, usuarioId) {
+  return {
+    id: item.id,
+    usuarioId: item.usuario_id,
+    nome: item.nome || "Intercambista",
+    mensagem: item.mensagem,
+    data: item.criado_em,
+    propria: item.usuario_id === usuarioId,
+  };
+}
+
 export default function Chat() {
   const { usuario } = useAuth();
-
-  const [mensagens, setMensagens] = useState(() => {
-    try {
-      const salvas = localStorage.getItem(STORAGE_KEY);
-
-      if (salvas) {
-        return JSON.parse(salvas);
-      }
-
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(mensagensIniciais)
-      );
-
-      return mensagensIniciais;
-    } catch {
-      return mensagensIniciais;
-    }
-  });
-
+  const [mensagens, setMensagens] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState("");
   const [texto, setTexto] = useState("");
   const fimRef = useRef(null);
 
   useEffect(() => {
-    if (mensagens.length > 0) {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(mensagens)
-      );
+    let ativo = true;
+    let carregamentoEmAndamento = false;
+
+    async function carregarMensagens() {
+      if (carregamentoEmAndamento) return;
+      carregamentoEmAndamento = true;
+      try {
+        const dados = await api.listarMensagensComunidade();
+        if (!ativo) return;
+        const atualizadas = dados.map((item) => formatarMensagem(item, usuario?.id));
+        setMensagens((anteriores) => {
+          const iguais = anteriores.length === atualizadas.length
+            && anteriores.every((item, indice) => (
+              item.id === atualizadas[indice]?.id
+              && item.propria === atualizadas[indice]?.propria
+            ));
+          return iguais ? anteriores : atualizadas;
+        });
+        setErro("");
+      } catch (falha) {
+        if (ativo) setErro(falha.message);
+      } finally {
+        carregamentoEmAndamento = false;
+        if (ativo) setCarregando(false);
+      }
     }
-  }, [mensagens]);
+
+    carregarMensagens();
+    const intervalo = window.setInterval(() => {
+      if (document.visibilityState === "visible") carregarMensagens();
+    }, 5000);
+
+    return () => {
+      ativo = false;
+      window.clearInterval(intervalo);
+    };
+  }, [usuario?.id]);
 
   useEffect(() => {
     fimRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -85,27 +108,21 @@ export default function Chat() {
 
   function enviarMensagem(e) {
     e.preventDefault();
-
     const mensagemLimpa = texto.trim();
+    if (!mensagemLimpa || !usuario || enviando) return;
 
-    if (!mensagemLimpa) return;
-
-    const nomeUsuario = usuario?.nome || "Você";
-
-    const nova = {
-      id: Date.now(),
-      nome: nomeUsuario,
-      paisOrigem: "Brasil",
-      paisIntercambio: usuario
-        ? "Em planejamento"
-        : "Visitante",
-      mensagem: mensagemLimpa,
-      data: new Date().toISOString(),
-      propria: true,
-    };
-
-    setMensagens((atual) => [...atual, nova]);
-    setTexto("");
+    setEnviando(true);
+    setErro("");
+    api.enviarMensagemComunidade(mensagemLimpa)
+      .then((salva) => {
+        const nova = formatarMensagem(salva, usuario.id);
+        setMensagens((anteriores) => anteriores.some((item) => item.id === nova.id)
+          ? anteriores
+          : [...anteriores, nova]);
+        setTexto("");
+      })
+      .catch((falha) => setErro(falha.message))
+      .finally(() => setEnviando(false));
   }
 
   return (
@@ -201,8 +218,8 @@ export default function Chat() {
               </div>
             </div>
 
-            <p className="prototype-notice chat-prototype-notice" role="note">
-              <strong>Modo demonstração:</strong> as mensagens ficam salvas somente neste navegador e não são enviadas a outros usuários.
+            <p role="note" style={{ margin: "12px 20px", color: "var(--muted)", fontSize: 13 }}>
+              As mensagens são compartilhadas com a comunidade e atualizadas automaticamente.
             </p>
 
             {!usuario && (
@@ -232,10 +249,25 @@ export default function Chat() {
               background: "var(--background)",
             }}
           >
+            {carregando && (
+              <p role="status" style={{ textAlign: "center", color: "var(--muted)" }}>
+                Carregando mensagens...
+              </p>
+            )}
+            {erro && (
+              <p role="alert" style={{ textAlign: "center", color: "#b42318" }}>
+                {erro} Tentaremos novamente em alguns segundos.
+              </p>
+            )}
+            {!carregando && !erro && mensagens.length === 0 && (
+              <p style={{ textAlign: "center", color: "var(--muted)", margin: "auto 0" }}>
+                {usuario
+                  ? "Ainda não há mensagens. Seja a primeira pessoa a começar a conversa."
+                  : "Ainda não há mensagens. Entre na conta para iniciar a conversa."}
+              </p>
+            )}
             {mensagens.map((msg) => {
-              const ePropria =
-                msg.propria ||
-                (usuario && msg.nome === usuario.nome);
+              const ePropria = msg.propria;
 
               return (
                 <div
@@ -297,15 +329,6 @@ export default function Chat() {
                             {msg.nome}
                           </strong>
 
-                          <span
-                            style={{
-                              fontSize: 12,
-                              color: "var(--muted)",
-                            }}
-                          >
-                            {msg.paisOrigem} →{" "}
-                            {msg.paisIntercambio}
-                          </span>
                         </div>
                       )}
 
@@ -369,10 +392,12 @@ export default function Chat() {
               type="text"
               value={texto}
               onChange={(e) => setTexto(e.target.value)}
+              maxLength={1000}
+              disabled={!usuario || enviando}
               placeholder={
                 usuario
                   ? "Escreva sua mensagem..."
-                  : "Escreva como visitante (ou entre na conta)..."
+                  : "Entre na conta para enviar uma mensagem..."
               }
               style={{
                 flex: 1,
@@ -387,12 +412,12 @@ export default function Chat() {
 
             <button
               type="submit"
-              disabled={!texto.trim()}
+              disabled={!texto.trim() || !usuario || enviando}
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                background: texto.trim()
+                background: texto.trim() && usuario && !enviando
                   ? "#173b67"
                   : "#94a3b8",
                 color: "#fff",
@@ -401,12 +426,12 @@ export default function Chat() {
                 padding: "0 22px",
                 fontWeight: 700,
                 fontSize: 15,
-                cursor: texto.trim()
+                cursor: texto.trim() && usuario && !enviando
                   ? "pointer"
                   : "not-allowed",
               }}
             >
-              Enviar
+              {enviando ? "Enviando..." : "Enviar"}
               <Send size={17} />
             </button>
           </form>
@@ -420,10 +445,10 @@ export default function Chat() {
             marginTop: 16,
           }}
         >
-          As mensagens ficam salvas neste navegador.
+          As mensagens ficam salvas no InterWay e aparecem em todos os dispositivos.
           {usuario
             ? ` Você está como ${usuario.nome}.`
-            : " Entre na conta para usar seu nome real."}
+            : " Entre na conta para participar da conversa."}
         </p>
       </div>
     </main>

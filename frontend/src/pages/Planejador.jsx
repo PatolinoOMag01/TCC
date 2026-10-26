@@ -67,7 +67,7 @@ export default function Planejador() {
         setPassport(passaporte);
         setFormulario({
           destino: planejamento.destino || [passaporte?.cidade, passaporte?.pais].filter(Boolean).join(", "),
-          meta: planejamento.meta != null ? String(planejamento.meta) : (passaporte?.orcamento ? String(passaporte.orcamento) : ""),
+          meta: planejamento.meta != null ? String(planejamento.meta) : "",
           guardado: planejamento.guardado != null ? String(planejamento.guardado) : "",
           mensal: planejamento.mensal != null ? String(planejamento.mensal) : "",
         });
@@ -282,7 +282,7 @@ export default function Planejador() {
         </section>
 
 
-        {passport?.pais && (
+        {(passport?.pais || passport?.cidade) && (
           <div className="planner-passport-info">
             <CheckCircle2
               size={19}
@@ -376,12 +376,14 @@ export default function Planejador() {
                   value={
                     formulario.destino
                   }
-                  onChange={
-                    alterarCampo
-                  }
+                  readOnly
+                  aria-describedby="planner-destination-help"
                   placeholder="Ex: Dublin, Irlanda"
                 />
               </div>
+              <small id="planner-destination-help">
+                O destino vem do seu Passport. <Link to="/passport">Atualize-o por lá.</Link>
+              </small>
             </label>
 
 
