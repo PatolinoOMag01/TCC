@@ -200,7 +200,7 @@ export default function Login() {
 
         <p className="auth-switch">
           Ainda não tem conta?{" "}
-          <Link to="/cadastro">
+          <Link to="/cadastro" state={{ from: location.state?.from }}>
             Criar conta
           </Link>
         </p>

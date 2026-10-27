@@ -1,0 +1,360 @@
+.plus-page {
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 84% 10%, rgba(39, 112, 245, 0.12), transparent 28%),
+    var(--background);
+}
+
+.plus-access-error {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 28px;
+  color: var(--text);
+  background: var(--background);
+  text-align: center;
+}
+
+.plus-access-error > svg {
+  color: var(--accent);
+}
+
+.plus-access-error h1 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(25px, 4vw, 36px);
+}
+
+.plus-access-error p {
+  max-width: 520px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.plus-access-error button,
+.plus-access-error a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.plus-access-error button:hover,
+.plus-access-error a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.plus-page-header {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0 7%;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+
+.plus-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.plus-back-link:hover {
+  color: var(--accent);
+}
+
+.plus-page-header > span {
+  color: var(--accent);
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.plus-page-content {
+  width: min(1220px, calc(100% - 56px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(310px, 390px);
+  align-items: center;
+  gap: clamp(42px, 7vw, 96px);
+  margin: 0 auto;
+  padding: 88px 0 110px;
+}
+
+.plus-page-intro {
+  max-width: 720px;
+}
+
+.plus-page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+
+.plus-page-intro h1 {
+  margin-top: 20px;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(42px, 5.3vw, 68px);
+  line-height: 1.05;
+  letter-spacing: -3px;
+}
+
+.plus-page-intro h1 span {
+  color: var(--accent);
+}
+
+.plus-page-intro > p {
+  max-width: 620px;
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.plus-plan-benefits {
+  display: grid;
+  gap: 12px;
+  margin-top: 38px;
+}
+
+.plus-plan-benefit {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 22px;
+  align-items: center;
+  gap: 15px;
+  padding: 17px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(16, 36, 70, 0.04);
+}
+
+.plus-plan-benefit-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: var(--accent);
+  background: var(--surface-soft);
+}
+
+.plus-plan-benefit h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: 15px;
+}
+
+.plus-plan-benefit p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.plus-plan-check {
+  color: var(--accent);
+}
+
+.plus-price-card {
+  padding: 30px;
+  border: 1px solid rgba(112, 161, 255, 0.25);
+  border-radius: 24px;
+  color: #f7faff;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(49, 111, 226, 0.5), transparent 40%),
+    linear-gradient(145deg, #07162f, #102c55);
+  box-shadow: 0 24px 70px rgba(7, 22, 47, 0.2);
+}
+
+.plus-price-badge {
+  width: fit-content;
+  padding: 8px 11px;
+  border: 1px solid rgba(141, 184, 255, 0.24);
+  border-radius: 999px;
+  color: #a9caff;
+  background: rgba(91, 149, 255, 0.13);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.plus-price-card h2 {
+  margin-top: 22px;
+  font-family: "Manrope", sans-serif;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.plus-price-description {
+  margin-top: 8px;
+  color: rgba(235, 242, 255, 0.72);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.plus-price {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 28px;
+}
+
+.plus-price > span {
+  padding-top: 10px;
+  color: #c9dcff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.plus-price strong {
+  font-family: "Manrope", sans-serif;
+  font-size: 50px;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.plus-price-caption {
+  margin-top: 6px;
+  color: rgba(235, 242, 255, 0.58);
+  font-size: 12px;
+}
+
+.plus-price-card ul {
+  display: grid;
+  gap: 13px;
+  margin: 27px 0 0;
+  padding: 23px 0 0;
+  border-top: 1px solid rgba(235, 242, 255, 0.15);
+  list-style: none;
+}
+
+.plus-price-card li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #e4edff;
+  font-size: 14px;
+}
+
+.plus-price-card li svg {
+  color: #80b4ff;
+}
+
+.plus-signup-button {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 28px;
+  padding: 0 16px;
+  border: 1px solid #2770f5;
+  border-radius: 12px;
+  color: #fff;
+  background: #1769ff;
+  font-weight: 700;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.plus-signup-button:hover {
+  transform: translateY(-2px);
+  background: #0c5ae7;
+}
+
+.plus-checkout-note {
+  margin-top: 14px;
+  color: rgba(235, 242, 255, 0.57);
+  font-size: 11px;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.plus-manage-link {
+  display: block;
+  margin-top: 13px;
+  color: #a9caff;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 850px) {
+  .plus-page-content {
+    grid-template-columns: 1fr;
+    width: min(700px, calc(100% - 44px));
+    gap: 42px;
+    padding: 64px 0 80px;
+  }
+
+  .plus-price-card {
+    width: min(100%, 520px);
+    justify-self: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .plus-page-header {
+    min-height: 68px;
+    padding: 0 22px;
+  }
+
+  .plus-page-header > span {
+    font-size: 9px;
+  }
+
+  .plus-page-content {
+    padding-top: 48px;
+  }
+
+  .plus-page-intro h1 {
+    font-size: 42px;
+    letter-spacing: -2px;
+  }
+
+  .plus-page-intro > p {
+    font-size: 15px;
+  }
+
+  .plus-plan-benefit {
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .plus-plan-benefit-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .plus-plan-check {
+    display: none;
+  }
+
+  .plus-price-card {
+    padding: 25px 21px;
+  }
+}

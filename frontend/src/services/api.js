@@ -31,7 +31,13 @@ async function request(
     {
       ...options,
       headers,
-      signal: options.signal ?? AbortSignal.timeout(endpoint === "/ia/chat" ? 120000 : 15000),
+      signal: options.signal ?? AbortSignal.timeout(
+        endpoint === "/ia/chat"
+          ? 120000
+          : endpoint === "/plus/assinatura/checkout"
+            ? 30000
+            : 15000
+      ),
     }
   );
   } catch (cause) {
@@ -173,6 +179,18 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ mensagem }),
     });
+  },
+
+  criarCheckoutPlus() {
+    return request("/plus/assinatura/checkout", { method: "POST" });
+  },
+
+  minhaAssinaturaPlus() {
+    return request("/plus/assinatura/me");
+  },
+
+  cancelarAssinaturaPlus() {
+    return request("/plus/assinatura/cancelar", { method: "POST" });
   },
 
   historicoIA() {

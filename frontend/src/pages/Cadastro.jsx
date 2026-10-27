@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   Link,
   Navigate,
+  useLocation,
   useNavigate,
 } from "react-router-dom";
 
@@ -31,6 +32,7 @@ function Cadastro() {
   } = useAuth();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [nome, setNome] =
     useState("");
@@ -124,7 +126,7 @@ function Cadastro() {
       });
 
       navigate(
-        "/perfil",
+        location.state?.from || "/perfil",
         {
           replace: true,
         }

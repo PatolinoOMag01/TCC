@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.user import User
+from app.models.plus_subscription import PlusSubscription
 
 load_dotenv()
 
@@ -110,6 +111,27 @@ def obter_usuario_atual(
     if usuario is None:
         raise erro_credenciais
 
+    return usuario
+
+
+def obter_assinante_plus(
+    usuario: User = Depends(obter_usuario_atual),
+    db: Session = Depends(get_db),
+):
+    assinatura = (
+        db.query(PlusSubscription)
+        .filter(
+            PlusSubscription.usuario_id == usuario.id,
+            PlusSubscription.status == "authorized",
+        )
+        .order_by(PlusSubscription.id.desc())
+        .first()
+    )
+    if assinatura is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Este recurso faz parte do InterWay Plus. Assine o plano para continuar.",
+        )
     return usuario
 optional_bearer_scheme = HTTPBearer(auto_error=False)
 

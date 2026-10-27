@@ -9,6 +9,8 @@ import {
   Banknote,
   BriefcaseBusiness,
   Check,
+  ChevronDown,
+  ChevronUp,
   Clock3,
   Globe2,
   GraduationCap,
@@ -257,6 +259,7 @@ function calcularMatch(destino, respostas) {
 
 function Match() {
   const [etapa, setEtapa] = useState(0);
+  const [mostrarTodasPossibilidades, setMostrarTodasPossibilidades] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -473,7 +476,7 @@ function Match() {
 
             <div className="ranking-grid">
               {resultados
-                .slice(1)
+                .slice(1, mostrarTodasPossibilidades ? undefined : 4)
                 .map((destino, index) => (
                   <Link
                     to={`/destinos/${destino.slug}`}
@@ -515,7 +518,50 @@ function Match() {
                   </Link>
                 ))}
             </div>
+
+            {resultados.length > 4 && (
+              <button
+                type="button"
+                className="ranking-toggle"
+                aria-expanded={mostrarTodasPossibilidades}
+                onClick={() => setMostrarTodasPossibilidades((aberto) => !aberto)}
+              >
+                {mostrarTodasPossibilidades ? (
+                  <>
+                    Mostrar menos <ChevronUp size={18} />
+                  </>
+                ) : (
+                  <>
+                    Ver todas as possibilidades ({resultados.length - 1})
+                    <ChevronDown size={18} />
+                  </>
+                )}
+              </button>
+            )}
           </div>
+
+          <aside className="match-plus-offer">
+            <div className="match-plus-icon">
+              <Sparkles size={21} />
+            </div>
+            <div className="match-plus-copy">
+              <span className="result-label">UM PRÓXIMO PASSO PARA SUA VIAGEM</span>
+              <h2>Agora que seu destino é {principal.pais}</h2>
+              <p>
+                O InterWay Plus reúne a IA, o Passport e o Planejador Financeiro
+                para ajudar você a organizar sua jornada e transformar esse destino em um plano.
+              </p>
+              <div className="match-plus-features">
+                <span><Check size={15} /> InterWay IA</span>
+                <span><Check size={15} /> Passport</span>
+                <span><Check size={15} /> Planejamento financeiro</span>
+              </div>
+              <Link to="/plus" className="match-plus-button">
+                Quero planejar minha viagem
+                <ArrowRight size={17} />
+              </Link>
+            </div>
+          </aside>
         </motion.section>
       </main>
     );

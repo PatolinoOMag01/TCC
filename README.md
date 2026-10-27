@@ -41,3 +41,16 @@ O workflow de GitHub Pages usa `frontend/`. **Na Vercel, atualize o Root Directo
 Importar o SQL não liga automaticamente as páginas com dados locais ao banco. Essa integração ainda exige rotas no backend e chamadas no frontend. A tabela antiga `usuário` não é usada no login atual e não deve ser migrada diretamente: ela contém um campo de senha incompatível com o hash de `usuarios`.
 
 A comunidade ativa usa a tabela `mensagens_comunidade`, criada pelo SQLAlchemy quando a API inicia. A tabela antiga `mensagens_chat` pertence ao protótipo e referencia `usuarios_chat`; ela não é usada pela comunidade atual. Em produção, o frontend deve apontar `VITE_API_URL` para uma API acessível pela internet e essa API deve usar um banco persistente compartilhado.
+
+## InterWay Plus e Mercado Pago
+
+O checkout cria assinaturas mensais de R$ 29,90 pela API de Assinaturas do Mercado Pago e redireciona o comprador ao checkout hospedado pelo provedor; o InterWay não recebe nem armazena dados de cartão. O backend cria a tabela `assinaturas_plus` automaticamente ao iniciar. IA, Passport e Planejador conferem no backend se a conta tem uma assinatura `authorized`.
+
+Configure somente no ambiente do backend, nunca no frontend:
+
+- `MERCADOPAGO_ACCESS_TOKEN`: credencial de acesso da aplicação Mercado Pago (use credenciais de teste no desenvolvimento).
+- `MERCADOPAGO_WEBHOOK_SECRET`: chave secreta de assinatura dos webhooks.
+- `FRONTEND_URL`: origem pública do frontend, usada para retornar após o checkout. Padrão local: `http://localhost:5173`.
+- `BACKEND_PUBLIC_URL`: origem HTTPS pública da API, para o Mercado Pago enviar notificações. Configure-a em produção para sincronizar mudanças de status.
+
+Sem `MERCADOPAGO_ACCESS_TOKEN`, a API mantém o checkout desabilitado e não simula pagamentos. Para receber notificações reais, publique a API com HTTPS e use o `BACKEND_PUBLIC_URL` correspondente.

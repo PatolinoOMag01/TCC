@@ -7,7 +7,7 @@ from app.models.user import User
 from app.models.passport import Passport
 from app.models.profile import ExchangeProfile
 from app.schemas.planner import PlannerUpdate
-from app.services.security import obter_usuario_atual
+from app.services.security import obter_assinante_plus
 
 router = APIRouter(prefix="/planejador", tags=["Planejador"])
 
@@ -34,13 +34,13 @@ def obter_ou_criar(db: Session, usuario: User):
     return item
 
 @router.get("/me")
-def meu_planejamento(db: Session = Depends(get_db), usuario: User = Depends(obter_usuario_atual)):
+def meu_planejamento(db: Session = Depends(get_db), usuario: User = Depends(obter_assinante_plus)):
     item = obter_ou_criar(db, usuario)
     destino = destino_compartilhado(db, usuario.id, item.destino)
     return calcular(item, destino)
 
 @router.put("/me")
-def atualizar_planejamento(dados: PlannerUpdate, db: Session = Depends(get_db), usuario: User = Depends(obter_usuario_atual)):
+def atualizar_planejamento(dados: PlannerUpdate, db: Session = Depends(get_db), usuario: User = Depends(obter_assinante_plus)):
     item = obter_ou_criar(db, usuario)
     for campo, valor in dados.model_dump().items(): setattr(item, campo, valor)
     db.commit(); db.refresh(item)
@@ -48,7 +48,7 @@ def atualizar_planejamento(dados: PlannerUpdate, db: Session = Depends(get_db), 
     return calcular(item, destino)
 
 @router.get("/plano-interway")
-def plano_interway(db: Session = Depends(get_db), usuario: User = Depends(obter_usuario_atual)):
+def plano_interway(db: Session = Depends(get_db), usuario: User = Depends(obter_assinante_plus)):
     from app.routes.passport import obter_ou_criar_passport, formatar_passport
     planner = calcular(obter_ou_criar(db, usuario))
     passport = formatar_passport(obter_ou_criar_passport(db, usuario))

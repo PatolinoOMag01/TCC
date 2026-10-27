@@ -20,7 +20,7 @@ from app.schemas.passport import (
     PassportUpdate,
 )
 from app.services.security import (
-    obter_usuario_atual,
+    obter_assinante_plus,
 )
 
 
@@ -132,7 +132,7 @@ def meu_passport(
         get_db
     ),
     usuario: User = Depends(
-        obter_usuario_atual
+        obter_assinante_plus
     ),
 ):
     passport = (
@@ -154,7 +154,7 @@ def atualizar_passport(
         get_db
     ),
     usuario: User = Depends(
-        obter_usuario_atual
+        obter_assinante_plus
     ),
 ):
     passport = (
@@ -211,7 +211,7 @@ def atualizar_checklist(
         get_db
     ),
     usuario: User = Depends(
-        obter_usuario_atual
+        obter_assinante_plus
     ),
 ):
     passport = (

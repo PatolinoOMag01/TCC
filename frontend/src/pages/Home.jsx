@@ -5,6 +5,9 @@ import logo from "../assets/logo.png";
 
 import {
   ArrowRight,
+  Bot,
+  Check,
+  ClipboardCheck,
   Globe2,
   Heart,
   LogOut,
@@ -13,6 +16,7 @@ import {
   Search,
   Sparkles,
   User,
+  Wallet,
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
@@ -490,6 +494,50 @@ function Home() {
                 </motion.article>
               )
             )}
+        </div>
+      </section>
+
+      <section className="plus-section" id="interway-plus">
+        <div className="plus-card">
+          <div className="plus-copy">
+            <span className="eyebrow light">INTERWAY PLUS</span>
+            <h2>Seu intercâmbio, melhor planejado.</h2>
+            <p>
+              Reúna as ferramentas que ajudam a transformar a vontade de viajar
+              em um plano possível, do primeiro passo até a organização financeira.
+            </p>
+            <Link to="/plus" className="plus-button">
+              Conhecer o plano Plus
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+
+          <div className="plus-benefits">
+            <article className="plus-benefit">
+              <div className="plus-benefit-icon"><Bot size={20} /></div>
+              <div>
+                <h3>InterWay IA</h3>
+                <p>Orientação para dúvidas e próximos passos do intercâmbio.</p>
+              </div>
+              <Check size={18} className="plus-benefit-check" />
+            </article>
+            <article className="plus-benefit">
+              <div className="plus-benefit-icon"><ClipboardCheck size={20} /></div>
+              <div>
+                <h3>InterWay Passport</h3>
+                <p>Acompanhe etapas, documentos e o progresso da sua jornada.</p>
+              </div>
+              <Check size={18} className="plus-benefit-check" />
+            </article>
+            <article className="plus-benefit">
+              <div className="plus-benefit-icon"><Wallet size={20} /></div>
+              <div>
+                <h3>Planejamento financeiro</h3>
+                <p>Organize sua meta e acompanhe quanto falta para realizá-la.</p>
+              </div>
+              <Check size={18} className="plus-benefit-check" />
+            </article>
+          </div>
         </div>
       </section>
 

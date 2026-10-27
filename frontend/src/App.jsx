@@ -19,6 +19,7 @@ import {
 
 import ProtectedRoute
   from "./components/ProtectedRoute";
+import PlusRoute from "./components/PlusRoute";
 
 const Home = lazy(() => import("./pages/Home"));
 const Destinos = lazy(() => import("./pages/Destinos"));
@@ -36,6 +37,8 @@ const Passport = lazy(() => import("./pages/Passport"));
 const Planejador = lazy(() => import("./pages/Planejador"));
 const AssistenteIA = lazy(() => import("./pages/AssistenteIA"));
 const PerfilIntercambio = lazy(() => import("./pages/PerfilIntercambio"));
+const PlanoPlus = lazy(() => import("./pages/PlanoPlus"));
+const CheckoutPlus = lazy(() => import("./pages/CheckoutPlus"));
 
 
 function NavigationAndTheme() {
@@ -102,6 +105,21 @@ function NavigationAndTheme() {
             />
 
             <Route
+              path="/plus"
+              element={<PlanoPlus />}
+            />
+
+            <Route
+              path="/plus/checkout"
+              element={<ProtectedRoute><CheckoutPlus /></ProtectedRoute>}
+            />
+
+            <Route
+              path="/plus/retorno"
+              element={<ProtectedRoute><CheckoutPlus /></ProtectedRoute>}
+            />
+
+            <Route
               path="/bolsas"
               element={<Bolsas />}
             />
@@ -159,7 +177,7 @@ function NavigationAndTheme() {
               path="/passport"
               element={
                 <ProtectedRoute>
-                  <Passport />
+                  <PlusRoute recurso="InterWay Passport"><Passport /></PlusRoute>
                 </ProtectedRoute>
               }
             />
@@ -168,7 +186,7 @@ function NavigationAndTheme() {
               path="/planejador"
               element={
                 <ProtectedRoute>
-                  <Planejador />
+                  <PlusRoute recurso="Planejador Financeiro"><Planejador /></PlusRoute>
                 </ProtectedRoute>
               }
             />
@@ -186,7 +204,7 @@ function NavigationAndTheme() {
               path="/assistente"
               element={
                 <ProtectedRoute>
-                  <AssistenteIA />
+                  <PlusRoute recurso="InterWay IA"><AssistenteIA /></PlusRoute>
                 </ProtectedRoute>
               }
             />

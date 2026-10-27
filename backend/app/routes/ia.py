@@ -5,12 +5,12 @@ from app.models.user import User
 from app.models.conversation import ConversationMessage
 from app.schemas.ia import ChatRequest, ChatResponse
 from app.services.ia_service import conversar_com_ia
-from app.services.security import obter_usuario_atual
+from app.services.security import obter_assinante_plus
 
 router = APIRouter(prefix="/ia", tags=["Inteligencia Artificial"])
 
 @router.post("/chat", response_model=ChatResponse)
-async def conversar(dados: ChatRequest, db: Session = Depends(get_db), usuario: User = Depends(obter_usuario_atual)):
+async def conversar(dados: ChatRequest, db: Session = Depends(get_db), usuario: User = Depends(obter_assinante_plus)):
     mensagem = dados.mensagem.strip()
     if not mensagem:
         raise HTTPException(status_code=400, detail="A mensagem nao pode estar vazia.")
