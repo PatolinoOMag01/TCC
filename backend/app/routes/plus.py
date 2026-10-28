@@ -1,6 +1,7 @@
 import hashlib
 import hmac
 import os
+from uuid import uuid4
 
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -19,6 +20,12 @@ VALOR_MENSAL = 29.90
 
 def _access_token() -> str:
     return os.getenv("MERCADOPAGO_ACCESS_TOKEN", "").strip()
+
+
+def _modo_demonstracao() -> bool:
+    return os.getenv("PLUS_DEMO_MODE", "false").strip().lower() in {
+        "1", "true", "yes", "on",
+    }
 
 
 def _consultar_assinatura_mp(provedor_id: str, token: str) -> dict | None:
@@ -79,7 +86,12 @@ def _validar_assinatura_webhook(
 
 def _resposta_assinatura(assinatura: PlusSubscription | None) -> dict:
     if assinatura is None:
-        return {"status": "none", "ativa": False, "valor_mensal": VALOR_MENSAL}
+        return {
+            "status": "none",
+            "ativa": False,
+            "valor_mensal": VALOR_MENSAL,
+            "modo_demonstracao": _modo_demonstracao(),
+        }
 
     return {
         "status": assinatura.status,
@@ -87,7 +99,43 @@ def _resposta_assinatura(assinatura: PlusSubscription | None) -> dict:
         "valor_mensal": float(assinatura.valor_mensal),
         "moeda": assinatura.moeda,
         "criado_em": assinatura.criado_em,
+        "demonstracao": assinatura.provedor_id.startswith("demo-"),
+        "modo_demonstracao": _modo_demonstracao(),
     }
+
+
+@router.post("/assinatura/demo")
+def ativar_plus_demo(
+    db: Session = Depends(get_db),
+    usuario: User = Depends(obter_usuario_atual),
+):
+    if not _modo_demonstracao():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="A ativação de demonstração do Plus não está habilitada.",
+        )
+
+    ultima = (
+        db.query(PlusSubscription)
+        .filter(PlusSubscription.usuario_id == usuario.id)
+        .order_by(PlusSubscription.id.desc())
+        .first()
+    )
+    if ultima and ultima.status == "authorized":
+        return _resposta_assinatura(ultima)
+
+    assinatura = PlusSubscription(
+        usuario_id=usuario.id,
+        provedor_id=f"demo-{uuid4().hex}",
+        status="authorized",
+        valor_mensal=VALOR_MENSAL,
+        moeda="BRL",
+        checkout_url="demo://interway-plus",
+    )
+    db.add(assinatura)
+    db.commit()
+    db.refresh(assinatura)
+    return _resposta_assinatura(assinatura)
 
 
 @router.post("/assinatura/checkout")
@@ -209,6 +257,12 @@ def cancelar_assinatura_plus(
     )
     if not assinatura:
         raise HTTPException(status_code=404, detail="Nenhuma assinatura Plus foi encontrada.")
+
+    if assinatura.provedor_id.startswith("demo-"):
+        assinatura.status = "canceled"
+        db.commit()
+        db.refresh(assinatura)
+        return _resposta_assinatura(assinatura)
 
     token = _access_token()
     if not token:

@@ -181,8 +181,8 @@ export const api = {
     });
   },
 
-  criarCheckoutPlus() {
-    return request("/plus/assinatura/checkout", { method: "POST" });
+  ativarPlusDemo() {
+    return request("/plus/assinatura/demo", { method: "POST" });
   },
 
   minhaAssinaturaPlus() {

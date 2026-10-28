@@ -69,35 +69,24 @@ function PlanoPlus() {
           </div>
         </div>
 
-        <aside className="plus-price-card">
-          <div className="plus-price-badge">PLANO INTERWAY PLUS</div>
-          <h2>Mais perto da sua viagem</h2>
+        <aside className="plus-price-card plus-demo-offer-card">
+          <div className="plus-price-badge">MODO DE APRESENTAÇÃO</div>
+          <h2>Experimente o InterWay Plus</h2>
           <p className="plus-price-description">
-            Um espaço só seu para planejar o próximo passo.
+            Ative os recursos para esta conta e explore a experiência completa do protótipo.
           </p>
-
-          <div className="plus-price">
-            <span>R$</span>
-            <strong>29,90</strong>
-          </div>
-          <p className="plus-price-caption">por mês, com renovação automática</p>
-
           <ul>
             <li><Check size={16} /> InterWay IA</li>
             <li><Check size={16} /> Passport e checklist</li>
             <li><Check size={16} /> Planejamento financeiro</li>
           </ul>
-
           <Link to="/plus/checkout" className="plus-signup-button">
-            Continuar para a compra
+            Abrir demonstração
             <ArrowRight size={18} />
           </Link>
           <p className="plus-checkout-note">
-            Pagamento processado com segurança pelo Mercado Pago. Você pode cancelar a renovação pela sua assinatura.
+            Sem pagamento ou método de cobrança. Os recursos são liberados somente após ativar a demonstração.
           </p>
-          <Link to="/plus/checkout" className="plus-manage-link">
-            Já assinei? Gerenciar assinatura
-          </Link>
         </aside>
       </section>
     </main>
