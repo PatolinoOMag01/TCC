@@ -222,7 +222,7 @@ export default function Perfil() {
             to="/passport"
             style={{
               background:
-                "rgba(255,255,255,0.88)",
+                "var(--surface)",
               borderRadius: 18,
               padding: "18px 16px",
               textAlign: "center",
@@ -240,7 +240,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 22,
-                color: "#000000",
+                color: "var(--text)",
                 marginTop: 6,
               }}
             >
@@ -251,7 +251,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "#000000",
+                color: "var(--text)",
               }}
             >
               Passport
@@ -263,7 +263,7 @@ export default function Perfil() {
             to="/planejador"
             style={{
               background:
-                "rgba(255,255,255,0.88)",
+                "var(--surface)",
               borderRadius: 18,
               padding: "18px 16px",
               textAlign: "center",
@@ -281,7 +281,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 22,
-                color: "#000000",
+                color: "var(--text)",
                 marginTop: 6,
               }}
             >
@@ -291,7 +291,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "#000000",
+                color: "var(--text)",
               }}
             >
               Meta financeira
@@ -302,7 +302,7 @@ export default function Perfil() {
           <div
             style={{
               background:
-                "rgba(255,255,255,0.88)",
+                "var(--surface)",
               borderRadius: 18,
               padding: "18px 16px",
               textAlign: "center",
@@ -320,7 +320,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 22,
-                color: "#000000",
+                color: "var(--text)",
                 marginTop: 6,
               }}
             >
@@ -330,7 +330,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "#000000",
+                color: "var(--text)",
               }}
             >
               Favoritos
@@ -342,7 +342,7 @@ export default function Perfil() {
             to="/match"
             style={{
               background:
-                "rgba(255,255,255,0.88)",
+                "var(--surface)",
               borderRadius: 18,
               padding: "18px 16px",
               textAlign: "center",
@@ -360,7 +360,7 @@ export default function Perfil() {
               style={{
                 display: "block",
                 fontSize: 15,
-                color: "#000000",
+                color: "var(--text)",
                 marginTop: 8,
               }}
             >
@@ -370,7 +370,7 @@ export default function Perfil() {
             <span
               style={{
                 fontSize: 13,
-                color: "#000000",
+                color: "var(--text)",
               }}
             >
               Encontrar destino

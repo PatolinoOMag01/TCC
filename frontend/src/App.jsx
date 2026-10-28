@@ -20,6 +20,7 @@ import {
 import ProtectedRoute
   from "./components/ProtectedRoute";
 import PlusRoute from "./components/PlusRoute";
+import Footer from "./components/Footer";
 
 const Home = lazy(() => import("./pages/Home"));
 const Destinos = lazy(() => import("./pages/Destinos"));
@@ -90,6 +91,11 @@ function NavigationAndTheme() {
             <Route
               path="/destinos"
               element={<Destinos />}
+            />
+
+            <Route
+              path="/destinos/:slug/:cidadeSlug"
+              element={<DestinoDetalhes />}
             />
 
             <Route
@@ -211,6 +217,7 @@ function NavigationAndTheme() {
             <Route path="*" element={<main className="not-found"><div><PageNavigation /><h1>Página não encontrada</h1><Link to="/escolas-idiomas">Abrir escolas de idiomas</Link></div></main>} />
       </Routes>
       </Suspense>
+      <Footer />
     </>
   );
 }

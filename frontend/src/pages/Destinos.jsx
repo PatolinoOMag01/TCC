@@ -3,12 +3,23 @@ import { Link } from "react-router-dom";
 import { Search, ArrowRight, Heart } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { destinos } from "../data/destinos";
+import { destinos, gerarSlugCidade } from "../data/destinos";
+import { cidadesExtras } from "../data/cidadesExtras";
 import { useFavorites } from "../context/FavoritesContext";
 
 export default function Destinos() {
   const [busca, setBusca] = useState("");
+  const [maisDestinosVisiveis, setMaisDestinosVisiveis] = useState(false);
   const { toggleFavorito, isFavorito } = useFavorites();
+  const termoBusca = busca.trim().toLocaleLowerCase("pt-BR");
+  const cidadesVisiveis = termoBusca
+    ? cidadesExtras.filter((cidade) => {
+        const pais = destinos.find((destino) => destino.slug === cidade.paisSlug);
+        return `${cidade.nome} ${pais?.pais || ""} ${pais?.continente || ""}`
+          .toLocaleLowerCase("pt-BR")
+          .includes(termoBusca);
+      })
+    : cidadesExtras.filter((cidade) => cidade.destaque);
 
   const destinosFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
@@ -19,6 +30,7 @@ export default function Destinos() {
       return (
         destino.pais.toLowerCase().includes(termo) ||
         destino.cidade.toLowerCase().includes(termo) ||
+        destino.cidades?.some((cidade) => cidade.toLowerCase().includes(termo)) ||
         destino.continente.toLowerCase().includes(termo)
       );
     });
@@ -230,7 +242,6 @@ export default function Destinos() {
                   >
                     {destino.cidade}
                   </strong>
-
                   <p
                     style={{
                       color: "var(--muted)",
@@ -242,7 +253,7 @@ export default function Destinos() {
                   </p>
 
                   <Link
-                    to={`/destinos/${destino.slug}`}
+                    to={`/destinos/${destino.slug}/${gerarSlugCidade(destino.cidade)}`}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -260,6 +271,73 @@ export default function Destinos() {
             );
           })}
         </section>
+
+        {cidadesVisiveis.length > 0 && (
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 32 }}>
+            <button
+              type="button"
+              aria-expanded={maisDestinosVisiveis}
+              aria-controls="cidades-adicionais"
+              onClick={() => setMaisDestinosVisiveis((visivel) => !visivel)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 9,
+                padding: "13px 18px",
+                border: "1px solid var(--border)",
+                borderRadius: 12,
+                color: "var(--link)",
+                background: "var(--surface)",
+                fontWeight: 700,
+                boxShadow: "0 10px 24px rgba(20, 50, 80, .08)",
+              }}
+            >
+              {maisDestinosVisiveis ? "Exibir menos destinos" : `Exibir mais destinos (${cidadesVisiveis.length})`}
+              <ArrowRight size={17} aria-hidden="true" />
+            </button>
+          </div>
+        )}
+
+        {maisDestinosVisiveis && cidadesVisiveis.length > 0 && (
+          <section
+            id="cidades-adicionais"
+            aria-label="Cidades adicionais para intercâmbio"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: 24,
+              marginTop: 28,
+            }}
+          >
+            {cidadesVisiveis.map((cidade) => {
+              const pais = destinos.find((destino) => destino.slug === cidade.paisSlug);
+              return (
+                <article
+                  key={`${cidade.paisSlug}-${cidade.nome}`}
+                  style={{ overflow: "hidden", borderRadius: 22, background: "var(--surface)", boxShadow: "0 18px 50px rgba(24,55,90,.1)" }}
+                >
+                  <img
+                    src={cidade.imagem}
+                    alt={`${cidade.nome}, ${pais?.pais || ""}`}
+                    loading="lazy"
+                    style={{ display: "block", width: "100%", height: 210, objectFit: "cover" }}
+                  />
+                  <div style={{ padding: 22 }}>
+                    <span style={{ color: "var(--muted)", fontSize: 13 }}>{pais?.pais} · {pais?.continente}</span>
+                    <h2 style={{ margin: "7px 0 10px", color: "var(--text)", fontSize: 25 }}>{cidade.nome}</h2>
+                    <p style={{ minHeight: 68, color: "var(--muted)", lineHeight: 1.6, fontSize: 14 }}>{cidade.descricao}</p>
+                    <Link
+                      to={`/destinos/${cidade.paisSlug}/${gerarSlugCidade(cidade.nome)}`}
+                      style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 16, color: "var(--link)", fontWeight: 700 }}
+                    >
+                      Conhecer {cidade.nome}<ArrowRight size={17} />
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
+          </section>
+        )}
 
         {destinosFiltrados.length === 0 && (
           <div

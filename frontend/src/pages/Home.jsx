@@ -342,7 +342,7 @@ function Home() {
             </Link>
 
             <p className="planner-caption">
-              ✨ Leva menos de 2 minutos
+               Leva menos de 2 minutos
               para descobrir seu destino
               ideal.
             </p>
@@ -471,6 +471,11 @@ function Home() {
                             destino.cidade
                           }
                         </p>
+                        {destino.cidades?.length > 1 && (
+                          <small style={{ display: "block", marginTop: 5, color: "rgba(255,255,255,.7)", fontSize: 11 }}>
+                            + {destino.cidades.slice(1).join(" · ")}
+                          </small>
+                        )}
                       </div>
                     </div>
 

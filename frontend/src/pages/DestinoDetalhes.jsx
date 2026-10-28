@@ -10,14 +10,21 @@ import {
 } from "lucide-react";
 
 import { Link, useParams } from "react-router-dom";
-import { destinos } from "../data/destinos";
+import { destinos, gerarSlugCidade } from "../data/destinos";
+import { buscarCidadeExtra } from "../data/cidadesExtras";
 
 function DestinoDetalhes() {
-  const { slug } = useParams();
+  const { slug, cidadeSlug } = useParams();
 
   const destino = destinos.find((item) => item.slug === slug);
+  const cidadeAtual = cidadeSlug
+    ? destino?.cidades?.find((cidade) => gerarSlugCidade(cidade) === cidadeSlug)
+    : destino?.cidade;
+  const detalhesCidade = destino && cidadeAtual
+    ? buscarCidadeExtra(destino.slug, cidadeAtual)
+    : null;
 
-  if (!destino) {
+  if (!destino || !cidadeAtual) {
     return (
       <main className="not-found">
         <div>
@@ -40,7 +47,7 @@ function DestinoDetalhes() {
               rgba(4, 12, 26, 0.94),
               rgba(4, 12, 26, 0.4)
             ),
-            url(${destino.imagem})
+            url(${detalhesCidade?.imagem || destino.imagem})
           `,
         }}
       >
@@ -59,19 +66,42 @@ function DestinoDetalhes() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-          <span className="destination-detail-tag">{destino.destaque}</span>
+          <span className="destination-detail-tag">
+            {detalhesCidade?.destaque ? "Destino em destaque" : destino.destaque}
+          </span>
 
           <div className="detail-title">
             <span>{destino.bandeira}</span>
-            <h1>{destino.pais}</h1>
+            <h1>{cidadeAtual}</h1>
           </div>
 
           <p className="detail-location">
             <MapPin size={18} />
-            {destino.cidade}, {destino.continente}
+            {cidadeAtual}, {destino.pais}, {destino.continente}
           </p>
 
-          <p className="detail-description">{destino.descricao}</p>
+          {destino.cidades?.length > 1 && (
+            <div aria-label="Outras cidades deste país" style={{ marginTop: 20 }}>
+              <span style={{ display: "block", marginBottom: 9, color: "rgba(255,255,255,.76)", fontSize: 13 }}>
+                Outras cidades para explorar
+              </span>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {destino.cidades.filter((cidade) => cidade !== cidadeAtual).map((cidade) => (
+                  <Link
+                    key={cidade}
+                    to={`/destinos/${destino.slug}/${gerarSlugCidade(cidade)}`}
+                    style={{ padding: "7px 11px", borderRadius: 999, color: "#fff", background: "rgba(255,255,255,.14)", fontSize: 13 }}
+                  >
+                    {cidade}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <p className="detail-description">
+            {detalhesCidade?.descricao || destino.descricao}
+          </p>
 
           <Link to={`/bolsas?busca=${encodeURIComponent(destino.pais)}`} className="destination-programs-link">
             Ver programas disponíveis
@@ -90,10 +120,10 @@ function DestinoDetalhes() {
             a sua próxima história.
           </h2>
 
-          <p>{destino.texto}</p>
+          <p>{detalhesCidade?.texto || destino.texto}</p>
 
           <div className="benefits-grid">
-            {destino.beneficios.map((beneficio) => (
+            {(detalhesCidade?.beneficios || destino.beneficios).map((beneficio) => (
               <div key={beneficio} className="benefit-item">
                 <div>
                   <Check size={17} />

@@ -3,6 +3,7 @@ export const destinos = [
     slug: "irlanda",
     pais: "Irlanda",
     cidade: "Dublin",
+    cidades: ["Dublin", "Cork", "Galway"],
     bandeira: "🇮🇪",
     continente: "Europa",
     idioma: "Inglês",
@@ -14,10 +15,10 @@ export const destinos = [
       "https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?auto=format&fit=crop&w=1600&q=90",
 
     descricao:
-      "Um dos destinos mais procurados por brasileiros que querem estudar inglês e viver uma experiência internacional.",
+      "Dublin combina escolas de inglês, bairros históricos e uma vida cultural intensa para quem quer estudar na Irlanda.",
 
     texto:
-      "A Irlanda combina ensino de inglês, cultura forte, cidades acolhedoras e oportunidades para estudantes internacionais.",
+      "Às margens do rio Liffey, Dublin reúne museus, parques, universidades e bairros cheios de música. A cidade oferece muitas oportunidades para praticar inglês no dia a dia e conhecer a cultura irlandesa.",
 
     beneficios: [
       "Estudar inglês",
@@ -59,6 +60,7 @@ export const destinos = [
     slug: "canada",
     pais: "Canadá",
     cidade: "Toronto",
+    cidades: ["Toronto", "Vancouver", "Montreal"],
     bandeira: "🇨🇦",
     continente: "América do Norte",
     idioma: "Inglês / Francês",
@@ -70,10 +72,10 @@ export const destinos = [
       "https://images.unsplash.com/photo-1517935706615-2717063c2225?auto=format&fit=crop&w=1600&q=90",
 
     descricao:
-      "Educação de alto nível, multiculturalismo e cidades com excelente infraestrutura.",
+      "Toronto é uma cidade multicultural, com instituições de ensino, bairros diversos e uma agenda cultural ativa.",
 
     texto:
-      "O Canadá é conhecido por sua qualidade educacional, segurança e diversidade cultural.",
+      "Toronto reúne universidades, museus, parques e comunidades de várias partes do mundo. É uma escolha para quem quer estudar inglês em uma metrópole conectada e multicultural.",
 
     beneficios: [
       "Educação reconhecida",
@@ -118,6 +120,7 @@ export const destinos = [
     slug: "australia",
     pais: "Austrália",
     cidade: "Sydney",
+    cidades: ["Sydney", "Melbourne", "Brisbane"],
     bandeira: "🇦🇺",
     continente: "Oceania",
     idioma: "Inglês",
@@ -129,10 +132,10 @@ export const destinos = [
       "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1600&q=90",
 
     descricao:
-      "Uma experiência que mistura estudo, trabalho, natureza e qualidade de vida.",
+      "Sydney une estudo, vida urbana e paisagens costeiras em uma das cidades mais conhecidas da Austrália.",
 
     texto:
-      "A Austrália é perfeita para quem busca intercâmbio com clima agradável, grandes cidades e contato com a natureza.",
+      "Sydney combina áreas centrais movimentadas, praias e espaços à beira-mar. A cidade oferece cursos, universidades e atividades ao ar livre para quem quer estudar inglês na Austrália.",
 
     beneficios: [
       "Estudo + trabalho",
@@ -174,6 +177,7 @@ export const destinos = [
     slug: "reino-unido",
     pais: "Reino Unido",
     cidade: "Londres",
+    cidades: ["Londres", "Manchester", "Edimburgo"],
     bandeira: "🇬🇧",
     continente: "Europa",
     idioma: "Inglês",
@@ -185,10 +189,10 @@ export const destinos = [
       "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1600&q=90",
 
     descricao:
-      "Universidades tradicionais, cultura global e algumas das cidades mais famosas do mundo.",
+      "Londres reúne universidades, museus e bairros de diferentes culturas em uma metrópole de alcance global.",
 
     texto:
-      "O Reino Unido reúne história, educação e oportunidades acadêmicas reconhecidas mundialmente.",
+      "Em Londres, instituições acadêmicas convivem com museus, teatros e bairros com identidades próprias. A cidade oferece muitas formas de estudar inglês e conhecer a cultura britânica.",
 
     beneficios: [
       "Universidades renomadas",
@@ -231,6 +235,7 @@ export const destinos = [
     slug: "malta",
     pais: "Malta",
     cidade: "Valletta",
+    cidades: ["Valletta", "Sliema", "St. Julian's"],
     bandeira: "🇲🇹",
     continente: "Europa",
     idioma: "Inglês / Maltês",
@@ -242,10 +247,10 @@ export const destinos = [
       "https://images.unsplash.com/photo-1669294841689-0ceb34ad40c1?auto=format&fit=crop&w=1600&q=90",
 
     descricao:
-      "Uma ilha europeia com clima agradável, inglês e opções de intercâmbio mais acessíveis.",
+      "Valletta oferece uma experiência de estudos em inglês cercada por arquitetura histórica e pelo mar Mediterrâneo.",
 
     texto:
-      "Malta oferece uma experiência europeia diferente, com praias, cultura mediterrânea e cursos de inglês.",
+      "A capital maltesa é compacta e marcada por construções históricas, museus e vistas para o porto. De Valletta, é possível explorar outras cidades da ilha e praticar inglês em situações cotidianas.",
 
     beneficios: [
       "Inglês",
@@ -285,6 +290,7 @@ export const destinos = [
     slug: "estados-unidos",
     pais: "Estados Unidos",
     cidade: "Nova York",
+    cidades: ["Nova York", "Boston", "Los Angeles"],
     bandeira: "🇺🇸",
     continente: "América do Norte",
     idioma: "Inglês",
@@ -292,8 +298,8 @@ export const destinos = [
     destaque: "Diversidade acadêmica",
     compatibilidade: 85,
     imagem: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=1600&q=90",
-    descricao: "Um destino de grandes centros urbanos, diversidade cultural e muitas áreas de estudo para explorar.",
-    texto: "Dos centros criativos de Nova York às universidades de diferentes regiões, os Estados Unidos oferecem experiências variadas para quem quer estudar fora.",
+    descricao: "Nova York reúne universidades, museus e bairros diversos em uma experiência urbana intensa.",
+    texto: "Nova York tem instituições de ensino, parques, museus e comunidades de diferentes origens. A cidade oferece um ambiente dinâmico para estudar inglês e conhecer áreas como cultura, negócios e artes.",
     beneficios: ["Variedade de áreas acadêmicas", "Grandes centros culturais", "Comunidades internacionais", "Opções de cursos de curta e longa duração"],
     match: { objetivos: ["idioma", "faculdade", "experiencia"], idiomas: ["ingles"], orcamento: 4, duracoes: ["1-mes", "3-meses", "6-meses", "1-ano", "mais-1-ano"], clima: ["frio", "moderado", "quente"], trabalho: false },
   },
@@ -301,6 +307,7 @@ export const destinos = [
     slug: "espanha",
     pais: "Espanha",
     cidade: "Barcelona",
+    cidades: ["Barcelona", "Madri", "Valência"],
     bandeira: "🇪🇸",
     continente: "Europa",
     idioma: "Espanhol / Catalão",
@@ -308,8 +315,8 @@ export const destinos = [
     destaque: "Cultura e idiomas",
     compatibilidade: 82,
     imagem: "https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=1600&q=90",
-    descricao: "Uma experiência europeia com vida urbana, arquitetura marcante e a oportunidade de aprender espanhol.",
-    texto: "Barcelona combina vida cultural, arquitetura reconhecida e uma rotina internacional. É uma opção para quem quer estudar espanhol e conhecer diferentes regiões da Espanha.",
+    descricao: "Barcelona combina arquitetura marcante, praias urbanas e uma vida cultural que acontece em vários idiomas.",
+    texto: "Barcelona reúne bairros históricos, obras modernistas, museus e uma comunidade internacional. É uma cidade para estudar espanhol e conhecer também a língua e a cultura catalãs.",
     beneficios: ["Aprendizado de espanhol", "Vida cultural intensa", "Arquitetura e história", "Opções em diferentes cidades"],
     match: { objetivos: ["idioma", "faculdade", "experiencia"], idiomas: ["espanhol"], orcamento: 3, duracoes: ["1-mes", "3-meses", "6-meses", "1-ano"], clima: ["moderado", "quente"], trabalho: false },
   },
@@ -317,6 +324,7 @@ export const destinos = [
     slug: "franca",
     pais: "França",
     cidade: "Paris",
+    cidades: ["Paris", "Lyon", "Toulouse"],
     bandeira: "🇫🇷",
     continente: "Europa",
     idioma: "Francês",
@@ -324,8 +332,8 @@ export const destinos = [
     destaque: "Arte e educação",
     compatibilidade: 80,
     imagem: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=90",
-    descricao: "Um destino para combinar estudos, patrimônio histórico, arte e o aprendizado do francês.",
-    texto: "A França reúne instituições de ensino, museus e cidades com identidades próprias. Paris é uma referência cultural, enquanto outras regiões oferecem experiências diferentes.",
+    descricao: "Paris reúne instituições de ensino, museus e monumentos históricos em uma cidade reconhecida mundialmente.",
+    texto: "Paris permite explorar bairros com estilos próprios, museus, bibliotecas e universidades. A rotina na capital oferece muitas oportunidades para praticar francês dentro e fora da sala de aula.",
     beneficios: ["Aprendizado de francês", "Museus e patrimônio cultural", "Opções acadêmicas variadas", "Conexões com outras cidades europeias"],
     match: { objetivos: ["idioma", "faculdade", "experiencia"], idiomas: ["frances"], orcamento: 3, duracoes: ["1-mes", "3-meses", "6-meses", "1-ano", "mais-1-ano"], clima: ["frio", "moderado"], trabalho: false },
   },
@@ -333,6 +341,7 @@ export const destinos = [
     slug: "alemanha",
     pais: "Alemanha",
     cidade: "Berlim",
+    cidades: ["Berlim", "Munique", "Hamburgo"],
     bandeira: "🇩🇪",
     continente: "Europa",
     idioma: "Alemão",
@@ -340,8 +349,8 @@ export const destinos = [
     destaque: "Ciência e inovação",
     compatibilidade: 79,
     imagem: "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=1600&q=90",
-    descricao: "Uma opção para quem se interessa por ciência, inovação, história e pelo idioma alemão.",
-    texto: "Berlim tem uma cena cultural diversa e uma história presente em toda a cidade. A Alemanha também oferece experiências acadêmicas em diferentes áreas e cidades.",
+    descricao: "Berlim combina história, arte e inovação em uma cidade com uma cena cultural diversa.",
+    texto: "Berlim tem museus, memoriais, espaços criativos e universidades. A cidade é uma opção para estudar alemão e acompanhar de perto a história e a vida contemporânea do país.",
     beneficios: ["Aprendizado de alemão", "Museus e história", "Ecossistema de ciência e tecnologia", "Diversidade de cidades universitárias"],
     match: { objetivos: ["idioma", "faculdade", "experiencia"], idiomas: ["alemao"], orcamento: 3, duracoes: ["3-meses", "6-meses", "1-ano", "mais-1-ano"], clima: ["frio", "moderado"], trabalho: false },
   },
@@ -349,6 +358,7 @@ export const destinos = [
     slug: "portugal",
     pais: "Portugal",
     cidade: "Lisboa",
+    cidades: ["Lisboa", "Porto", "Coimbra"],
     bandeira: "🇵🇹",
     continente: "Europa",
     idioma: "Português",
@@ -356,8 +366,8 @@ export const destinos = [
     destaque: "Experiência lusófona",
     compatibilidade: 78,
     imagem: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1600&q=90",
-    descricao: "Uma experiência internacional em português, com cidades históricas e fácil conexão cultural para brasileiros.",
-    texto: "Lisboa combina bairros históricos, vida cultural e uma rotina em português. É uma alternativa para quem quer viver fora e estudar sem a barreira inicial de um novo idioma.",
+    descricao: "Lisboa combina bairros históricos, miradouros e uma vida cultural em português, facilitando a adaptação de brasileiros.",
+    texto: "A capital portuguesa tem bairros históricos, museus, universidades e uma rotina conectada ao rio Tejo. É uma opção para estudar fora, viver em outra cultura e começar sem a barreira de um novo idioma.",
     beneficios: ["Estudos em português", "Adaptação linguística mais simples", "História e cultura", "Acesso a outras cidades europeias"],
     match: { objetivos: ["faculdade", "experiencia"], idiomas: ["portugues"], orcamento: 2, duracoes: ["1-mes", "3-meses", "6-meses", "1-ano", "mais-1-ano"], clima: ["moderado", "quente"], trabalho: false },
   },
@@ -365,6 +375,7 @@ export const destinos = [
     slug: "japao",
     pais: "Japão",
     cidade: "Tóquio",
+    cidades: ["Tóquio", "Quioto", "Osaka"],
     bandeira: "🇯🇵",
     continente: "Ásia",
     idioma: "Japonês",
@@ -372,8 +383,8 @@ export const destinos = [
     destaque: "Tradição e tecnologia",
     compatibilidade: 77,
     imagem: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1600&q=90",
-    descricao: "Uma imersão cultural entre cidades modernas, tradições locais e o aprendizado do japonês.",
-    texto: "Tóquio apresenta diferentes facetas da vida japonesa, de bairros movimentados a espaços de história e cultura. O destino é indicado para quem busca uma experiência cultural bem diferente.",
+    descricao: "Tóquio aproxima tecnologia, cultura pop, bairros históricos e o aprendizado do japonês.",
+    texto: "Tóquio é formada por bairros muito diferentes entre si, com centros culturais, espaços históricos e instituições de ensino. A cidade oferece uma imersão intensa para quem quer estudar japonês e conhecer a vida no Japão.",
     beneficios: ["Aprendizado de japonês", "Imersão cultural", "Tecnologia e cultura pop", "História e tradições locais"],
     match: { objetivos: ["idioma", "faculdade", "experiencia"], idiomas: ["japones"], orcamento: 4, duracoes: ["1-mes", "3-meses", "6-meses", "1-ano"], clima: ["frio", "moderado", "quente"], trabalho: false },
   },
@@ -381,6 +392,7 @@ export const destinos = [
     slug: "paises-baixos",
     pais: "Países Baixos",
     cidade: "Amsterdã",
+    cidades: ["Amsterdã", "Roterdã", "Utrecht"],
     bandeira: "🇳🇱",
     continente: "Europa",
     idioma: "Neerlandês / Inglês",
@@ -388,9 +400,18 @@ export const destinos = [
     destaque: "Inovação e vida internacional",
     compatibilidade: 78,
     imagem: "https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?auto=format&fit=crop&w=1600&q=90",
-    descricao: "Um destino de canais históricos, vida internacional e oportunidades de estudo em diferentes áreas.",
-    texto: "Amsterdã combina patrimônio histórico, museus e uma comunidade internacional. É uma opção para quem quer conhecer a cultura neerlandesa e pesquisar programas acadêmicos em inglês ou neerlandês.",
+    descricao: "Amsterdã reúne canais históricos, museus, bicicletas e uma comunidade internacional.",
+    texto: "A capital neerlandesa oferece museus, universidades e bairros conectados por canais e ciclovias. É uma opção para estudar em um ambiente internacional e conhecer de perto a cultura dos Países Baixos.",
     beneficios: ["Ambiente internacional", "Museus e patrimônio cultural", "Opções de estudo em diferentes áreas", "Mobilidade urbana por bicicleta e transporte público"],
     match: { objetivos: ["idioma", "faculdade", "experiencia"], idiomas: ["ingles", "holandes"], orcamento: 4, duracoes: ["1-mes", "3-meses", "6-meses", "1-ano", "mais-1-ano"], clima: ["frio", "moderado"], trabalho: false },
   },
 ];
+
+export function gerarSlugCidade(cidade) {
+  return cidade
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
