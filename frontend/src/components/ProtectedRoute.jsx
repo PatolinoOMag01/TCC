@@ -8,6 +8,7 @@ import { useAuth }
 
 export default function ProtectedRoute({
   children,
+  redirectTo = "/login",
 }) {
   const {
     usuario,
@@ -34,7 +35,7 @@ export default function ProtectedRoute({
   if (!usuario) {
     return (
       <Navigate
-        to="/login"
+        to={redirectTo}
         replace
         state={{
           from: location.pathname,

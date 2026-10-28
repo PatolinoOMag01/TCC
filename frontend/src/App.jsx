@@ -209,7 +209,7 @@ function NavigationAndTheme() {
             <Route
               path="/assistente"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute redirectTo="/plus">
                   <PlusRoute recurso="InterWay IA"><AssistenteIA /></PlusRoute>
                 </ProtectedRoute>
               }
