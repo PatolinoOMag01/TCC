@@ -15,6 +15,7 @@ from app.models.passport import (
 )
 from app.models.user import User
 from app.models.profile import ExchangeProfile
+from app.models.planner import Planner
 from app.schemas.passport import (
     ChecklistUpdate,
     PassportUpdate,
@@ -55,22 +56,46 @@ def calcular_progresso(
         for item in checklist
         if item.get("concluido")
     )
+    return round((concluidos / len(checklist)) * 100)
 
-    return round(
-        (
-            concluidos
-            / len(checklist)
-        )
-        * 100
-    )
 
+def sincronizar_checklist(db: Session, passport: Passport, usuario: User):
+    perfil = db.query(ExchangeProfile).filter(ExchangeProfile.usuario_id == usuario.id).first()
+    planejamento = db.query(Planner).filter(Planner.usuario_id == usuario.id).first()
+    dados_alterados = False
+    if perfil:
+        if not passport.pais and perfil.destino_pais:
+            passport.pais = perfil.destino_pais
+            dados_alterados = True
+        if not passport.cidade and perfil.destino_cidade:
+            passport.cidade = perfil.destino_cidade
+            dados_alterados = True
+    checklist = carregar_checklist(passport)
+    destino_pais = passport.pais or (perfil.destino_pais if perfil else None)
+    destino_cidade = passport.cidade or (perfil.destino_cidade if perfil else None)
+    itens_automaticos = {
+        "perfil": bool(usuario.nome and usuario.email and passport.objetivo and passport.nivel_idioma),
+        "destino": bool(destino_pais or destino_cidade),
+        "orcamento": bool((passport.orcamento or 0) > 0 or (planejamento and (planejamento.meta or 0) > 0)),
+    }
+    alterado = dados_alterados
+    for item in checklist:
+        if item.get("id") in itens_automaticos:
+            concluido = itens_automaticos[item["id"]]
+            if item.get("concluido") != concluido:
+                item["concluido"] = concluido
+                alterado = True
+    if alterado:
+        passport.checklist = json.dumps(checklist, ensure_ascii=False)
+        db.commit()
+        db.refresh(passport)
+    return checklist
 
 def formatar_passport(
     passport: Passport,
+    checklist=None,
 ):
-    checklist = carregar_checklist(
-        passport
-    )
+    checklist = checklist if checklist is not None else carregar_checklist(passport)
 
     return {
         "id": passport.id,
@@ -142,9 +167,8 @@ def meu_passport(
         )
     )
 
-    return formatar_passport(
-        passport
-    )
+    checklist = sincronizar_checklist(db, passport, usuario)
+    return formatar_passport(passport, checklist)
 
 
 @router.put("/me")
@@ -198,10 +222,8 @@ def atualizar_passport(
 
     db.commit()
     db.refresh(passport)
-
-    return formatar_passport(
-        passport
-    )
+    checklist = sincronizar_checklist(db, passport, usuario)
+    return formatar_passport(passport, checklist)
 
 
 @router.patch("/checklist")
@@ -231,6 +253,8 @@ def atualizar_checklist(
 
     for item in checklist:
         if item["id"] == dados.id:
+            if dados.id in {"perfil", "destino", "orcamento"}:
+                break
             item["concluido"] = (
                 dados.concluido
             )
@@ -238,6 +262,9 @@ def atualizar_checklist(
             item_encontrado = True
             break
 
+    if dados.id in {"perfil", "destino", "orcamento"}:
+        checklist = sincronizar_checklist(db, passport, usuario)
+        return formatar_passport(passport, checklist)
     if not item_encontrado:
         raise HTTPException(
             status_code=404,
@@ -256,7 +283,5 @@ def atualizar_checklist(
 
     db.commit()
     db.refresh(passport)
-
-    return formatar_passport(
-        passport
-    )
+    checklist = sincronizar_checklist(db, passport, usuario)
+    return formatar_passport(passport, checklist)

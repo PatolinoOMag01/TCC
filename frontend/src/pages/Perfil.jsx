@@ -67,31 +67,13 @@ export default function Perfil() {
 
   useEffect(() => {
     async function carregarDashboard() {
-      try {
-        const dados =
-          await api.meuPassport();
+      const [resultadoPassport, resultadoFinanceiro] = await Promise.allSettled([
+        api.meuPassport(),
+        usuario?.id ? api.meuPlanejamento() : Promise.resolve(null),
+      ]);
 
-        setPassport(dados);
-      } catch {
-        setPassport(null);
-      }
-
-      if (usuario?.id) {
-        const salvo =
-          localStorage.getItem(
-            `interway-planejador-${usuario.id}`
-          );
-
-        if (salvo) {
-          try {
-            setFinanceiro(
-              JSON.parse(salvo)
-            );
-          } catch {
-            setFinanceiro(null);
-          }
-        }
-      }
+      setPassport(resultadoPassport.status === "fulfilled" ? resultadoPassport.value : null);
+      setFinanceiro(resultadoFinanceiro.status === "fulfilled" ? resultadoFinanceiro.value : null);
     }
 
     carregarDashboard();

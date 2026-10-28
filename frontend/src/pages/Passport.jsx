@@ -72,6 +72,8 @@ export default function Passport() {
     erro,
     setErro,
   ] = useState("");
+  const [itemAtualizando, setItemAtualizando] = useState(null);
+  const [tentativa, setTentativa] = useState(0);
 
 
   useEffect(() => {
@@ -105,7 +107,7 @@ export default function Passport() {
     }
     carregarPassport();
     return () => { ativo = false; };
-  }, []);
+  }, [usuario?.id, tentativa]);
 
   function alterarCampo(
     event
@@ -121,6 +123,8 @@ export default function Passport() {
         [name]: value,
       })
     );
+    setMensagem("");
+    setErro("");
   }
 
 
@@ -128,6 +132,7 @@ export default function Passport() {
     event
   ) {
     event.preventDefault();
+    if (salvando) return;
 
     setSalvando(true);
     setMensagem("");
@@ -155,6 +160,13 @@ export default function Passport() {
         );
 
       setPassport(dados);
+      setFormulario({
+        pais: dados.pais || "",
+        cidade: dados.cidade || "",
+        objetivo: dados.objetivo || "",
+        nivel_idioma: dados.nivel_idioma || "",
+        orcamento: dados.orcamento ?? "",
+      });
 
       setMensagem(
         "Passport atualizado!"
@@ -172,6 +184,10 @@ export default function Passport() {
   async function alternarItem(
     item
   ) {
+    if (itemAtualizando) return;
+    setItemAtualizando(item.id);
+    setErro("");
+    setMensagem("");
     try {
       const dados =
         await api.atualizarChecklist(
@@ -184,6 +200,8 @@ export default function Passport() {
       setErro(
         error.message
       );
+    } finally {
+      setItemAtualizando(null);
     }
   }
 
@@ -218,6 +236,16 @@ export default function Passport() {
             {erro}
           </span>
         )}
+        <button
+          type="button"
+          onClick={() => {
+            setErro("");
+            setCarregando(true);
+            setTentativa((valor) => valor + 1);
+          }}
+        >
+          Tentar novamente
+        </button>
       </main>
     );
   }
@@ -419,8 +447,14 @@ export default function Passport() {
 
 
             <div className="passport-checklist">
-              {passport.checklist.map(
+              <p className="passport-checklist-hint">
+                Perfil, destino e orçamento são atualizados automaticamente com os dados que você preencher no Passport e no Planejador Financeiro.
+              </p>
+              {(Array.isArray(passport.checklist) ? passport.checklist : []).map(
                 (item) => (
+                  (() => {
+                    const automatico = ["perfil", "destino", "orcamento"].includes(item.id);
+                    return (
                   <button
                     type="button"
                     key={item.id}
@@ -434,6 +468,9 @@ export default function Passport() {
                         item
                       )
                     }
+                    disabled={automatico || Boolean(itemAtualizando) || salvando}
+                    aria-pressed={item.concluido}
+                    title={automatico ? "Este item é atualizado pelos dados preenchidos no site." : undefined}
                   >
                     <div className="checklist-icon">
                       {item.concluido ? (
@@ -451,6 +488,8 @@ export default function Passport() {
                       {item.titulo}
                     </span>
                   </button>
+                    );
+                  })()
                 )
               )}
             </div>
@@ -653,9 +692,7 @@ export default function Passport() {
 
               <button
                 type="submit"
-                disabled={
-                  salvando
-                }
+                disabled={salvando || Boolean(itemAtualizando)}
               >
                 <Save
                   size={18}

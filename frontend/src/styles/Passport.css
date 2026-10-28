@@ -442,6 +442,13 @@
   gap: 8px;
 }
 
+.passport-checklist-hint {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .checklist-item {
   width: 100%;
 
@@ -465,6 +472,15 @@
 
 .checklist-item:hover {
   background: #edf3ff;
+}
+
+.checklist-item:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.checklist-item:disabled:hover {
+  background: var(--background);
 }
 
 .checklist-icon {
