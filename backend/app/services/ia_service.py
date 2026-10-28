@@ -267,6 +267,9 @@ async def conversar_com_ia(
             )
         )
 
+        if pergunta_sobre_clima(mensagem) and "DADOS METEOROLOGICOS REAIS" in contexto:
+            return contexto.strip()
+
         contexto_usuario = criar_contexto_usuario(db, usuario) if db is not None else ""
         contexto_catalogo = contexto_catalogos(mensagem)
 
