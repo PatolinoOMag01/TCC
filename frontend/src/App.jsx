@@ -34,6 +34,7 @@ const Vagas = lazy(() => import("./pages/Vagas"));
 const EscolasIdiomas = lazy(() => import("./pages/EscolasIdiomas"));
 const Favoritos = lazy(() => import("./pages/Favoritos"));
 const Chat = lazy(() => import("./pages/Chat"));
+const Sobre = lazy(() => import("./pages/Sobre"));
 const Passport = lazy(() => import("./pages/Passport"));
 const Planejador = lazy(() => import("./pages/Planejador"));
 const AssistenteIA = lazy(() => import("./pages/AssistenteIA"));
@@ -159,6 +160,8 @@ function NavigationAndTheme() {
               path="/chat"
               element={<Chat />}
             />
+
+            <Route path="/sobre" element={<Sobre />} />
 
             <Route
               path="/login"

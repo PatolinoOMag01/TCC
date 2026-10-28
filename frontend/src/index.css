@@ -447,6 +447,10 @@ a {
   margin-left: 0;
 }
 
+:root:not([data-theme="dark"]) .avatars div {
+  color: #111827;
+}
+
 .hero-info p {
   display: flex;
   flex-direction: column;

@@ -9,6 +9,7 @@ const secoes = [
   { label: "Vagas", to: "/vagas" },
   { label: "Escolas de idiomas", to: "/escolas-idiomas" },
   { label: "Comunidade", to: "/chat" },
+  { label: "Sobre nós", to: "/sobre" },
 ];
 
 const desenvolvedores = [

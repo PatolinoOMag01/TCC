@@ -23,7 +23,7 @@ def _access_token() -> str:
 
 
 def _modo_demonstracao() -> bool:
-    return os.getenv("PLUS_DEMO_MODE", "false").strip().lower() in {
+    return os.getenv("PLUS_DEMO_MODE", "true").strip().lower() in {
         "1", "true", "yes", "on",
     }
 
