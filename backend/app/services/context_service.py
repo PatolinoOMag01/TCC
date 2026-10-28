@@ -88,7 +88,7 @@ def extrair_cidade(
     padroes = [
         (
             r"(?:temperatura|clima|tempo|graus|chuva)"
-            r".*?\bem\s+(.+?)(?:\?|$)"
+            r".*?\b(?:em|de|do|da|para)\s+(.+?)(?:\?|$)"
         ),
         (
             r"(?:como esta)"
