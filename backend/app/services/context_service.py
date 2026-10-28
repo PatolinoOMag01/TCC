@@ -33,7 +33,7 @@ def pergunta_sobre_clima(mensagem: str) -> bool:
     palavras = [
         "clima", "temperatura", "tempo em", "tempo agora",
         "tempo hoje", "tempo amanha", "quantos graus", "graus",
-        "chovendo", "chover", "chuva", "previsao",
+        "chovendo", "chover", "vai chover", "chuva", "previsao",
         "sensacao termica", "umidade", "vento", "meteorologia",
         "faz frio", "faz calor", "esta frio", "esta calor",
     ]
@@ -69,7 +69,7 @@ def pergunta_sobre_moeda(
 def extrair_cidade(mensagem: str) -> str | None:
     texto = normalizar_texto(mensagem.strip())
     padroes = [
-        r"\\b(?:em|de|do|da|para|no|na)\\s+([a-z][a-z\\s.'-]{1,65})",
+        r"\b(?:em|de|do|da|para|no|na)\s+([a-z][a-z\s.'-]{1,65})",
     ]
     if not pergunta_sobre_clima(mensagem):
         return None
@@ -79,11 +79,11 @@ def extrair_cidade(mensagem: str) -> str | None:
             continue
         cidade = candidatos[-1]
         cidade = re.split(
-            r"\\b(?:agora|hoje|amanha|nesse momento|atualmente|"
-            r"por favor|neste momento|essa semana|proximos dias)\\b",
+            r"\b(?:agora|hoje|amanha|nesse momento|atualmente|"
+            r"por favor|neste momento|essa semana|proximos dias)\b",
             cidade,
         )[0].strip(" ,.-?!")
-        cidade = re.sub(r"^(?:a|o|um|uma)\\s+", "", cidade)
+        cidade = re.sub(r"^(?:a|o|um|uma)\s+", "", cidade)
         if cidade and cidade not in ("hoje", "amanha", "agora", "tempo"):
             return cidade
     return None
