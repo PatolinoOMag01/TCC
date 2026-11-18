@@ -22,6 +22,7 @@ function formatarHora(dataIso) {
       month: "2-digit",
       hour: "2-digit",
       minute: "2-digit",
+      timeZone: "America/Sao_Paulo",
     });
   } catch {
     return "";
@@ -361,8 +362,7 @@ export default function Chat() {
                     )}
 
                     <div>
-                      {!ePropria && (
-                        <div
+                      <div
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -377,11 +377,9 @@ export default function Chat() {
                               color: "var(--text)",
                             }}
                           >
-                            {msg.nome}
+                            {ePropria ? `${msg.nome} (você)` : msg.nome}
                           </strong>
-
-                        </div>
-                      )}
+                      </div>
 
                       {editandoId === msg.id ? (
                         <div style={{ display: "grid", gap: 8, minWidth: 260 }}>

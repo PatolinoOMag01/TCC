@@ -1,3 +1,4 @@
+import os
 import httpx
 
 
@@ -10,7 +11,7 @@ FORECAST_URL = (
 )
 
 
-async def buscar_clima(
+async def buscar_clima_open_meteo(
     client: httpx.AsyncClient,
     cidade: str,
 ) -> dict | None:
@@ -85,6 +86,47 @@ async def buscar_clima(
             {},
         ),
     }
+
+
+
+async def buscar_clima_weatherapi(client: httpx.AsyncClient, cidade: str) -> dict:
+    response = await client.get(
+        "https://api.weatherapi.com/v1/forecast.json",
+        params={"key": os.environ["WEATHERAPI_KEY"], "q": cidade, "days": 3, "aqi": "no", "alerts": "no", "lang": "pt"},
+        timeout=10.0,
+    )
+    response.raise_for_status()
+    dados = response.json()
+    local, atual = dados["location"], dados["current"]
+    dias = dados["forecast"]["forecastday"]
+    return {
+        "cidade": local["name"], "estado": local.get("region"),
+        "pais": local.get("country"), "timezone": local.get("tz_id"),
+        "fonte": "WeatherAPI.com",
+        "atual": {
+            "temperature_2m": atual.get("temp_c"),
+            "apparent_temperature": atual.get("feelslike_c"),
+            "relative_humidity_2m": atual.get("humidity"),
+            "precipitation": atual.get("precip_mm"),
+            "wind_speed_10m": atual.get("wind_kph"),
+            "time": atual.get("last_updated"),
+        },
+        "previsao": {
+            "time": [d["date"] for d in dias],
+            "temperature_2m_max": [d["day"].get("maxtemp_c") for d in dias],
+            "temperature_2m_min": [d["day"].get("mintemp_c") for d in dias],
+            "precipitation_probability_max": [d["day"].get("daily_chance_of_rain") for d in dias],
+        },
+    }
+
+
+async def buscar_clima(client: httpx.AsyncClient, cidade: str) -> dict | None:
+    if os.getenv("WEATHERAPI_KEY", "").strip():
+        try:
+            return await buscar_clima_weatherapi(client, cidade)
+        except (httpx.HTTPError, ValueError, KeyError, TypeError):
+            pass
+    return await buscar_clima_open_meteo(client, cidade)
 
 
 def criar_contexto_clima(
@@ -175,7 +217,7 @@ def criar_contexto_clima(
             )
 
     texto += (
-        "\nFonte: Open-Meteo. "
+        f"\nFonte: {clima.get('fonte', 'Open-Meteo')}. "
         "Use os valores acima e nao invente "
         "dados meteorologicos."
     )

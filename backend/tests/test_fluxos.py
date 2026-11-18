@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock, patch
 _tmp = tempfile.TemporaryDirectory()
 os.environ['DATABASE_URL'] = 'sqlite:///' + _tmp.name + '/test.db'
 os.environ['JWT_SECRET_KEY'] = 'chave-exclusiva-dos-testes-interway'
+os.environ['PLUS_DEMO_MODE'] = 'true'
 from fastapi.testclient import TestClient
 from app.main import app
 from app.services.currency_service import detectar_moedas
@@ -33,6 +34,7 @@ class FluxosTest(unittest.TestCase):
             self.assertEqual(c.post('/auth/login',json={**dados,'senha':'errada'}).status_code,401)
             login=c.post('/auth/login',json=dados).json()
             h={'Authorization':'Bearer '+login['access_token']}
+            self.assertEqual(c.post('/plus/assinatura/demo',headers=h).status_code,200)
             self.assertEqual(c.get('/usuarios/me',headers=h).json()['nome'],dados['nome'])
             resposta_comunidade=c.post('/comunidade/mensagens',headers=h,json={'mensagem':'Olá, comunidade!'} )
             self.assertEqual(resposta_comunidade.status_code,201)
@@ -40,7 +42,12 @@ class FluxosTest(unittest.TestCase):
             self.assertEqual(c.post('/comunidade/mensagens',headers=h,json={'mensagem':'   '}).status_code,422)
             self.assertEqual(c.post('/comunidade/mensagens',headers=h,json={'mensagem':'x'*1001}).status_code,422)
             self.assertEqual(c.get('/passport/me',headers=h).json()['progresso'],0)
-            self.assertEqual(c.put('/passport/me',headers=h,json={'pais':'Canadá','cidade':'Toronto','objetivo':'Estudo','orcamento':50000}).status_code,200)
+            passport_salvo=c.put('/passport/me',headers=h,json={'pais':'Canadá','cidade':'Toronto','objetivo':'Estudo','orcamento':50000}).json()
+            self.assertTrue(next(i for i in passport_salvo['checklist'] if i['id']=='destino')['concluido'])
+            self.assertTrue(next(i for i in passport_salvo['checklist'] if i['id']=='orcamento')['concluido'])
+            self.assertFalse(next(i for i in passport_salvo['checklist'] if i['id']=='perfil')['concluido'])
+            passport_salvo=c.put('/passport/me',headers=h,json={'nivel_idioma':'Intermediário'}).json()
+            self.assertTrue(next(i for i in passport_salvo['checklist'] if i['id']=='perfil')['concluido'])
             self.assertGreater(c.patch('/passport/checklist',headers=h,json={'id':'visto','concluido':True}).json()['progresso'],0)
             self.assertEqual(c.patch('/passport/checklist',headers=h,json={'id':'inexistente','concluido':True}).status_code,404)
             r=c.put('/planejador/me',headers=h,json={'meta':10000,'guardado':2000,'mensal':1000}).json()
@@ -63,6 +70,7 @@ class FluxosTest(unittest.TestCase):
             self.assertEqual(len(c.get('/ia/historico',headers=h).json()),4)
             c.post('/auth/cadastro',json={**dados,'email':'outro@example.com'})
             h2={'Authorization':'Bearer '+c.post('/auth/login',json={**dados,'email':'outro@example.com'}).json()['access_token']}
+            self.assertEqual(c.post('/plus/assinatura/demo',headers=h2).status_code,200)
             self.assertEqual(c.get('/ia/historico',headers=h2).json(),[])
             mensagens_compartilhadas=c.get('/comunidade/mensagens',headers=h2).json()
             self.assertEqual(len(mensagens_compartilhadas),1)

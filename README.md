@@ -69,3 +69,9 @@ Configure somente no ambiente do backend, nunca no frontend:
 - `BACKEND_PUBLIC_URL`: origem HTTPS pública da API, para o Mercado Pago enviar notificações. Configure-a em produção para sincronizar mudanças de status.
 
 Sem `MERCADOPAGO_ACCESS_TOKEN`, a API mantém o checkout desabilitado e não simula pagamentos. Para receber notificações reais, publique a API com HTTPS e use o `BACKEND_PUBLIC_URL` correspondente.
+
+## IA com multiplos provedores (branch feat/multi-ai-providers)
+
+O chat tenta OpenRouter, depois Gemini e depois Groq. Configure pelo menos uma chave **somente no backend** (Railway > Backend > Variables): `OPENROUTER_API_KEY`, `GEMINI_API_KEY` ou `GROQ_API_KEY`. Modelos opcionais: `OPENROUTER_MODEL` (padrao `openrouter/free`), `GEMINI_MODEL` (padrao `gemini-2.5-flash`) e `GROQ_MODEL` (padrao `llama-3.3-70b-versatile`). Verifique disponibilidade, cotas e custos de cada provedor. Nao configure chaves no frontend ou em commits.
+
+O contexto de clima e cambio existente continua sendo coletado antes da consulta a IA. A implantacao exige revisar o PR, fazer merge e redeploy do backend. Para Railway monorepo, use Root Directory `/` e Dockerfile `/backend/Dockerfile`.
