@@ -181,6 +181,19 @@ export const api = {
     });
   },
 
+  editarMensagemComunidade(id, mensagem) {
+    return request(`/comunidade/mensagens/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ mensagem }),
+    });
+  },
+
+  apagarMensagemComunidade(id) {
+    return request(`/comunidade/mensagens/${id}`, {
+      method: "DELETE",
+    });
+  },
+
   ativarPlusDemo() {
     return request("/plus/assinatura/demo", { method: "POST" });
   },

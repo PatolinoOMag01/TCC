@@ -23,6 +23,7 @@ import PlusRoute from "./components/PlusRoute";
 import Footer from "./components/Footer";
 
 const Home = lazy(() => import("./pages/Home"));
+const Sobre = lazy(() => import("./pages/Sobre"));
 const Destinos = lazy(() => import("./pages/Destinos"));
 const DestinoDetalhes = lazy(() => import("./pages/DestinoDetalhes"));
 const Match = lazy(() => import("./pages/Match"));
@@ -86,6 +87,11 @@ function NavigationAndTheme() {
             <Route
               path="/"
               element={<Home />}
+            />
+
+            <Route
+              path="/sobre"
+              element={<Sobre />}
             />
 
             <Route

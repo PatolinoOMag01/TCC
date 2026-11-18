@@ -1,5 +1,5 @@
 import PageNavigation from "../components/PageNavigation";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Search, ArrowRight, Heart } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -7,34 +7,97 @@ import { destinos, gerarSlugCidade } from "../data/destinos";
 import { cidadesExtras } from "../data/cidadesExtras";
 import { useFavorites } from "../context/FavoritesContext";
 
+const nomesIdiomas = {
+  alemao: "Alemão",
+  arabe: "Árabe",
+  coreano: "Coreano",
+  dinamarques: "Dinamarquês",
+  espanhol: "Espanhol",
+  finlandes: "Finlandês",
+  frances: "Francês",
+  grego: "Grego",
+  hindi: "Hindi",
+  holandes: "Neerlandês",
+  hungaro: "Húngaro",
+  ingles: "Inglês",
+  italiano: "Italiano",
+  japones: "Japonês",
+  malaio: "Malaio",
+  mandarim: "Mandarim",
+  noruegues: "Norueguês",
+  polones: "Polonês",
+  portugues: "Português",
+  suaili: "Suaíli",
+  sueco: "Sueco",
+  tailandes: "Tailandês",
+  tcheco: "Tcheco",
+  vietnamita: "Vietnamita",
+};
+
+const faixasOrcamento = [
+  { valor: "1", rotulo: "Até R$ 10 mil" },
+  { valor: "2", rotulo: "R$ 10 mil a R$ 20 mil" },
+  { valor: "3", rotulo: "R$ 20 mil a R$ 40 mil" },
+  { valor: "4", rotulo: "Acima de R$ 40 mil" },
+];
+
+function normalizarTexto(valor = "") {
+  return valor
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("pt-BR");
+}
+
 export default function Destinos() {
-  const [busca, setBusca] = useState("");
+  const [searchParams] = useSearchParams();
+  const [busca, setBusca] = useState(() => searchParams.get("busca") || "");
   const [maisDestinosVisiveis, setMaisDestinosVisiveis] = useState(false);
+  const [continenteSelecionado, setContinenteSelecionado] = useState("");
+  const [idiomaSelecionado, setIdiomaSelecionado] = useState("");
+  const [orcamentoSelecionado, setOrcamentoSelecionado] = useState("");
   const { toggleFavorito, isFavorito } = useFavorites();
-  const termoBusca = busca.trim().toLocaleLowerCase("pt-BR");
-  const cidadesVisiveis = termoBusca
-    ? cidadesExtras.filter((cidade) => {
-        const pais = destinos.find((destino) => destino.slug === cidade.paisSlug);
-        return `${cidade.nome} ${pais?.pais || ""} ${pais?.continente || ""}`
-          .toLocaleLowerCase("pt-BR")
-          .includes(termoBusca);
-      })
-    : cidadesExtras.filter((cidade) => cidade.destaque);
+  const termoBusca = normalizarTexto(busca.trim());
+  const continentesDisponiveis = [...new Set(destinos.map((destino) => destino.continente))]
+    .sort((a, b) => a.localeCompare(b, "pt-BR"));
+  const idiomasDisponiveis = [...new Set(destinos.flatMap((destino) => destino.match?.idiomas || []))]
+    .sort((a, b) => (nomesIdiomas[a] || a).localeCompare(nomesIdiomas[b] || b, "pt-BR"));
 
   const destinosFiltrados = useMemo(() => {
-    const termo = busca.trim().toLowerCase();
-
-    if (!termo) return destinos;
-
     return destinos.filter((destino) => {
-      return (
-        destino.pais.toLowerCase().includes(termo) ||
-        destino.cidade.toLowerCase().includes(termo) ||
-        destino.cidades?.some((cidade) => cidade.toLowerCase().includes(termo)) ||
-        destino.continente.toLowerCase().includes(termo)
-      );
+      const textoDestino = normalizarTexto([
+        destino.pais,
+        destino.cidade,
+        destino.continente,
+        destino.idioma,
+        ...(destino.cidades || []),
+      ].join(" "));
+
+      return (!termoBusca || textoDestino.includes(termoBusca))
+        && (!continenteSelecionado || destino.continente === continenteSelecionado)
+        && (!idiomaSelecionado || destino.match?.idiomas?.includes(idiomaSelecionado))
+        && (!orcamentoSelecionado || String(destino.match?.orcamento || "") === orcamentoSelecionado);
     });
-  }, [busca]);
+  }, [termoBusca, continenteSelecionado, idiomaSelecionado, orcamentoSelecionado]);
+
+  const cidadesVisiveis = cidadesExtras.filter((cidade) => {
+    const destino = destinos.find((item) => item.slug === cidade.paisSlug);
+    if (!destino) return false;
+
+    const textoCidade = normalizarTexto(`${cidade.nome} ${destino.pais} ${destino.continente} ${destino.idioma}`);
+    return (!termoBusca || textoCidade.includes(termoBusca))
+      && (!continenteSelecionado || destino.continente === continenteSelecionado)
+      && (!idiomaSelecionado || destino.match?.idiomas?.includes(idiomaSelecionado))
+      && (!orcamentoSelecionado || String(destino.match?.orcamento || "") === orcamentoSelecionado);
+  });
+
+  const filtrosAtivos = Boolean(busca || continenteSelecionado || idiomaSelecionado || orcamentoSelecionado);
+
+  function limparFiltros() {
+    setBusca("");
+    setContinenteSelecionado("");
+    setIdiomaSelecionado("");
+    setOrcamentoSelecionado("");
+  }
 
   return (
     <main
@@ -125,6 +188,77 @@ export default function Destinos() {
         </div>
 
         <section
+          aria-label="Filtros de destinos"
+          style={{ marginTop: -20, marginBottom: 36 }}
+        >
+          <p style={{ margin: "0 0 14px", color: "var(--muted)", fontSize: 13, lineHeight: 1.5 }}>
+            Faixas indicativas para viagens curtas; passagem, duração, curso e hospedagem podem alterar o custo total.
+          </p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+              gap: 14,
+            }}
+          >
+            <label style={{ display: "grid", gap: 7, color: "var(--text)", fontWeight: 700, fontSize: 14 }}>
+              Continente
+              <select
+                aria-label="Filtrar por continente"
+                value={continenteSelecionado}
+                onChange={(event) => setContinenteSelecionado(event.target.value)}
+                style={estiloFiltro}
+              >
+                <option value="">Todos os continentes</option>
+                {continentesDisponiveis.map((continente) => (
+                  <option key={continente} value={continente}>{continente}</option>
+                ))}
+              </select>
+            </label>
+
+            <label style={{ display: "grid", gap: 7, color: "var(--text)", fontWeight: 700, fontSize: 14 }}>
+              Idioma
+              <select
+                aria-label="Filtrar por idioma"
+                value={idiomaSelecionado}
+                onChange={(event) => setIdiomaSelecionado(event.target.value)}
+                style={estiloFiltro}
+              >
+                <option value="">Todos os idiomas</option>
+                {idiomasDisponiveis.map((idioma) => (
+                  <option key={idioma} value={idioma}>{nomesIdiomas[idioma] || idioma}</option>
+                ))}
+              </select>
+            </label>
+
+            <label style={{ display: "grid", gap: 7, color: "var(--text)", fontWeight: 700, fontSize: 14 }}>
+              Faixa de orçamento
+              <select
+                aria-label="Filtrar por faixa de orçamento"
+                value={orcamentoSelecionado}
+                onChange={(event) => setOrcamentoSelecionado(event.target.value)}
+                style={estiloFiltro}
+              >
+                <option value="">Qualquer faixa</option>
+                {faixasOrcamento.map((faixa) => (
+                  <option key={faixa.valor} value={faixa.valor}>{faixa.rotulo}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          {filtrosAtivos && (
+            <button
+              type="button"
+              onClick={limparFiltros}
+              style={{ marginTop: 12, border: 0, padding: 0, background: "transparent", color: "var(--link)", fontWeight: 700, cursor: "pointer" }}
+            >
+              Limpar busca e filtros
+            </button>
+          )}
+        </section>
+
+        <section
           style={{
             display: "grid",
             gridTemplateColumns:
@@ -156,6 +290,7 @@ export default function Destinos() {
                   <img
                     src={destino.imagem}
                     alt={`${destino.pais} - ${destino.cidade}`}
+                    loading="lazy"
                     style={{
                       width: "100%",
                       height: "100%",
@@ -339,7 +474,7 @@ export default function Destinos() {
           </section>
         )}
 
-        {destinosFiltrados.length === 0 && (
+        {destinosFiltrados.length === 0 && cidadesVisiveis.length === 0 && (
           <div
             style={{
               textAlign: "center",
@@ -354,3 +489,15 @@ export default function Destinos() {
     </main>
   );
 }
+
+const estiloFiltro = {
+  width: "100%",
+  minHeight: 48,
+  padding: "0 14px",
+  border: "1px solid var(--border)",
+  borderRadius: 12,
+  color: "var(--text)",
+  background: "var(--surface)",
+  font: "inherit",
+  fontWeight: 500,
+};

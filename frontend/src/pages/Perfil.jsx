@@ -37,8 +37,16 @@ import {
   api,
 } from "../services/api";
 
+import { destinos, gerarSlugCidade } from "../data/destinos";
 import "../styles/Auth.css";
 
+function normalizarDestino(valor = "") {
+  return valor
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLocaleLowerCase("pt-BR");
+}
 
 export default function Perfil() {
   const navigate =
@@ -64,37 +72,62 @@ export default function Perfil() {
     setFinanceiro,
   ] = useState(null);
 
+  const destinoDoPassport = passport?.pais
+    ? destinos.find(
+        (destino) =>
+          normalizarDestino(destino.pais) === normalizarDestino(passport.pais),
+      )
+    : null;
+  const cidadeDoCatalogo = destinoDoPassport?.cidades?.find(
+    (cidade) => normalizarDestino(cidade) === normalizarDestino(passport?.cidade),
+  );
+  const destinoUrl = destinoDoPassport
+    ? cidadeDoCatalogo
+      ? `/destinos/${destinoDoPassport.slug}/${gerarSlugCidade(cidadeDoCatalogo)}`
+      : `/destinos/${destinoDoPassport.slug}`
+    : `/destinos?busca=${encodeURIComponent(passport?.cidade || passport?.pais || "")}`;
+
 
   useEffect(() => {
-    async function carregarDashboard() {
-      try {
-        const dados =
-          await api.meuPassport();
+    let ativo = true;
 
-        setPassport(dados);
-      } catch {
-        setPassport(null);
+    async function carregarDashboard() {
+      const [resultadoPassport, resultadoFinanceiro] = await Promise.allSettled([
+        api.meuPassport(),
+        usuario?.id ? api.meuPlanejamento() : Promise.resolve(null),
+      ]);
+
+      if (!ativo) return;
+
+      setPassport(
+        resultadoPassport.status === "fulfilled"
+          ? resultadoPassport.value
+          : null,
+      );
+
+      if (resultadoFinanceiro.status === "fulfilled" && resultadoFinanceiro.value) {
+        setFinanceiro(resultadoFinanceiro.value);
+        return;
       }
 
+      // Mantém compatibilidade com dados locais salvos por versões anteriores.
       if (usuario?.id) {
-        const salvo =
-          localStorage.getItem(
-            `interway-planejador-${usuario.id}`
-          );
-
-        if (salvo) {
-          try {
-            setFinanceiro(
-              JSON.parse(salvo)
-            );
-          } catch {
-            setFinanceiro(null);
-          }
+        try {
+          const salvo = localStorage.getItem(`interway-planejador-${usuario.id}`);
+          setFinanceiro(salvo ? JSON.parse(salvo) : null);
+        } catch {
+          setFinanceiro(null);
         }
+      } else {
+        setFinanceiro(null);
       }
     }
 
     carregarDashboard();
+
+    return () => {
+      ativo = false;
+    };
   }, [usuario?.id]);
 
 
@@ -672,10 +705,30 @@ export default function Perfil() {
               </span>
 
               <h3>
-                {passport?.pais
-                  ? `${passport.pais} está no seu radar.`
+                {passport?.pais || passport?.cidade
+                  ? "Seu destino está no radar."
                   : "Comece a planejar seu intercâmbio."}
               </h3>
+
+              {passport?.pais || passport?.cidade ? (
+                <Link
+                  to={destinoUrl}
+                  className="profile-destination-highlight"
+                  aria-label={`Abrir destino ${[passport.cidade, passport.pais].filter(Boolean).join(", ")}`}
+                >
+                  <MapPin size={20} aria-hidden="true" />
+                  <div>
+                    <span>DESTINO ESCOLHIDO</span>
+                    <strong>
+                      {[passport.cidade, passport.pais].filter(Boolean).join(", ")}
+                    </strong>
+                  </div>
+                </Link>
+              ) : (
+                <p className="profile-destination-empty">
+                  Escolha e salve seu destino no Passport para vê-lo em destaque aqui.
+                </p>
+              )}
 
               <p>
                 Seu Passport está{" "}

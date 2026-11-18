@@ -1,4 +1,6 @@
-export const destinos = [
+import { destinosAdicionais } from "./destinosAdicionais";
+
+const destinosPrincipais = [
   {
     slug: "irlanda",
     pais: "Irlanda",
@@ -175,7 +177,7 @@ export const destinos = [
 
   {
     slug: "reino-unido",
-    pais: "Reino Unido",
+    pais: "Inglaterra",
     cidade: "Londres",
     cidades: ["Londres", "Manchester", "Edimburgo"],
     bandeira: "🇬🇧",
@@ -406,6 +408,8 @@ export const destinos = [
     match: { objetivos: ["idioma", "faculdade", "experiencia"], idiomas: ["ingles", "holandes"], orcamento: 4, duracoes: ["1-mes", "3-meses", "6-meses", "1-ano", "mais-1-ano"], clima: ["frio", "moderado"], trabalho: false },
   },
 ];
+
+export const destinos = [...destinosPrincipais, ...destinosAdicionais];
 
 export function gerarSlugCidade(cidade) {
   return cidade

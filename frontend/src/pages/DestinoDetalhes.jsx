@@ -4,6 +4,7 @@ import {
   ArrowRight,
   Banknote,
   Check,
+  CloudSun,
   Globe2,
   Languages,
   MapPin,
@@ -12,6 +13,21 @@ import {
 import { Link, useParams } from "react-router-dom";
 import { destinos, gerarSlugCidade } from "../data/destinos";
 import { buscarCidadeExtra } from "../data/cidadesExtras";
+
+const climaDestinosPrincipais = {
+  irlanda: "Oceânico: clima ameno, úmido e sujeito a mudanças ao longo do dia.",
+  canada: "Quatro estações marcadas: invernos frios e verões quentes em Toronto.",
+  australia: "Temperado em Sydney: verões quentes e invernos amenos.",
+  "reino-unido": "Oceânico: temperaturas moderadas e chuva possível em qualquer estação.",
+  malta: "Mediterrâneo: verões quentes e secos, invernos amenos.",
+  "estados-unidos": "Quatro estações marcadas em Nova York, com invernos frios e verões quentes.",
+  espanha: "Mediterrâneo em Barcelona: verões quentes e invernos suaves.",
+  franca: "Temperado em Paris, com estações distintas e chuvas ao longo do ano.",
+  alemanha: "Temperado em Berlim: invernos frios e verões amenos a quentes.",
+  portugal: "Mediterrâneo em Lisboa: verões secos e invernos suaves.",
+  japao: "Subtropical úmido em Tóquio: verões quentes e úmidos e inverno mais frio.",
+  "paises-baixos": "Temperado oceânico: clima ameno, vento e chuva distribuída pelo ano.",
+};
 
 function DestinoDetalhes() {
   const { slug, cidadeSlug } = useParams();
@@ -158,6 +174,14 @@ function DestinoDetalhes() {
             <span>Continente</span>
 
             <strong>{destino.continente}</strong>
+          </div>
+
+          <div className="stat-card">
+            <CloudSun size={22} />
+
+            <span>Clima</span>
+
+            <strong>{destino.climaResumo || climaDestinosPrincipais[destino.slug] || "Varia conforme a cidade e a estação."}</strong>
           </div>
 
           <div className="stat-card highlight-stat">

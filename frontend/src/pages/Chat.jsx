@@ -3,8 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   MessageCircle,
+  Pencil,
+  Save,
   Send,
+  Trash2,
   Users,
+  X,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
@@ -61,6 +65,10 @@ export default function Chat() {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
   const [texto, setTexto] = useState("");
+  const [editandoId, setEditandoId] = useState(null);
+  const [textoEdicao, setTextoEdicao] = useState("");
+  const [acaoEmAndamentoId, setAcaoEmAndamentoId] = useState(null);
+  const editandoIdRef = useRef(null);
   const fimRef = useRef(null);
 
   useEffect(() => {
@@ -72,13 +80,15 @@ export default function Chat() {
       carregamentoEmAndamento = true;
       try {
         const dados = await api.listarMensagensComunidade();
-        if (!ativo) return;
+        if (!ativo || editandoIdRef.current !== null) return;
         const atualizadas = dados.map((item) => formatarMensagem(item, usuario?.id));
         setMensagens((anteriores) => {
           const iguais = anteriores.length === atualizadas.length
             && anteriores.every((item, indice) => (
               item.id === atualizadas[indice]?.id
               && item.propria === atualizadas[indice]?.propria
+              && item.mensagem === atualizadas[indice]?.mensagem
+              && item.data === atualizadas[indice]?.data
             ));
           return iguais ? anteriores : atualizadas;
         });
@@ -123,6 +133,54 @@ export default function Chat() {
       })
       .catch((falha) => setErro(falha.message))
       .finally(() => setEnviando(false));
+  }
+
+  function iniciarEdicao(msg) {
+    editandoIdRef.current = msg.id;
+    setEditandoId(msg.id);
+    setTextoEdicao(msg.mensagem);
+    setErro("");
+  }
+
+  function cancelarEdicao() {
+    editandoIdRef.current = null;
+    setEditandoId(null);
+    setTextoEdicao("");
+  }
+
+  async function salvarEdicao(id) {
+    const mensagemLimpa = textoEdicao.trim();
+    if (!mensagemLimpa || !usuario || acaoEmAndamentoId !== null) return;
+
+    setAcaoEmAndamentoId(id);
+    setErro("");
+    try {
+      const salva = await api.editarMensagemComunidade(id, mensagemLimpa);
+      const atualizada = formatarMensagem(salva, usuario.id);
+      setMensagens((anteriores) => anteriores.map((item) => item.id === id ? atualizada : item));
+      cancelarEdicao();
+    } catch (falha) {
+      setErro(falha.message);
+    } finally {
+      setAcaoEmAndamentoId(null);
+    }
+  }
+
+  async function apagarMensagem(msg) {
+    if (!usuario || acaoEmAndamentoId !== null) return;
+    const confirmado = window.confirm("Apagar esta mensagem da comunidade?");
+    if (!confirmado) return;
+
+    setAcaoEmAndamentoId(msg.id);
+    setErro("");
+    try {
+      await api.apagarMensagemComunidade(msg.id);
+      setMensagens((anteriores) => anteriores.filter((item) => item.id !== msg.id));
+    } catch (falha) {
+      setErro(falha.message);
+    } finally {
+      setAcaoEmAndamentoId(null);
+    }
   }
 
   return (
@@ -259,13 +317,6 @@ export default function Chat() {
                 {erro} Tentaremos novamente em alguns segundos.
               </p>
             )}
-            {!carregando && !erro && mensagens.length === 0 && (
-              <p style={{ textAlign: "center", color: "var(--muted)", margin: "auto 0" }}>
-                {usuario
-                  ? "Ainda não há mensagens. Seja a primeira pessoa a começar a conversa."
-                  : "Ainda não há mensagens. Entre na conta para iniciar a conversa."}
-              </p>
-            )}
             {mensagens.map((msg) => {
               const ePropria = msg.propria;
 
@@ -332,27 +383,75 @@ export default function Chat() {
                         </div>
                       )}
 
-                      <div
-                        style={{
-                          background: ePropria
-                            ? "#173b67"
-                            : "#fff",
-                          color: ePropria
-                            ? "#fff"
-                            : "#0b1f33",
-                          padding: "12px 16px",
-                          borderRadius: ePropria
-                            ? "18px 18px 4px 18px"
-                            : "18px 18px 18px 4px",
-                          boxShadow: ePropria
-                            ? "none"
-                            : "0 4px 14px rgba(24, 55, 90, 0.06)",
-                          lineHeight: 1.5,
-                          fontSize: 15,
-                        }}
-                      >
-                        {msg.mensagem}
-                      </div>
+                      {editandoId === msg.id ? (
+                        <div style={{ display: "grid", gap: 8, minWidth: 260 }}>
+                          <textarea
+                            aria-label="Editar mensagem"
+                            value={textoEdicao}
+                            onChange={(event) => setTextoEdicao(event.target.value)}
+                            maxLength={1000}
+                            rows={3}
+                            autoFocus
+                            style={{ width: "100%", boxSizing: "border-box", resize: "vertical", border: "1px solid var(--border)", borderRadius: 12, padding: 12, color: "var(--text)", background: "var(--surface)", font: "inherit" }}
+                          />
+                          <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+                            <button
+                              type="button"
+                              onClick={cancelarEdicao}
+                              disabled={acaoEmAndamentoId === msg.id}
+                              style={estiloAcaoMensagem}
+                            >
+                              <X size={15} /> Cancelar
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => salvarEdicao(msg.id)}
+                              disabled={!textoEdicao.trim() || acaoEmAndamentoId === msg.id}
+                              style={{ ...estiloAcaoMensagem, color: "var(--link)" }}
+                            >
+                              <Save size={15} /> {acaoEmAndamentoId === msg.id ? "Salvando..." : "Salvar"}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div
+                          style={{
+                            background: ePropria ? "#173b67" : "#fff",
+                            color: ePropria ? "#fff" : "#0b1f33",
+                            padding: "12px 16px",
+                            borderRadius: ePropria ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
+                            boxShadow: ePropria ? "none" : "0 4px 14px rgba(24, 55, 90, 0.06)",
+                            lineHeight: 1.5,
+                            fontSize: 15,
+                            overflowWrap: "anywhere",
+                          }}
+                        >
+                          {msg.mensagem}
+                        </div>
+                      )}
+
+                      {ePropria && editandoId !== msg.id && (
+                        <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 6 }}>
+                          <button
+                            type="button"
+                            aria-label="Editar mensagem"
+                            onClick={() => iniciarEdicao(msg)}
+                            disabled={acaoEmAndamentoId !== null}
+                            style={estiloAcaoMensagem}
+                          >
+                            <Pencil size={14} /> Editar
+                          </button>
+                          <button
+                            type="button"
+                            aria-label="Apagar mensagem"
+                            onClick={() => apagarMensagem(msg)}
+                            disabled={acaoEmAndamentoId !== null}
+                            style={{ ...estiloAcaoMensagem, color: "#b42318" }}
+                          >
+                            <Trash2 size={14} /> Apagar
+                          </button>
+                        </div>
+                      )}
 
                       <div
                         style={{
@@ -454,3 +553,16 @@ export default function Chat() {
     </main>
   );
 }
+
+const estiloAcaoMensagem = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 5,
+  padding: "5px 3px",
+  border: 0,
+  color: "var(--muted)",
+  background: "transparent",
+  fontSize: 12,
+  fontWeight: 700,
+  cursor: "pointer",
+};

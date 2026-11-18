@@ -12,7 +12,7 @@ export const mensagensIniciais = [
     nome: "Amanda",
     paisOrigem: "Brasil",
     paisIntercambio: "Inglaterra",
-    mensagem: "Sim! Fiz em Londres, foi incrível. Qualquer dúvida pode perguntar.",
+    mensagem: "Sim! Fiz em Londres, Inglaterra, foi incrível. Qualquer dúvida pode perguntar.",
     data: "2026-09-09T16:36:10",
   },
   {

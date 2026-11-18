@@ -14,7 +14,6 @@ import {
   MapPin,
   Menu,
   Search,
-  Sparkles,
   User,
   Wallet,
 } from "lucide-react";
@@ -167,10 +166,7 @@ function Home() {
               duration: 0.8,
             }}
           >
-            <div className="hero-badge">
-              <Sparkles size={16} />
-              Seu intercâmbio começa aqui
-            </div>
+            <p className="hero-kicker">Seu intercâmbio começa aqui</p>
 
             <h1>
               O mundo é grande demais

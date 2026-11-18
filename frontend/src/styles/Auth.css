@@ -557,6 +557,63 @@
   letter-spacing: -1px;
 }
 
+.profile-destination-highlight {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.profile-destination-highlight:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.17);
+}
+
+.profile-destination-highlight:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 3px;
+}
+
+.profile-destination-highlight > svg {
+  flex: 0 0 auto;
+  color: #a8d7ff;
+}
+
+.profile-destination-highlight > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.profile-destination-highlight span {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 1.2px;
+}
+
+.profile-destination-highlight strong {
+  color: #fff;
+  font-size: 17px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.profile-progress-card .profile-destination-empty {
+  margin: 14px 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+
 .profile-progress-card p {
   position: relative;
   z-index: 1;

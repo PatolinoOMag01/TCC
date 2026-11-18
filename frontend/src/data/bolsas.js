@@ -92,7 +92,7 @@ export const bolsas = [
   {
     id: 6,
     nome: "Bolsa Idiomas no Exterior",
-    pais: "Irlanda / Reino Unido",
+    pais: "Irlanda / Inglaterra",
     bandeira: "🇮🇪",
     descricao:
       "Apoio para cursos intensivos de inglês em países de língua nativa.",

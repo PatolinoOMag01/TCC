@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -68,3 +68,64 @@ def enviar_mensagem(
     db.commit()
     db.refresh(mensagem)
     return formatar_mensagem(mensagem, usuario.nome)
+
+
+@router.patch(
+    "/{mensagem_id}",
+    response_model=CommunityMessageResponse,
+)
+def editar_mensagem(
+    mensagem_id: int,
+    dados: CommunityMessageCreate,
+    db: Session = Depends(get_db),
+    usuario: User = Depends(obter_usuario_atual),
+):
+    mensagem = db.query(CommunityMessage).filter(CommunityMessage.id == mensagem_id).first()
+    if mensagem is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Mensagem não encontrada.",
+        )
+    if mensagem.usuario_id != usuario.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Você só pode editar suas próprias mensagens.",
+        )
+
+    texto = dados.mensagem.strip()
+    if not texto:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="A mensagem não pode estar vazia.",
+        )
+
+    mensagem.mensagem = texto
+    db.commit()
+    db.refresh(mensagem)
+    return formatar_mensagem(mensagem, usuario.nome)
+
+
+@router.delete(
+    "/{mensagem_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def apagar_mensagem(
+    mensagem_id: int,
+    db: Session = Depends(get_db),
+    usuario: User = Depends(obter_usuario_atual),
+):
+    mensagem = db.query(CommunityMessage).filter(CommunityMessage.id == mensagem_id).first()
+    if mensagem is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Mensagem não encontrada.",
+        )
+    if mensagem.usuario_id != usuario.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Você só pode apagar suas próprias mensagens.",
+        )
+
+    db.delete(mensagem)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

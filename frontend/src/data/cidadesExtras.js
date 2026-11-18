@@ -45,7 +45,7 @@ export const cidadesExtras = [
     paisSlug: "reino-unido", nome: "Manchester", destaque: true,
     imagem: "https://images.unsplash.com/photo-1648888273690-de507f3ab4d2?auto=format&fit=crop&w=1600&q=85",
     descricao: "Manchester une universidades, música e arquitetura industrial em uma cidade dinâmica do norte inglês.",
-    texto: "Manchester tem uma forte identidade musical e esportiva, além de universidades e espaços culturais. A cidade pode ser uma alternativa a Londres para estudar inglês e conhecer uma região diferente do Reino Unido.",
+    texto: "Manchester tem uma forte identidade musical e esportiva, além de universidades e espaços culturais. A cidade pode ser uma alternativa a Londres para estudar inglês e conhecer uma região diferente da Inglaterra.",
     beneficios: ["Universidades e cursos de inglês", "Música e espaços culturais", "Transporte ferroviário para outras cidades", "Custo de vida potencialmente menor que Londres"],
   },
   {
@@ -166,6 +166,48 @@ export const cidadesExtras = [
     descricao: "Utrecht combina canais históricos, universidades e uma rotina urbana compacta nos Países Baixos.",
     texto: "Utrecht tem um centro histórico atravessado por canais e uma comunidade estudantil ativa. Sua localização central facilita conhecer outras cidades enquanto se estuda inglês ou neerlandês.",
     beneficios: ["Universidade e ambiente estudantil", "Canais e centro histórico", "Mobilidade de bicicleta", "Conexões de trem pelo país"],
+  },
+  {
+    paisSlug: "suica", nome: "Genebra",
+    imagem: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=1600&q=85",
+    descricao: "Genebra combina instituições internacionais, universidades e uma paisagem marcada pelo Lago Léman e pelos Alpes.",
+    texto: "Genebra oferece um ambiente multilíngue, instituições acadêmicas e espaços culturais junto ao Lago Léman. A cidade também é uma alternativa para conhecer a região francófona da Suíça.",
+    beneficios: ["Cursos em francês e outros idiomas", "Universidades e organizações internacionais", "Lago e paisagens alpinas", "Conexões com cidades suíças e europeias"],
+  },
+  {
+    paisSlug: "austria", nome: "Salzburgo",
+    imagem: "https://images.unsplash.com/photo-1516550893923-42d28e5677af?auto=format&fit=crop&w=1600&q=85",
+    descricao: "Salzburgo une arquitetura barroca, música e uma vida estudantil próxima aos Alpes austríacos.",
+    texto: "Salzburgo tem um centro histórico reconhecido, instituições de ensino e uma forte tradição musical. É uma opção para estudar alemão em uma cidade menor, com acesso a paisagens alpinas.",
+    beneficios: ["Estudo de alemão", "Música e patrimônio histórico", "Universidades e escolas especializadas", "Proximidade de montanhas e lagos"],
+  },
+  {
+    paisSlug: "belgica", nome: "Antuérpia",
+    imagem: "https://images.unsplash.com/photo-1498307833015-e7b400441eb8?auto=format&fit=crop&w=1600&q=85",
+    descricao: "Antuérpia reúne design, moda, arquitetura histórica e uma comunidade internacional nos Países Baixos belgas.",
+    texto: "Antuérpia tem instituições de ensino, museus e uma cena criativa ligada à moda e ao design. O neerlandês é a língua oficial da região, e a cidade também oferece espaços acadêmicos internacionais.",
+    beneficios: ["Cursos de neerlandês e programas internacionais", "Moda, design e museus", "Centro histórico e arquitetura", "Conexões de trem pela Bélgica"],
+  },
+  {
+    paisSlug: "grecia", nome: "Tessalônica",
+    imagem: "https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?auto=format&fit=crop&w=1600&q=85",
+    descricao: "Tessalônica é uma cidade universitária à beira-mar com patrimônio histórico e vida cultural movimentada.",
+    texto: "A segunda maior cidade grega combina universidades, monumentos de diferentes épocas e uma orla ativa. É uma alternativa a Atenas para conhecer a língua e a cultura grega em outro contexto urbano.",
+    beneficios: ["Universidades e cursos de grego", "Patrimônio histórico e museus", "Vida cultural e gastronômica", "Localização costeira no norte da Grécia"],
+  },
+  {
+    paisSlug: "republica-tcheca", nome: "Brno",
+    imagem: "https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=1600&q=85",
+    descricao: "Brno é um polo universitário tcheco com arquitetura, centros de pesquisa e uma atmosfera jovem.",
+    texto: "Brno reúne universidades, centros de tecnologia e espaços culturais em uma cidade de escala mais compacta que Praga. Há opções de estudo em tcheco e programas internacionais em diferentes áreas.",
+    beneficios: ["Universidades e pesquisa", "Cursos de tcheco e programas internacionais", "Vida estudantil e cultural", "Conexões com outras cidades da Europa Central"],
+  },
+  {
+    paisSlug: "polonia", nome: "Cracóvia",
+    imagem: "https://images.unsplash.com/photo-1519197924294-4ba991a11128?auto=format&fit=crop&w=1600&q=85",
+    descricao: "Cracóvia combina universidades, centro histórico e uma cena cultural ativa no sul da Polônia.",
+    texto: "Cracóvia é um importante centro acadêmico, com universidades, museus e bairros históricos. A cidade permite estudar polonês ou buscar programas internacionais em um ambiente universitário consolidado.",
+    beneficios: ["Universidades e programas internacionais", "Cursos de polonês", "Patrimônio e museus", "Vida estudantil em uma cidade compacta"],
   },
 ];
 
