@@ -143,23 +143,6 @@ export default function Perfil() {
   }
 
 
-  function pegarIniciais(
-    nome = ""
-  ) {
-    return nome
-      .split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map(
-        (parte) =>
-          parte
-            .charAt(0)
-            .toUpperCase()
-      )
-      .join("");
-  }
-
-
   function progressoFinanceiro() {
     const meta =
       Number(
@@ -234,11 +217,6 @@ export default function Perfil() {
             </p>
           </div>
 
-          <div className="profile-avatar-large">
-            {pegarIniciais(
-              usuario?.nome
-            )}
-          </div>
         </section>
 
 

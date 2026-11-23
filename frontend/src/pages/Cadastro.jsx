@@ -412,7 +412,6 @@ function Cadastro() {
             </button>
           </form>
 
-
           <div className="auth-register">
             <span>
               Já possui uma conta?

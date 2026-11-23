@@ -1,5 +1,3 @@
-const DURACOES = ["1-mes", "3-meses", "6-meses", "1-ano", "mais-1-ano"];
-
 function criarDestino({
   slug, pais, cidade, cidades, bandeira, continente, idioma, idiomaMatch,
   moeda, climaResumo, clima, orcamento, compatibilidade, destaque, imagem,
@@ -25,7 +23,6 @@ function criarDestino({
       objetivos: ["idioma", "faculdade", "experiencia"],
       idiomas: idiomaMatch,
       orcamento,
-      duracoes: DURACOES,
       clima,
       trabalho: false,
     },

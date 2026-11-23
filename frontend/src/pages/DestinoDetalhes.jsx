@@ -10,7 +10,7 @@ import {
   MapPin,
 } from "lucide-react";
 
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { destinos, gerarSlugCidade } from "../data/destinos";
 import { buscarCidadeExtra } from "../data/cidadesExtras";
 
@@ -31,6 +31,8 @@ const climaDestinosPrincipais = {
 
 function DestinoDetalhes() {
   const { slug, cidadeSlug } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const destino = destinos.find((item) => item.slug === slug);
   const cidadeAtual = cidadeSlug
@@ -68,10 +70,14 @@ function DestinoDetalhes() {
         }}
       >
         <div className="destination-detail-nav">
-          <Link to="/destinos">
+          <button
+            type="button"
+            onClick={() => location.key === "default" ? navigate("/destinos") : navigate(-1)}
+            className="destination-detail-back"
+          >
             <ArrowLeft size={18} />
-            Todos os destinos
-          </Link>
+            Voltar
+          </button>
 
           <span>INTERWAY</span>
         </div>

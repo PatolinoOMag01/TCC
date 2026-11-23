@@ -226,52 +226,63 @@ const perguntas = [
 function calcularMatch(destino, respostas) {
   let pontos = 0;
   let maximo = 0;
+  const perfil = destino.match || {};
 
-  maximo += 30;
-
-  if (destino.match.objetivos.includes(respostas.objetivo)) {
-    pontos += 30;
-  }
-
+  // Objetivos variam conforme bolsas e programas disponíveis em cada país,
+  // então influenciam o resultado sem dominar a recomendação.
   maximo += 20;
 
-  if (destino.match.idiomas.includes(respostas.idioma)) {
+  if (perfil.objetivos?.includes(respostas.objetivo)) {
     pontos += 20;
   }
 
   maximo += 20;
 
-  const diferencaOrcamento = Math.abs(
-    destino.match.orcamento - respostas.orcamento
-  );
-
-  if (diferencaOrcamento === 0) {
+  if (perfil.idiomas?.includes(respostas.idioma)) {
     pontos += 20;
-  } else if (diferencaOrcamento === 1) {
-    pontos += 14;
-  } else if (diferencaOrcamento === 2) {
-    pontos += 7;
+  }
+
+  maximo += 20;
+
+  // A faixa escolhida representa o limite de investimento. Uma opção abaixo
+  // desse limite continua cabendo no perfil; uma acima deve perder pontos.
+  const faixaDestino = Number(perfil.orcamento);
+  const faixaUsuario = Number(respostas.orcamento);
+  if (Number.isFinite(faixaDestino) && Number.isFinite(faixaUsuario)) {
+    const acimaDoOrcamento = faixaDestino - faixaUsuario;
+    if (acimaDoOrcamento <= 0) {
+      pontos += 20;
+    } else if (acimaDoOrcamento === 1) {
+      pontos += 8;
+    } else if (acimaDoOrcamento === 2) {
+      pontos += 3;
+    }
+  }
+
+  // Só pontua duração quando existe informação específica para o destino.
+  if (Array.isArray(perfil.duracoes) && perfil.duracoes.length > 0) {
+    maximo += 10;
+    if (perfil.duracoes.includes(respostas.duracao)) {
+      pontos += 10;
+    }
   }
 
   maximo += 10;
 
-  if (destino.match.duracoes.includes(respostas.duracao)) {
+  if (perfil.clima?.includes(respostas.clima)) {
     pontos += 10;
   }
 
-  maximo += 10;
-
-  if (destino.match.clima.includes(respostas.clima)) {
-    pontos += 10;
+  // "Não pretendo trabalhar" não significa que a pessoa prefira um destino
+  // sem possibilidade de trabalho. Esse critério só pesa quando ela responde sim.
+  if (respostas.trabalho === true) {
+    maximo += 5;
+    if (perfil.trabalho === true) {
+      pontos += 5;
+    }
   }
 
-  maximo += 10;
-
-  if (destino.match.trabalho === respostas.trabalho) {
-    pontos += 10;
-  }
-
-  return Math.round((pontos / maximo) * 100);
+  return maximo ? Math.round((pontos / maximo) * 100) : 0;
 }
 
 function Match() {
@@ -309,9 +320,9 @@ function Match() {
       }))
       .sort(
         (a, b) =>
+          b.compatibilidade - a.compatibilidade ||
           Number(Boolean(destinoPreferido && `${b.pais} ${b.cidade}`.toLocaleLowerCase("pt-BR").includes(destinoPreferido))) -
-          Number(Boolean(destinoPreferido && `${a.pais} ${a.cidade}`.toLocaleLowerCase("pt-BR").includes(destinoPreferido))) ||
-          b.compatibilidade - a.compatibilidade
+          Number(Boolean(destinoPreferido && `${a.pais} ${a.cidade}`.toLocaleLowerCase("pt-BR").includes(destinoPreferido)))
       );
   }, [finalizado, respostas, destinoPreferido]);
 

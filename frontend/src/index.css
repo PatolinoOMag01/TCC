@@ -1513,13 +1513,21 @@ a {
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.destination-detail-nav a {
+.destination-detail-nav a,
+.destination-detail-nav button {
   display: flex;
   align-items: center;
-
   gap: 8px;
-
   color: rgba(255, 255, 255, 0.8);
+}
+
+.destination-detail-nav button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
 }
 
 .destination-detail-nav span {
