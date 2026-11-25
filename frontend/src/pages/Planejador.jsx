@@ -14,7 +14,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
@@ -23,7 +23,14 @@ import "../styles/Planejador.css";
 
 
 export default function Planejador() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { usuario } = useAuth();
+
+  function voltar() {
+    if (location.key === "default") navigate("/");
+    else navigate(-1);
+  }
 
   const [passport, setPassport] =
     useState(null);
@@ -231,14 +238,15 @@ export default function Planejador() {
   return (
     <main className="planner-page">
       <header className="planner-topbar">
-        <Link
-          to="/perfil"
+        <button
+          type="button"
+          onClick={voltar}
           className="planner-back"
         >
           <ArrowLeft size={18} />
 
-          Meu perfil
-        </Link>
+          Voltar
+        </button>
 
         <Link
           to="/"

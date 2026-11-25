@@ -21,6 +21,8 @@ import {
 
 import {
   Link,
+  useLocation,
+  useNavigate,
 } from "react-router-dom";
 
 import {
@@ -39,6 +41,9 @@ import "../styles/Passport.css";
 
 
 export default function Passport() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const {
     favoritos,
     removerFavorito,
@@ -47,6 +52,11 @@ export default function Passport() {
   const {
     usuario,
   } = useAuth();
+
+  function voltar() {
+    if (location.key === "default") navigate("/");
+    else navigate(-1);
+  }
 
   const [
     passport,
@@ -265,16 +275,17 @@ export default function Passport() {
   return (
     <main className="passport-page">
       <div className="passport-top">
-        <Link
-          to="/perfil"
+        <button
+          type="button"
+          onClick={voltar}
           className="passport-back"
         >
           <ArrowLeft
             size={18}
           />
 
-          Voltar ao perfil
-        </Link>
+          Voltar
+        </button>
 
         <Link
           to="/"

@@ -791,6 +791,15 @@
   text-decoration: none;
 }
 
+.planner-back {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .planner-back:hover { color: var(--accent); }
 .planner-logo { color: var(--text); font: 800 22px "Manrope", sans-serif; letter-spacing: -1px; }
 .planner-logo span { color: var(--accent); }
