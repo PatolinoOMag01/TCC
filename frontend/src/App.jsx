@@ -22,6 +22,10 @@ import ProtectedRoute
 import PlusRoute from "./components/PlusRoute";
 import Footer from "./components/Footer";
 
+import AdminRoute from "./components/AdminRoute";
+import { DestinationsProvider } from "./context/DestinationsContext";
+const Admin = lazy(() => import("./pages/Admin"));
+
 const Home = lazy(() => import("./pages/Home"));
 const Sobre = lazy(() => import("./pages/Sobre"));
 const Destinos = lazy(() => import("./pages/Destinos"));
@@ -84,6 +88,7 @@ function NavigationAndTheme() {
         }
       >
       <Routes>
+            <Route path="/admin" element={<ProtectedRoute><AdminRoute><Admin /></AdminRoute></ProtectedRoute>} />
             <Route
               path="/"
               element={<Home />}
@@ -223,7 +228,7 @@ function NavigationAndTheme() {
             <Route path="*" element={<main className="not-found"><div><PageNavigation /><h1>Página não encontrada</h1><Link to="/escolas-idiomas">Abrir escolas de idiomas</Link></div></main>} />
       </Routes>
       </Suspense>
-      <Footer />
+      {!pathname.startsWith("/admin") && <Footer />}
     </>
   );
 }
@@ -232,9 +237,9 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <FavoritesProvider>
+        <DestinationsProvider><FavoritesProvider>
           <NavigationAndTheme />
-        </FavoritesProvider>
+        </FavoritesProvider></DestinationsProvider>
       </AuthProvider>
     </BrowserRouter>
   );

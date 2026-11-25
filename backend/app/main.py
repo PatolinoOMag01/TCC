@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
@@ -9,7 +10,11 @@ from fastapi.middleware.cors import (
 from app.database import (
     Base,
     engine,
+    SessionLocal,
 )
+from app.routes.admin import router as admin_router, public_router as destinations_router
+from app.services.administration import seed_destinations
+from app.routes.match import router as match_router
 
 from app.models import (
     Passport,
@@ -39,7 +44,15 @@ Base.metadata.create_all(
 )
 
 
+@asynccontextmanager
+async def lifespan(app):
+    with SessionLocal() as db:
+        seed_destinations(db)
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="InterWay API",
     description=(
         "API oficial da "
@@ -91,6 +104,9 @@ app.include_router(profile_router)
 app.include_router(conversations_router)
 app.include_router(community_router)
 app.include_router(plus_router)
+app.include_router(admin_router)
+app.include_router(destinations_router)
+app.include_router(match_router)
 
 @app.get("/")
 def home():

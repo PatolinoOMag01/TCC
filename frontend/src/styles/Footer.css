@@ -66,6 +66,8 @@
 }
 
 .site-footer-section a {
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: inherit;
   transition: color 160ms ease, opacity 160ms ease;
 }
@@ -94,7 +96,7 @@
   font-size: 12px;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 960px) {
   .site-footer {
     padding: 40px 24px 18px;
   }

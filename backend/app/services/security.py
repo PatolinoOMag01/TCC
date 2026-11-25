@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.user import User
+from app.models.administration import UserAccess
 from app.models.plus_subscription import PlusSubscription
 
 load_dotenv()
@@ -111,6 +112,10 @@ def obter_usuario_atual(
     if usuario is None:
         raise erro_credenciais
 
+    acesso = db.get(UserAccess, usuario.id)
+    if acesso is not None and acesso.bloqueado:
+        raise HTTPException(401, "Esta conta está bloqueada. Entre em contato com a administração.")
+
     return usuario
 
 
@@ -146,6 +151,8 @@ def obter_usuario_opcional(
         user_id = payload.get("sub")
         if user_id is None:
             return None
-        return db.query(User).filter(User.id == int(user_id)).first()
+        usuario = db.query(User).filter(User.id == int(user_id)).first()
+        acesso = db.get(UserAccess, int(user_id))
+        return None if acesso is not None and acesso.bloqueado else usuario
     except (JWTError, ValueError, TypeError):
         return None

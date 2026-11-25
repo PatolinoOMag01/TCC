@@ -1016,3 +1016,10 @@
     width: 100%;
   }
 }
+.match-save-panel { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px; margin: 26px 0; padding: 22px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); color: var(--text); }
+.match-save-panel > div { flex: 1; min-width: 200px; }
+.match-save-panel strong { font-size: 16px; }
+.match-save-panel p { margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.match-save-panel button, .match-save-panel a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border: 0; border-radius: 10px; background: #2563eb; color: white; font: inherit; font-size: 14px; font-weight: 700; text-decoration: none; cursor: pointer; }
+.match-save-panel button:disabled { opacity: .6; cursor: wait; }
+.match-save-panel .match-save-error { flex-basis: 100%; color: #dc2626; }

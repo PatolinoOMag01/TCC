@@ -12,6 +12,95 @@ from app.main import app
 from app.services.currency_service import detectar_moedas
 
 class FluxosTest(unittest.TestCase):
+    def test_match_salvo_por_usuario(self):
+        with TestClient(app) as c:
+            headers = []
+            for email in ('match-a@example.com', 'match-b@example.com'):
+                dados = {'nome': 'Match Teste', 'email': email, 'senha': 'senha123'}
+                self.assertEqual(c.post('/auth/cadastro', json=dados).status_code, 201)
+                token = c.post('/auth/login', json=dados).json()['access_token']
+                headers.append({'Authorization': 'Bearer ' + token})
+            ha, hb = headers
+            respostas = {'objetivo': 'idioma', 'idioma': 'ingles', 'orcamento': 2, 'duracao': '6-meses', 'clima': 'moderado', 'trabalho': True}
+            payload = {'respostas': respostas, 'destinoPreferido': 'dublin'}
+            self.assertIn(c.get('/match/me').status_code, (401, 403))
+            self.assertIn(c.put('/match/me', json=payload).status_code, (401, 403))
+            self.assertIsNone(c.get('/match/me', headers=ha).json())
+            self.assertEqual(c.put('/match/me', headers=ha, json={'respostas': {}}).status_code, 422)
+            self.assertEqual(c.put('/match/me', headers=ha, json={**payload, 'respostas': {**respostas, 'trabalho': 'false'}}).status_code, 422)
+            result = c.put('/match/me', headers=ha, json=payload)
+            self.assertEqual(result.status_code, 200)
+            salvo = result.json()
+            self.assertEqual(salvo['respostas'], respostas)
+            self.assertEqual(salvo['destinoPreferido'], 'dublin')
+            self.assertIn('salvo_em', salvo)
+            self.assertGreater(len(salvo['ranking']), 10)
+            self.assertEqual(salvo['ranking'], sorted(salvo['ranking'], key=lambda d: -d['compatibilidade']))
+            irlanda = next(d for d in salvo['ranking'] if d['slug'] == 'irlanda')
+            self.assertEqual(irlanda['compatibilidade'], 100)
+            self.assertEqual(c.get('/match/me', headers=ha).json(), salvo)
+            self.assertIsNone(c.get('/match/me', headers=hb).json())
+            updated = c.put('/match/me', headers=ha, json={'respostas': {**respostas, 'idioma': 'japones'}, 'destinoPreferido': 'tóquio'}).json()
+            self.assertEqual(updated['respostas']['idioma'], 'japones')
+            self.assertIsNone(c.get('/match/me', headers=hb).json())
+        # A new application lifespan/session reads the result from the database.
+        with TestClient(app) as c:
+            self.assertEqual(c.get('/match/me', headers=ha).json(), updated)
+
+    def test_admin_permissoes_e_gestao(self):
+        with patch.dict(os.environ, {"ADMIN_EMAILS": "admin-teste@example.com"}), TestClient(app) as c:
+            admin = {"nome": "Admin Teste", "email": "admin-teste@example.com", "senha": "senha123"}
+            normal = {"nome": "Usuário Admin Teste", "email": "membro-teste@example.com", "senha": "senha123"}
+            for dados in (admin, normal):
+                self.assertEqual(c.post('/auth/cadastro', json=dados).status_code, 201)
+            login_admin = c.post('/auth/login', json=admin).json()
+            login_normal = c.post('/auth/login', json=normal).json()
+            ha = {'Authorization': 'Bearer ' + login_admin['access_token']}
+            hn = {'Authorization': 'Bearer ' + login_normal['access_token']}
+            self.assertTrue(login_admin['usuario']['is_admin'])
+            self.assertFalse(login_normal['usuario']['is_admin'])
+            for path in ('usuarios', 'comunidade', 'destinos'):
+                self.assertIn(c.get('/admin/' + path).status_code, (401, 403))
+                self.assertEqual(c.get('/admin/' + path, headers=hn).status_code, 403)
+                self.assertEqual(c.get('/admin/' + path, headers=ha).status_code, 200)
+            self.assertEqual(c.get('/admin/usuarios?pagina=0', headers=ha).status_code, 422)
+            mensagem = c.post('/comunidade/mensagens', headers=hn, json={'mensagem': 'Mensagem para moderar'}).json()
+            path = '/admin/comunidade/' + str(mensagem['id'])
+            self.assertEqual(c.delete(path, headers=hn).status_code, 403)
+            self.assertEqual(c.get('/admin/comunidade?busca=moderar', headers=ha).json()['total'], 1)
+            self.assertEqual(c.delete(path, headers=ha).status_code, 204)
+            self.assertEqual(c.delete(path, headers=ha).status_code, 404)
+            uid = login_normal['usuario']['id']
+            update = {'nome': 'Nome atualizado', 'email': normal['email'], 'bloqueado': True}
+            self.assertEqual(c.patch(f'/admin/usuarios/{uid}', headers=hn, json=update).status_code, 403)
+            self.assertEqual(c.patch(f'/admin/usuarios/{uid}', headers=ha, json=update).status_code, 200)
+            self.assertEqual(c.get('/usuarios/me', headers=hn).status_code, 401)
+            self.assertEqual(c.post('/auth/login', json=normal).status_code, 403)
+            self.assertEqual(c.post('/comunidade/mensagens', headers=hn, json={'mensagem': 'Bloqueado'}).status_code, 401)
+            update['bloqueado'] = False
+            self.assertEqual(c.patch(f'/admin/usuarios/{uid}', headers=ha, json=update).status_code, 200)
+            self.assertEqual(c.post('/auth/login', json=normal).status_code, 200)
+            update['email'] = admin['email']
+            self.assertEqual(c.patch(f'/admin/usuarios/{uid}', headers=ha, json=update).status_code, 409)
+            aid = login_admin['usuario']['id']
+            self.assertEqual(c.patch(f'/admin/usuarios/{aid}', headers=ha, json={**update, 'bloqueado': True}).status_code, 409)
+            catalog = c.get('/destinos').json()
+            self.assertGreater(len(catalog), 10)
+            destino = {**catalog[0], 'slug': 'destino-teste', 'pais': 'País Teste'}
+            self.assertEqual(c.post('/admin/destinos', headers=hn, json=destino).status_code, 403)
+            self.assertEqual(c.post('/admin/destinos', headers=ha, json={**destino, 'imagem': 'javascript:alert(1)'}).status_code, 422)
+            self.assertEqual(c.post('/admin/destinos', headers=ha, json=destino).status_code, 201)
+            self.assertEqual(c.post('/admin/destinos', headers=ha, json=destino).status_code, 409)
+            destino['descricao'] = 'Descrição atualizada pelo painel.'
+            self.assertEqual(c.put('/admin/destinos/destino-teste', headers=ha, json=destino).status_code, 200)
+            saved = next(d for d in c.get('/destinos').json() if d['slug'] == 'destino-teste')
+            self.assertEqual(saved['descricao'], destino['descricao'])
+            self.assertIn(saved['cidade'], saved['cidades'])
+            self.assertEqual(c.delete('/admin/destinos/destino-teste', headers=hn).status_code, 403)
+            self.assertEqual(c.delete('/admin/destinos/destino-teste', headers=ha).status_code, 204)
+            self.assertFalse(any(d['slug'] == 'destino-teste' for d in c.get('/destinos').json()))
+            self.assertEqual(c.delete('/admin/destinos/_catalogo_inicializado', headers=ha).status_code, 404)
+
     @classmethod
     def tearDownClass(cls):
         from app.database import engine

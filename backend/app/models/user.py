@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy import Column, DateTime, Integer, String
 from sqlalchemy.sql import func
 
@@ -6,6 +8,11 @@ from app.database import Base
 
 class User(Base):
     __tablename__ = "usuarios"
+
+    @property
+    def is_admin(self):
+        emails = {email.strip().lower() for email in os.getenv("ADMIN_EMAILS", "").split(",") if email.strip()}
+        return self.email.lower() in emails
 
     id = Column(
         Integer,

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.user import User
+from app.models.administration import UserAccess
 from app.schemas.user import (
     CadastroRequest,
     LoginRequest,
@@ -92,6 +93,10 @@ def login(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="E-mail ou senha incorretos.",
         )
+
+    acesso = db.get(UserAccess, usuario.id)
+    if acesso is not None and acesso.bloqueado:
+        raise HTTPException(403, "Esta conta está bloqueada. Entre em contato com a administração.")
 
     token = criar_access_token(
         usuario.id
