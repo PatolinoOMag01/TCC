@@ -34,7 +34,7 @@
 
 .about-heading > p {
   margin: 0 auto;
-  color: var(--muted);
+  color: color-mix(in srgb, var(--muted) 75%, var(--text));
   font-size: 17px;
   line-height: 1.7;
 }
@@ -58,7 +58,7 @@
 
 .about-project-card p {
   margin: 0;
-  color: var(--muted);
+  color: color-mix(in srgb, var(--muted) 75%, var(--text));
   font-size: 15px;
   line-height: 1.8;
 }
@@ -106,6 +106,7 @@
 
 .about-member-card {
   display: flex;
+  overflow: hidden;
   min-height: 240px;
   flex-direction: column;
   align-items: center;
@@ -120,8 +121,8 @@
 
 .about-member-photo-slot {
   display: grid;
-  width: 182px;
-  height: 182px;
+  width: min(100%, 182px);
+  aspect-ratio: 1;
   flex: 0 0 auto;
   place-items: center;
   border: 1px dashed rgba(96, 119, 154, 0.48);
@@ -131,8 +132,8 @@
 
 .about-member-avatar {
   display: grid;
-  width: 170px;
-  height: 170px;
+  width: min(100%, 170px);
+  aspect-ratio: 1;
   place-items: center;
   border: 2px solid #be72df;
   border-radius: 50%;
@@ -144,12 +145,13 @@
 }
 
 .about-member-photo {
-  width: 170px;
-  height: 170px;
+  width: calc(100% - 12px);
+  aspect-ratio: 1;
   border: 2px solid #be72df;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
+  background: var(--surface);
 }
 
 .about-member-card h3 {
@@ -253,18 +255,15 @@
   }
 
   .about-member-photo-slot {
-    width: 164px;
-    height: 164px;
+    width: min(100%, 164px);
   }
 
   .about-member-avatar {
-    width: 152px;
-    height: 152px;
+    width: min(100%, 152px);
   }
 
   .about-member-photo {
-    width: 152px;
-    height: 152px;
+    width: calc(100% - 12px);
   }
 
   .about-teacher-card {
