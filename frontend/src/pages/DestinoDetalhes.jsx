@@ -52,6 +52,19 @@ function DestinoDetalhes() {
     : "";
   const favoritado = isFavorito(favoritoId);
 
+  function voltar() {
+    if (location.state?.resultadoMatch?.finalizado) {
+      navigate("/match", {
+        replace: true,
+        state: { resultadoMatch: location.state.resultadoMatch },
+      });
+      return;
+    }
+
+    if (location.key === "default") navigate("/destinos");
+    else navigate(-1);
+  }
+
   if (!destino || !cidadeAtual) {
     return (
       <main className="not-found">
@@ -82,7 +95,7 @@ function DestinoDetalhes() {
         <div className="destination-detail-nav">
           <button
             type="button"
-            onClick={() => location.key === "default" ? navigate("/destinos") : navigate(-1)}
+            onClick={voltar}
             className="destination-detail-back"
           >
             <ArrowLeft size={18} />
@@ -122,6 +135,9 @@ function DestinoDetalhes() {
                   <Link
                     key={cidade}
                     to={`/destinos/${destino.slug}/${gerarSlugCidade(cidade)}`}
+                    state={location.state?.resultadoMatch
+                      ? { resultadoMatch: location.state.resultadoMatch }
+                      : undefined}
                     style={{ padding: "7px 11px", borderRadius: 999, color: "#fff", background: "rgba(255,255,255,.14)", fontSize: 13 }}
                   >
                     {cidade}

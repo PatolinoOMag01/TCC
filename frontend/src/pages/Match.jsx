@@ -291,14 +291,24 @@ function Match() {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const resultadoRestaurado = location.state?.resultadoMatch;
   const sair = () => location.key === "default" ? navigate("/") : navigate(-1);
   const [respostas, setRespostas] = useState(() => {
+    if (resultadoRestaurado?.respostas) {
+      return resultadoRestaurado.respostas;
+    }
+
     const p = location.state?.preferencias;
     return p ? { ...(p.objetivo ? { objetivo: p.objetivo } : {}), ...(p.orcamento ? { orcamento: Number(p.orcamento) } : {}) } : {};
   });
-  const destinoPreferido = location.state?.preferencias?.destino?.trim().toLocaleLowerCase("pt-BR");
+  const destinoPreferido = resultadoRestaurado?.destinoPreferido ?? location.state?.preferencias?.destino?.trim().toLocaleLowerCase("pt-BR");
 
-  const [finalizado, setFinalizado] = useState(false);
+  const [finalizado, setFinalizado] = useState(() => Boolean(resultadoRestaurado?.finalizado));
+  const retornoMatch = {
+    respostas,
+    destinoPreferido,
+    finalizado: true,
+  };
 
   const perguntaAtual = perguntas[etapa];
 
@@ -475,6 +485,7 @@ function Match() {
 
                 <Link
                   to={`/destinos/${principal.slug}`}
+                  state={{ resultadoMatch: retornoMatch }}
                   className="winner-button"
                 >
                   Conhecer {principal.pais}
@@ -508,6 +519,7 @@ function Match() {
                 .map((destino, index) => (
                   <Link
                     to={`/destinos/${destino.slug}`}
+                    state={{ resultadoMatch: retornoMatch }}
                     className="ranking-card"
                     key={destino.slug}
                   >
