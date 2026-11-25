@@ -13,11 +13,11 @@ const secoes = [
 ];
 
 const desenvolvedores = [
-  { nome: "Matheus Lima", github: "https://github.com/PatolinoOMag01" },
-  { nome: "João Pedro de Andrade", github: "https://github.com/joaoPedro095810" },
-  { nome: "Lorenzo Muller", github: "https://github.com/LorenzoMuller" },
-  { nome: "Tamires Anastacio", github: "https://github.com/Tamires-Anastacio" },
-  { nome: "Sophia", github: "https://github.com/soph-astronauta" },
+  { nome: "João Pedro de Andrade Ferreira", github: "https://github.com/joaoPedro095810" },
+  { nome: "Lorenzo Muller Cardoso", github: "https://github.com/LorenzoMuller" },
+  { nome: "Matheus Lima Colantuono", github: "https://github.com/PatolinoOMag01" },
+  { nome: "Sophia Gonçalves Morais", github: "https://github.com/soph-astronauta" },
+  { nome: "Tamires Anastacio de Freitas", github: "https://github.com/Tamires-Anastacio" },
 ];
 
 function Footer() {
