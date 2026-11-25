@@ -1598,6 +1598,14 @@ a {
   line-height: 1.7;
 }
 
+.destination-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
+  margin-top: 30px;
+}
+
 .destination-detail-content button,
 .destination-detail-content .destination-programs-link {
   display: flex;
@@ -1605,7 +1613,7 @@ a {
 
   gap: 8px;
 
-  margin-top: 30px;
+  margin-top: 0;
 
   padding: 15px 20px;
 
@@ -1618,6 +1626,30 @@ a {
 
   font-weight: 700;
   text-decoration: none;
+}
+
+.destination-detail-actions .destination-programs-link {
+  flex: 1 1 320px;
+}
+
+.destination-detail-actions .destination-favorite-button {
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  background: rgba(4, 12, 26, 0.35);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.destination-detail-actions .destination-favorite-button:hover {
+  border-color: white;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.destination-detail-actions .destination-favorite-button.is-favorite {
+  border-color: #fb7185;
+  color: #fecdd3;
+  background: rgba(136, 19, 55, 0.4);
 }
 
 .prototype-notice {

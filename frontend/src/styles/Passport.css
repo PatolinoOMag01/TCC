@@ -435,6 +435,112 @@
   font-size: 22px;
 }
 
+.passport-favorites-card .passport-section-title h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.passport-favorites-card .passport-section-title h2 svg {
+  color: #ef4444;
+}
+
+.passport-favorites-all,
+.passport-favorites-empty a,
+.passport-favorite-actions > a {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.passport-favorites-all:hover,
+.passport-favorites-empty a:hover,
+.passport-favorite-actions > a:hover {
+  text-decoration: underline;
+}
+
+.passport-favorites-empty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--background);
+}
+
+.passport-favorites-empty p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.passport-favorites-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.passport-favorite-item {
+  min-width: 0;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid #e6eaf0;
+  border-radius: 15px;
+  background: var(--background);
+}
+
+.passport-favorite-item > img {
+  width: 104px;
+  min-height: 120px;
+  flex: 0 0 104px;
+  object-fit: cover;
+}
+
+.passport-favorite-content {
+  min-width: 0;
+  flex: 1;
+  padding: 14px;
+}
+
+.passport-favorite-content > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.passport-favorite-content h3 {
+  overflow-wrap: anywhere;
+  margin: 5px 0 13px;
+  color: var(--text);
+  font-size: 16px;
+}
+
+.passport-favorite-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.passport-favorite-actions > button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 10px;
+  color: #ef4444;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.passport-favorite-actions > button:hover {
+  background: #fff1f2;
+}
+
 .passport-checklist {
   display: flex;
   flex-direction: column;

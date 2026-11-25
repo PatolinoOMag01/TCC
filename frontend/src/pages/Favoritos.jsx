@@ -130,7 +130,7 @@ export default function Favoritos() {
           >
             {favoritos.map((destino) => (
               <article
-                key={destino.slug}
+                key={destino.id || destino.slug}
                 style={{
                   overflow: "hidden",
                   borderRadius: 24,
@@ -159,9 +159,10 @@ export default function Favoritos() {
                   <button
                     type="button"
                     onClick={() =>
-                      removerFavorito(destino.slug)
+                      removerFavorito(destino.id || destino.slug)
                     }
                     title="Remover dos favoritos"
+                    aria-label={`Remover ${destino.cidade || destino.pais} dos favoritos`}
                     style={{
                       position: "absolute",
                       top: 14,
@@ -235,7 +236,9 @@ export default function Favoritos() {
                   </p>
 
                   <Link
-                    to={`/destinos/${destino.slug}`}
+                    to={destino.cidadeSlug
+                      ? `/destinos/${destino.slug}/${destino.cidadeSlug}`
+                      : `/destinos/${destino.slug}`}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",

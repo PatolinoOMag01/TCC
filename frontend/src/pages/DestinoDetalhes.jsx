@@ -6,6 +6,7 @@ import {
   Check,
   CloudSun,
   Globe2,
+  Heart,
   Languages,
   MapPin,
 } from "lucide-react";
@@ -13,6 +14,7 @@ import {
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { destinos, gerarSlugCidade } from "../data/destinos";
 import { buscarCidadeExtra } from "../data/cidadesExtras";
+import { useFavorites } from "../context/FavoritesContext";
 
 const climaDestinosPrincipais = {
   irlanda: "Oceânico: clima ameno, úmido e sujeito a mudanças ao longo do dia.",
@@ -33,6 +35,7 @@ function DestinoDetalhes() {
   const { slug, cidadeSlug } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { toggleFavorito, isFavorito } = useFavorites();
 
   const destino = destinos.find((item) => item.slug === slug);
   const cidadeAtual = cidadeSlug
@@ -41,6 +44,13 @@ function DestinoDetalhes() {
   const detalhesCidade = destino && cidadeAtual
     ? buscarCidadeExtra(destino.slug, cidadeAtual)
     : null;
+  const cidadeSlugAtual = cidadeSlug || null;
+  const favoritoId = destino
+    ? cidadeSlugAtual
+      ? `${destino.slug}/${cidadeSlugAtual}`
+      : destino.slug
+    : "";
+  const favoritado = isFavorito(favoritoId);
 
   if (!destino || !cidadeAtual) {
     return (
@@ -125,10 +135,28 @@ function DestinoDetalhes() {
             {detalhesCidade?.descricao || destino.descricao}
           </p>
 
-          <Link to={`/bolsas?busca=${encodeURIComponent(destino.pais)}`} className="destination-programs-link">
-            Ver programas disponíveis
-            <ArrowRight size={18} />
-          </Link>
+          <div className="destination-detail-actions">
+            <Link to={`/bolsas?busca=${encodeURIComponent(destino.pais)}`} className="destination-programs-link">
+              Ver programas disponíveis
+              <ArrowRight size={18} />
+            </Link>
+
+            <button
+              type="button"
+              className={`destination-favorite-button${favoritado ? " is-favorite" : ""}`}
+              aria-pressed={favoritado}
+              aria-label={favoritado ? `Remover ${cidadeAtual} dos meus favoritos` : `Adicionar ${cidadeAtual} aos meus favoritos`}
+              onClick={() => toggleFavorito({
+                ...destino,
+                id: favoritoId,
+                cidade: cidadeAtual,
+                cidadeSlug: cidadeSlugAtual,
+              })}
+            >
+              <Heart size={19} fill={favoritado ? "currentColor" : "none"} />
+              {favoritado ? "Salvo nos meus favoritos" : "Adicionar aos meus favoritos"}
+            </button>
+          </div>
         </motion.div>
       </section>
 

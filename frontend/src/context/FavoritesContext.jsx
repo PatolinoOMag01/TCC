@@ -10,6 +10,10 @@ const FavoritesContext = createContext(null);
 
 const STORAGE_KEY = "interway-favoritos";
 
+function chaveFavorito(item) {
+    return item.id || item.slug;
+}
+
 export function FavoritesProvider({ children }) {
     const [favoritos, setFavoritos] = useState(() => {
         try {
@@ -29,23 +33,26 @@ export function FavoritesProvider({ children }) {
     }, [favoritos]);
 
     function toggleFavorito(destino) {
+        const id = chaveFavorito(destino);
         setFavoritos((atual) => {
             const existe = atual.some(
-                (item) => item.slug === destino.slug
+                (item) => chaveFavorito(item) === id
             );
 
             if (existe) {
                 return atual.filter(
-                    (item) => item.slug !== destino.slug
+                    (item) => chaveFavorito(item) !== id
                 );
             }
 
             return [
                 ...atual,
                 {
+                    id,
                     slug: destino.slug,
                     pais: destino.pais,
                     cidade: destino.cidade,
+                    cidadeSlug: destino.cidadeSlug || null,
                     bandeira: destino.bandeira,
                     imagem: destino.imagem,
                     destaque: destino.destaque,
@@ -55,13 +62,13 @@ export function FavoritesProvider({ children }) {
         });
     }
 
-    function isFavorito(slug) {
-        return favoritos.some((item) => item.slug === slug);
+    function isFavorito(id) {
+        return favoritos.some((item) => chaveFavorito(item) === id);
     }
 
-    function removerFavorito(slug) {
+    function removerFavorito(id) {
         setFavoritos((atual) =>
-            atual.filter((item) => item.slug !== slug)
+            atual.filter((item) => chaveFavorito(item) !== id)
         );
     }
 

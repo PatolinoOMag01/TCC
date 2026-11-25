@@ -8,12 +8,14 @@ import {
   Check,
   Circle,
   Globe2,
+  Heart,
   Languages,
   LoaderCircle,
   MapPin,
   Plane,
   Save,
   Target,
+  Trash2,
   Wallet,
 } from "lucide-react";
 
@@ -29,10 +31,19 @@ import {
   api,
 } from "../services/api";
 
+import {
+  useFavorites,
+} from "../context/FavoritesContext";
+
 import "../styles/Passport.css";
 
 
 export default function Passport() {
+  const {
+    favoritos,
+    removerFavorito,
+  } = useFavorites();
+
   const {
     usuario,
   } = useAuth();
@@ -704,6 +715,67 @@ export default function Passport() {
               </button>
             </div>
           </form>
+        </section>
+
+        <section className="passport-card passport-form-card passport-favorites-card">
+          <div className="passport-section-title">
+            <div>
+              <span>
+                DESTINOS SALVOS
+              </span>
+
+              <h2>
+                <Heart size={22} fill="currentColor" />
+                Meus Favoritos
+              </h2>
+            </div>
+
+            <Link to="/favoritos" className="passport-favorites-all">
+              Ver todos
+            </Link>
+          </div>
+
+          {favoritos.length === 0 ? (
+            <div className="passport-favorites-empty">
+              <p>Seus destinos favoritos aparecem aqui quando você salva uma cidade.</p>
+              <Link to="/destinos">Explorar destinos</Link>
+            </div>
+          ) : (
+            <div className="passport-favorites-list">
+              {favoritos.map((destino) => {
+                const favoritoId = destino.id || destino.slug;
+                const destinoUrl = destino.cidadeSlug
+                  ? `/destinos/${destino.slug}/${destino.cidadeSlug}`
+                  : `/destinos/${destino.slug}`;
+
+                return (
+                  <article key={favoritoId} className="passport-favorite-item">
+                    <img
+                      src={destino.imagem}
+                      alt={`Vista de ${destino.cidade || destino.pais}`}
+                    />
+
+                    <div className="passport-favorite-content">
+                      <span>{destino.pais}</span>
+                      <h3>{destino.bandeira} {destino.cidade || destino.pais}</h3>
+
+                      <div className="passport-favorite-actions">
+                        <Link to={destinoUrl}>Ver destino</Link>
+                        <button
+                          type="button"
+                          aria-label={`Remover ${destino.cidade || destino.pais} dos meus favoritos`}
+                          title="Remover dos favoritos"
+                          onClick={() => removerFavorito(favoritoId)}
+                        >
+                          <Trash2 size={17} />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </section>
       </section>
     </main>
