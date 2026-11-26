@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import logo from "../assets/logo.png";
 
@@ -16,20 +16,43 @@ import {
   Search,
   User,
   Wallet,
+  X,
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
 
-import { destinos } from "../data/destinos";
+import { useDestinations } from "../context/DestinationsContext";
 import { useAuth } from "../context/AuthContext";
 import { useFavorites } from "../context/FavoritesContext";
 
-const destinosDoCard = ["reino-unido", "malta", "estados-unidos"]
+function Home() {
+  const { destinos } = useDestinations();
+  const destinosDoCard = ["reino-unido", "malta", "estados-unidos"]
   .map((slug) => destinos.find((destino) => destino.slug === slug))
   .filter(Boolean);
 
-function Home() {
+
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigationRef = useRef(null);
+  const menuButtonRef = useRef(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    function dismissOutside(event) {
+      if (!navigationRef.current?.contains(event.target)) setMenuOpen(false);
+    }
+    function dismissEscape(event) {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    }
+    document.addEventListener("pointerdown", dismissOutside);
+    document.addEventListener("keydown", dismissEscape);
+    return () => {
+      document.removeEventListener("pointerdown", dismissOutside);
+      document.removeEventListener("keydown", dismissEscape);
+    };
+  }, [menuOpen]);
   const [preferencias, setPreferencias] = useState({ destino: "", objetivo: "", orcamento: "" });
   const alterarPreferencia = (event) => setPreferencias((atual) => ({ ...atual, [event.target.name]: event.target.value }));
   const {
@@ -43,7 +66,7 @@ function Home() {
       <section className="hero">
         <div className="hero-overlay" />
 
-        <nav className="navbar">
+        <nav className="navbar" ref={navigationRef} aria-label="Navegação principal">
           <Link
             to="/"
             className="logo"
@@ -60,8 +83,9 @@ function Home() {
             </span>
           </Link>
 
-          <div className={`nav-links${menuOpen ? " is-open" : ""}`} id="main-navigation">
+          <div className={`nav-links${menuOpen ? " is-open" : ""}`} id="main-navigation" onClick={event => { if (event.target.closest("a")) setMenuOpen(false); }}>
             <Link to="/destinos">Destinos</Link>
+            {usuario?.is_admin && <Link to="/admin">Administração</Link>}
             <Link to="/favoritos">Favoritos</Link>
             <Link to="/bolsas">Bolsas</Link>
             <Link to="/vagas">Vagas</Link>
@@ -69,6 +93,7 @@ function Home() {
             <Link to="/chat">Comunidade</Link>
 <Link to="/assistente">InterWay IA</Link>
 <Link to="/match">Match</Link>
+            <Link to="/sobre">Sobre</Link>
             <Link to={usuario ? "/perfil" : "/login"} className="mobile-account-link">
               {usuario ? "Meu perfil" : "Entrar"}
             </Link>
@@ -95,9 +120,6 @@ function Home() {
                   className="login-button"
                   style={{
                     textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
                   }}
                 >
                   <User size={17} />
@@ -141,12 +163,14 @@ function Home() {
             <button
               type="button"
               className="menu-button"
+              ref={menuButtonRef}
               aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
               aria-expanded={menuOpen}
               aria-controls="main-navigation"
               onClick={() => setMenuOpen((open) => !open)}
             >
-              <Menu />
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+              <span>{menuOpen ? "Fechar" : "Menu"}</span>
             </button>
           </div>
         </nav>

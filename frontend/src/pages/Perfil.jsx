@@ -37,8 +37,10 @@ import {
   api,
 } from "../services/api";
 
-import { destinos, gerarSlugCidade } from "../data/destinos";
+import { gerarSlugCidade } from "../data/destinos";
+import { useDestinations } from "../context/DestinationsContext";
 import "../styles/Auth.css";
+import SavedMatchCard from "../components/SavedMatchCard";
 
 function normalizarDestino(valor = "") {
   return valor
@@ -49,6 +51,7 @@ function normalizarDestino(valor = "") {
 }
 
 export default function Perfil() {
+  const { destinos } = useDestinations();
   const navigate =
     useNavigate();
 
@@ -170,6 +173,7 @@ export default function Perfil() {
 
   return (
     <main className="profile-page">
+      {usuario?.is_admin && <Link to="/admin" style={{ display: "inline-block", margin: "20px 5%", color: "var(--link)", fontWeight: 700 }}>Abrir painel de administração →</Link>}
       <div className="profile-glow profile-glow-one" />
       <div className="profile-glow profile-glow-two" />
 
@@ -219,6 +223,8 @@ export default function Perfil() {
 
         </section>
 
+
+        <SavedMatchCard key={usuario.id} />
 
         <div
           style={{

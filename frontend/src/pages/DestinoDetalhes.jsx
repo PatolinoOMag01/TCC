@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { destinos, gerarSlugCidade } from "../data/destinos";
+import { gerarSlugCidade } from "../data/destinos";
+import { useDestinations } from "../context/DestinationsContext";
 import { buscarCidadeExtra } from "../data/cidadesExtras";
 import { useFavorites } from "../context/FavoritesContext";
 
@@ -32,6 +33,7 @@ const climaDestinosPrincipais = {
 };
 
 function DestinoDetalhes() {
+  const { destinos } = useDestinations();
   const { slug, cidadeSlug } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ function DestinoDetalhes() {
   const cidadeAtual = cidadeSlug
     ? destino?.cidades?.find((cidade) => gerarSlugCidade(cidade) === cidadeSlug)
     : destino?.cidade;
-  const detalhesCidade = destino && cidadeAtual
+  const detalhesCidade = destino && cidadeAtual && cidadeAtual !== destino.cidade
     ? buscarCidadeExtra(destino.slug, cidadeAtual)
     : null;
   const cidadeSlugAtual = cidadeSlug || null;

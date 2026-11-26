@@ -71,6 +71,20 @@ async function request(
 
 
 export const api = {
+  meuMatch() { return request("/match/me"); },
+  salvarMatch(dados) { return request("/match/me", { method: "PUT", body: JSON.stringify(dados) }); },
+  listarDestinos() { return request("/destinos"); },
+  adminListar(tipo, busca = "", pagina = 1) {
+    return request(`/admin/${tipo}?busca=${encodeURIComponent(busca)}&pagina=${pagina}`);
+  },
+  adminSalvarUsuario(id, dados) {
+    return request(`/admin/usuarios/${id}`, { method: "PATCH", body: JSON.stringify(dados) });
+  },
+  adminApagarMensagem(id) { return request(`/admin/comunidade/${id}`, { method: "DELETE" }); },
+  adminSalvarDestino(dados, existente = false) {
+    return request(`/admin/destinos${existente ? `/${dados.slug}` : ""}`, { method: existente ? "PUT" : "POST", body: JSON.stringify(dados) });
+  },
+  adminApagarDestino(slug) { return request(`/admin/destinos/${slug}`, { method: "DELETE" }); },
   cadastrar(dados) {
     return request(
       "/auth/cadastro",

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
@@ -30,13 +30,19 @@ const beneficios = [
 ];
 
 function PlanoPlus() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  function voltar() {
+    if (location.key === "default") navigate("/");
+    else navigate(-1);
+  }
   return (
     <main className="plus-page">
       <header className="plus-page-header">
-        <Link to="/" className="plus-back-link">
+        <button type="button" onClick={voltar} className="plus-back-link">
           <ArrowLeft size={18} />
-          Voltar para o início
-        </Link>
+          Voltar
+        </button>
         <span>INTERWAY PLUS</span>
       </header>
 

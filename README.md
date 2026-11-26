@@ -1,5 +1,29 @@
 # InterWay
 
+## Match salvo na conta
+
+Ao concluir o teste, use **Salvar meu Match**. O resultado mais recente fica disponível em **Perfil → Meu Match**, com o ranking, a compatibilidade e as respostas do momento do salvamento. Um novo resultado substitui o anterior somente após clicar em salvar. A consulta não exige Plus.
+
+Se não estiver autenticado, **Entrar para salvar** leva ao login e retorna ao resultado preenchido. Clique em salvar após entrar. A API calcula o ranking com o catálogo atual e guarda o resultado na tabela `matches_salvos`, criada automaticamente na inicialização. As rotas autenticadas `GET /match/me` e `PUT /match/me` usam exclusivamente o usuário da sessão; os resultados ficam disponíveis entre dispositivos e reinicializações, desde que o banco seja persistente.
+
+## Painel de administração
+
+Acesse `/admin` após entrar com uma conta administrativa. O link **Administração** aparece na página inicial e no perfil dessas contas.
+
+1. Cadastre sua conta normalmente no site.
+2. No ambiente do **backend**, configure `ADMIN_EMAILS` com o e-mail dessa conta. Para mais de um administrador, separe os e-mails por vírgula. Exemplo: `ADMIN_EMAILS=seu-email@exemplo.com`.
+3. Reinicie a API e entre novamente. Na Railway, configure a variável no serviço Backend e faça o redeploy.
+
+Não há senha administrativa padrão. Somente contas previamente cadastradas e autorizadas no servidor devem ser adicionadas a `ADMIN_EMAILS`. As rotas `/admin/*` verificam a sessão e a autorização no backend; o cadastro público não permite escolher o papel de administrador.
+
+O painel oferece busca e paginação de usuários, edição de nome/e-mail, bloqueio e desbloqueio de acesso, consulta e exclusão de mensagens de qualquer autor e criação, edição e exclusão de destinos. Exclusões exigem confirmação no painel e são permanentes. Contas bloqueadas perdem acesso autenticado inclusive com tokens já emitidos. O e-mail e o bloqueio de administradores são protegidos; remova a autorização no servidor para revogar seu papel.
+
+Ao iniciar a API, o SQLAlchemy cria `usuarios_acesso` e `destinos_catalogo`, sem alterar as colunas das tabelas existentes. O catálogo original é importado de `backend/app/data/destinos.json` uma única vez. As alterações ficam no banco, e destinos excluídos não são recriados na próxima inicialização. Mantenha o banco persistente na hospedagem.
+
+Destinos, detalhes, página inicial, perfil e Match usam o catálogo da API. Sem conexão com a API, o site pode exibir o catálogo local original; a página Destinos sinaliza esse modo offline. O painel sempre exige conexão com a API para ler ou alterar dados.
+
+Validação: em `frontend`, execute `npm ci`, `npm run lint` e `npm run build`. Em `backend`, com as dependências instaladas, execute `python -m unittest discover -s tests -v`. Os testes usam um banco SQLite temporário e verificam permissões, bloqueios, moderação e alterações no catálogo público, além dos fluxos existentes.
+
 Site publicado:https://tcc-production-e593.up.railway.app/
 
 ## Organização

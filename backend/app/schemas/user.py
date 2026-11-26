@@ -38,6 +38,7 @@ class UserResponse(BaseModel):
     nome: str
     email: str
     criado_em: datetime
+    is_admin: bool = False
 
     model_config = ConfigDict(
         from_attributes=True

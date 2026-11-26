@@ -3,7 +3,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Search, ArrowRight, Heart } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { destinos, gerarSlugCidade } from "../data/destinos";
+import { gerarSlugCidade } from "../data/destinos";
+import { useDestinations } from "../context/DestinationsContext";
 import { cidadesExtras } from "../data/cidadesExtras";
 import { useFavorites } from "../context/FavoritesContext";
 
@@ -49,6 +50,7 @@ function normalizarTexto(valor = "") {
 }
 
 export default function Destinos() {
+  const { destinos, offline } = useDestinations();
   const [searchParams] = useSearchParams();
   const [busca, setBusca] = useState(() => searchParams.get("busca") || "");
   const [maisDestinosVisiveis, setMaisDestinosVisiveis] = useState(false);
@@ -77,11 +79,11 @@ export default function Destinos() {
         && (!idiomaSelecionado || destino.match?.idiomas?.includes(idiomaSelecionado))
         && (!orcamentoSelecionado || String(destino.match?.orcamento || "") === orcamentoSelecionado);
     });
-  }, [termoBusca, continenteSelecionado, idiomaSelecionado, orcamentoSelecionado]);
+  }, [destinos, termoBusca, continenteSelecionado, idiomaSelecionado, orcamentoSelecionado]);
 
   const cidadesVisiveis = cidadesExtras.filter((cidade) => {
     const destino = destinos.find((item) => item.slug === cidade.paisSlug);
-    if (!destino) return false;
+    if (!destino || !destino.cidades?.includes(cidade.nome)) return false;
 
     const textoCidade = normalizarTexto(`${cidade.nome} ${destino.pais} ${destino.continente} ${destino.idioma}`);
     return (!termoBusca || textoCidade.includes(termoBusca))
@@ -114,6 +116,7 @@ export default function Destinos() {
         }}
       >
         <PageNavigation />
+        {offline && <p role="status">Catálogo offline: exibindo a versão local. As alterações mais recentes estarão disponíveis quando a conexão retornar.</p>}
 
         <section
           style={{

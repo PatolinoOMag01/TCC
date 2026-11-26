@@ -12,16 +12,21 @@ import {
   ChevronDown,
   ChevronUp,
   Clock3,
+  CloudSun,
   Globe2,
   GraduationCap,
   Languages,
   MapPin,
   RotateCcw,
+  Save,
   Sparkles,
+  Snowflake,
   SunMedium,
 } from "lucide-react";
 
-import { destinos } from "../data/destinos";
+import { useDestinations } from "../context/DestinationsContext";
+import { useAuth } from "../context/AuthContext";
+import { api } from "../services/api";
 
 import "../styles/Match.css";
 
@@ -184,13 +189,13 @@ const perguntas = [
         valor: "frio",
         titulo: "Prefiro frio",
         descricao: "Casaco, inverno e temperaturas baixas.",
-        emoji: "❄️",
+        icone: Snowflake,
       },
       {
         valor: "moderado",
         titulo: "Clima moderado",
         descricao: "Nem muito quente, nem muito frio.",
-        emoji: "🌤️",
+        icone: CloudSun,
       },
       {
         valor: "quente",
@@ -286,11 +291,16 @@ function calcularMatch(destino, respostas) {
 }
 
 function Match() {
+  const { usuario } = useAuth();
+  const [salvando, setSalvando] = useState(false);
+  const [erroSalvar, setErroSalvar] = useState("");
+  const { destinos } = useDestinations();
   const [etapa, setEtapa] = useState(0);
   const [mostrarTodasPossibilidades, setMostrarTodasPossibilidades] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
+  const [matchSalvo, setMatchSalvo] = useState(() => location.state?.matchSalvo || location.state?.resultadoMatch?.matchSalvo || null);
   const resultadoRestaurado = location.state?.resultadoMatch;
   const sair = () => location.key === "default" ? navigate("/") : navigate(-1);
   const [respostas, setRespostas] = useState(() => {
@@ -308,6 +318,7 @@ function Match() {
     respostas,
     destinoPreferido,
     finalizado: true,
+    matchSalvo,
   };
 
   const perguntaAtual = perguntas[etapa];
@@ -322,6 +333,7 @@ function Match() {
     if (!finalizado) {
       return [];
     }
+    if (matchSalvo) return matchSalvo.ranking;
 
     return destinos
       .map((destino) => ({
@@ -334,7 +346,21 @@ function Match() {
           Number(Boolean(destinoPreferido && `${b.pais} ${b.cidade}`.toLocaleLowerCase("pt-BR").includes(destinoPreferido))) -
           Number(Boolean(destinoPreferido && `${a.pais} ${a.cidade}`.toLocaleLowerCase("pt-BR").includes(destinoPreferido)))
       );
-  }, [finalizado, respostas, destinoPreferido]);
+  }, [destinos, finalizado, respostas, destinoPreferido, matchSalvo]);
+
+  async function salvarResultado() {
+    if (!usuario) {
+      navigate("/login", { state: { from: "/match", returnState: { resultadoMatch: retornoMatch } } });
+      return;
+    }
+    setSalvando(true);
+    setErroSalvar("");
+    try {
+      const salvo = await api.salvarMatch({ respostas, destinoPreferido });
+      setMatchSalvo(salvo);
+    } catch (error) { setErroSalvar(error.message); }
+    finally { setSalvando(false); }
+  }
 
   function escolherResposta(valor) {
     setRespostas((anteriores) => ({
@@ -363,9 +389,15 @@ function Match() {
   }
 
   function reiniciar() {
+    setMatchSalvo(null);
+    setErroSalvar("");
     setEtapa(0);
     setRespostas({});
     setFinalizado(false);
+  }
+
+  if (finalizado && resultados.length === 0) {
+    return <main className="not-found"><div><h1>Nenhum destino disponível</h1><p>O catálogo está sendo atualizado. Tente novamente mais tarde.</p><Link to="/destinos">Ver destinos</Link></div></main>;
   }
 
   if (finalizado) {
@@ -416,6 +448,12 @@ function Match() {
               destinos disponíveis no InterWay.
             </p>
           </div>
+
+          <section className="match-save-panel" aria-label="Salvar resultado do Match">
+            <div><strong>{matchSalvo ? "Match salvo na sua conta" : "Guarde seu próximo destino"}</strong><p>{matchSalvo ? "Você pode consultar este resultado no seu perfil, mesmo em outro dispositivo." : "Salve este resultado no seu perfil. Ao salvar um novo teste, ele substitui o anterior."}</p></div>
+            {matchSalvo ? <Link to="/perfil">Ver no meu perfil <ArrowRight size={17} /></Link> : <button type="button" disabled={salvando} onClick={salvarResultado}><Save size={18} />{salvando ? "Salvando..." : usuario ? "Salvar meu Match" : "Entrar para salvar"}</button>}
+            {erroSalvar && <p role="alert" className="match-save-error">{erroSalvar}</p>}
+          </section>
 
           <div className="winner-card">
             <div

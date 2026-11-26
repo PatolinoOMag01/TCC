@@ -1,0 +1,12 @@
+.saved-match-card { position: relative; padding: 26px; margin-bottom: 28px; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); color: var(--text); }
+.saved-match-heading { display: flex; align-items: center; gap: 10px; color: var(--accent); margin-bottom: 18px; }
+.saved-match-heading h2 { color: var(--text); font-size: 20px; margin: 0; }
+.saved-match-card p { color: var(--muted); line-height: 1.6; margin: 8px 0 18px; }
+.saved-match-card a, .saved-match-card button { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 700; text-decoration: none; }
+.saved-match-card button { background: transparent; border: 1px solid var(--border); padding: 10px 16px; border-radius: 10px; font: inherit; cursor: pointer; }
+.saved-match-summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.saved-match-summary span { color: var(--muted); font-size: 12px; }
+.saved-match-summary h3 { font-size: 27px; margin: 8px 0; }
+.saved-match-date { align-self: flex-start; }
+.saved-match-actions { display: flex; flex-wrap: wrap; gap: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+.saved-match-actions a:last-child { color: var(--muted); font-size: 13px; }

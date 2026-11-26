@@ -71,6 +71,7 @@ export default function Login() {
 
       navigate(destino, {
         replace: true,
+        state: location.state?.returnState,
       });
     } catch (error) {
       setErro(
