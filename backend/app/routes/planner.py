@@ -47,6 +47,11 @@ def meu_planejamento(db: Session = Depends(get_db), usuario: User = Depends(obte
 def atualizar_planejamento(dados: PlannerUpdate, db: Session = Depends(get_db), usuario: User = Depends(obter_assinante_plus)):
     item = obter_ou_criar(db, usuario)
     for campo, valor in dados.model_dump().items(): setattr(item, campo, valor)
+    passport = db.query(Passport).filter(Passport.usuario_id == usuario.id).first()
+    if passport is None:
+        passport = Passport(usuario_id=usuario.id)
+        db.add(passport)
+    passport.orcamento = item.guardado
     db.commit(); db.refresh(item)
     destino = destino_compartilhado(db, usuario.id, item.destino)
     return calcular(item, destino)
