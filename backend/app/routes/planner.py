@@ -29,7 +29,11 @@ def calcular(p: Planner, destino: str | None = None):
 def obter_ou_criar(db: Session, usuario: User):
     item = db.query(Planner).filter(Planner.usuario_id == usuario.id).first()
     if item: return item
-    item = Planner(usuario_id=usuario.id)
+    passport = db.query(Passport).filter(Passport.usuario_id == usuario.id).first()
+    item = Planner(
+        usuario_id=usuario.id,
+        guardado=passport.orcamento if passport and passport.orcamento is not None else 0,
+    )
     db.add(item); db.commit(); db.refresh(item)
     return item
 

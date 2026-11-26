@@ -75,7 +75,7 @@ export default function Planejador() {
         setFormulario({
           destino: planejamento.destino || [passaporte?.cidade, passaporte?.pais].filter(Boolean).join(", "),
           meta: planejamento.meta != null ? String(planejamento.meta) : "",
-          guardado: planejamento.guardado != null ? String(planejamento.guardado) : "",
+          guardado: planejamento.guardado != null ? String(planejamento.guardado) : passaporte?.orcamento != null ? String(passaporte.orcamento) : "",
           mensal: planejamento.mensal != null ? String(planejamento.mensal) : "",
         });
       } catch (erro) {

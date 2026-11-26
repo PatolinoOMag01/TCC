@@ -201,6 +201,15 @@ def atualizar_passport(
             valor,
         )
 
+    if "orcamento" in valores:
+        planejamento = (
+            db.query(Planner)
+            .filter(Planner.usuario_id == usuario.id)
+            .first()
+        )
+        if planejamento:
+            planejamento.guardado = valores["orcamento"] or 0
+
     campos_destino = {
         "pais": "destino_pais",
         "cidade": "destino_cidade",
