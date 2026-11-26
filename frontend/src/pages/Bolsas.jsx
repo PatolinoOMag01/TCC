@@ -84,10 +84,6 @@ export default function Bolsas() {
           </p>
         </section>
 
-        <p className="opportunity-info-note" role="note">
-          <strong>Antes de se inscrever:</strong> estas informações não foram confirmadas com as instituições. Verifique critérios, prazos e disponibilidade nos canais oficiais.
-        </p>
-
         <div
           style={{
             display: "flex",
@@ -276,7 +272,7 @@ export default function Bolsas() {
               color: "var(--muted)",
             }}
           >
-            Nenhuma bolsa encontrada.
+            {bolsas.length === 0 ? "Nenhuma bolsa disponível no momento." : "Nenhuma bolsa encontrada."}
           </div>
         )}
       </div>
