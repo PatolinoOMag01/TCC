@@ -84,6 +84,10 @@ export default function Vagas() {
           </p>
         </section>
 
+        <p className="opportunity-info-note" role="note">
+          <strong>Antes de se candidatar:</strong> estas vagas não foram confirmadas com os empregadores. Verifique a existência da vaga, as condições de trabalho e os requisitos do visto nos canais oficiais.
+        </p>
+
         <div
           style={{
             display: "flex",
@@ -284,7 +288,7 @@ export default function Vagas() {
               color: "var(--muted)",
             }}
           >
-            {vagas.length === 0 ? "Nenhuma vaga disponível no momento." : "Nenhuma vaga encontrada."}
+            Nenhuma vaga encontrada.
           </div>
         )}
       </div>
