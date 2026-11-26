@@ -634,7 +634,7 @@ function Match() {
                 <span><Check size={15} /> Passport</span>
                 <span><Check size={15} /> Planejamento financeiro</span>
               </div>
-              <Link to="/plus" className="match-plus-button">
+              <Link to="/plus" state={{ resultadoMatch: retornoMatch }} className="match-plus-button">
                 Quero planejar minha viagem
                 <ArrowRight size={17} />
               </Link>

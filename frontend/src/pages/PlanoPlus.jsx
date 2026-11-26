@@ -33,6 +33,10 @@ function PlanoPlus() {
   const navigate = useNavigate();
   const location = useLocation();
   function voltar() {
+    if (location.state?.resultadoMatch?.finalizado) {
+      navigate("/match", { state: { resultadoMatch: location.state.resultadoMatch } });
+      return;
+    }
     if (location.key === "default") navigate("/");
     else navigate(-1);
   }
