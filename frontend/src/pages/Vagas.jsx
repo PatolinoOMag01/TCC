@@ -84,8 +84,8 @@ export default function Vagas() {
           </p>
         </section>
 
-        <p className="prototype-notice" role="note">
-          <strong>Conteúdo demonstrativo:</strong> estas vagas são exemplos e não foram confirmadas por empregadores. Verifique a empresa, as regras de trabalho e os requisitos do visto em fontes oficiais.
+        <p className="opportunity-info-note" role="note">
+          <strong>Antes de se candidatar:</strong> estas vagas não foram confirmadas com os empregadores. Verifique a existência da vaga, as condições de trabalho e os requisitos do visto nos canais oficiais.
         </p>
 
         <div
@@ -273,8 +273,8 @@ export default function Vagas() {
                 <strong>Idioma:</strong> {vaga.idioma}
               </p>
 
-              <p className="prototype-action-note">
-                Candidatura indisponível neste protótipo.
+              <p className="opportunity-action-note">
+                Consulte o empregador para confirmar a vaga e as instruções de candidatura.
               </p>
             </article>
           ))}

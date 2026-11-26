@@ -84,8 +84,8 @@ export default function Bolsas() {
           </p>
         </section>
 
-        <p className="prototype-notice" role="note">
-          <strong>Conteúdo demonstrativo:</strong> estas bolsas são exemplos do protótipo, não oportunidades confirmadas. Consulte os canais oficiais antes de tomar qualquer decisão.
+        <p className="opportunity-info-note" role="note">
+          <strong>Antes de se inscrever:</strong> estas informações não foram confirmadas com as instituições. Verifique critérios, prazos e disponibilidade nos canais oficiais.
         </p>
 
         <div
@@ -260,9 +260,9 @@ export default function Bolsas() {
                 </ul>
               </div>
 
-              <p className="prototype-action-note">
+              <p className="opportunity-action-note">
                 <GraduationCap size={18} />
-                Candidatura indisponível neste protótipo.
+                Consulte os canais oficiais do programa para verificar como se candidatar.
               </p>
             </article>
           ))}
